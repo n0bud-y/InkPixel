@@ -108,8 +108,8 @@ A milestone is only **Done** when the gate owner signs off against the criteria.
 | ID | Task | Owner | Depends on | Output | Status |
 |---|---|---|---|---|---|
 | P1-01 | Create repository: branch protection, PR template, CODEOWNERS | PH | P0-03 | Repository | Not started |
-| P1-02 | Scaffold Next.js 16.3.x (TypeScript strict, App Router, `src/`, Tailwind v4). Scaffold in place (`create-next-app` tolerates `docs/`; remove other stray root files first) and replace the generated root `README.md` with a pointer to `docs/README.md` | FA | P1-01 | Running app | Not started |
-| P1-03 | Tooling: pnpm, ESLint (flat config), Prettier, Husky + lint-staged, commitlint | FA | P1-02 | Pre-commit checks | Not started |
+| P1-02 | Scaffold Next.js 16.3.x (TypeScript strict, App Router, `src/`, Tailwind v4). Scaffold in place (`create-next-app` tolerates `docs/`; remove other stray root files first) and replace the generated root `README.md` with a pointer to `docs/README.md`. **30 Sep:** scaffolded (Next.js 16.3.7, TS strict, App Router, Tailwind v4, ESLint) and root README replaced; no `src/` folder yet — pending decision | FA | P1-01 | Running app | In progress |
+| P1-03 | Tooling: pnpm, ESLint (flat config), Prettier, Husky + lint-staged, commitlint. ESLint flat config came with the scaffold; pnpm pending decision (scaffold uses npm) | FA | P1-02 | Pre-commit checks | Not started |
 | P1-04 | `env.ts` validation and `.env.example` | FB | P1-02 | Validated env vars | Not started |
 | P1-05 | Vercel project: preview protection, env vars per environment, noindex outside production | PH | P1-02 | Preview URL per PR | Not started |
 | P1-06 | Contentful space, environments (`master`, `dev`), API tokens (delivery, preview, management in CI only), migration tooling, GraphQL type generation | FB | P1-02, P0-14 | Contentful connected | Not started |
@@ -117,8 +117,8 @@ A milestone is only **Done** when the gate owner signs off against the criteria.
 | P1-08 | CI: typecheck, lint, unit tests, build | FA | P1-03 | Required checks | Not started |
 | P1-09 | Playwright + axe + Lighthouse CI against the preview URL; record the performance baseline | FA | P1-05, P1-08 | Budgets in CI | Not started |
 | P1-10 | Skeleton routes per the folder structure (architecture plan §7) with placeholder content | FA + FB | P1-02 | Navigable skeleton | Not started |
-| P1-11 | Renovate; pin `next`, `react`, `react-dom` versions | PH | P1-01 | Dependency updates | Not started |
-| P1-12 | Fill in the `docs/README.md` "Getting started" section | FA | P1-10 | Setup guide | Not started |
+| P1-11 | Renovate; pin `next`, `react`, `react-dom` versions (already pinned exactly by the scaffold) | PH | P1-01 | Dependency updates | Not started |
+| P1-12 | Fill in the `docs/README.md` "Getting started" section. First version (scaffold, scripts, Tailwind v4) written 30 Sep | FA | P1-10 | Setup guide | In progress |
 
 ### Phase 2 — Design system (W3–W5)
 
@@ -328,6 +328,7 @@ Newest first.
 
 | Date | Update |
 |---|---|
+| 30 Sep 2026 | Codebase scaffolded: Next.js 16.3.7, React 19.2.8, TypeScript strict, Tailwind CSS v4, ESLint 9. P1-02 and P1-12 → In progress; notes added to P1-03 and P1-11. Pending decisions: npm vs pnpm, `src/` folder |
 | 30 Sep 2026 | Postgres dropped: no database. Leads emailed to a shared sales inbox; CRM optional; Upstash replaced by a Vercel Firewall rule. Updated assumptions, P0-03, P3-14, P3-15, runbook, R8 |
 | 30 Sep 2026 | CMS switched to Contentful (Sanity dropped); SQL database removed from the plan. Updated P0-03, P0-09, P1-06, P3-01 → P3-05, P3-15, P3-19, runbook; added P0-14, R7, R8 |
 | 30 Sep 2026 | Execution plan created. Kickoff date not yet set; all tasks `Not started` |

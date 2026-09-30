@@ -2,7 +2,7 @@
 
 > **Living project brief.** This is the single place to learn what the project is, what has been decided, and what is still open. It is updated whenever new information arrives; every change is recorded in the [Project log](#project-log).
 
-**Last updated:** 30 Sep 2026 · **Current phase:** Planning (before Phase 0 kickoff) · **Code:** not scaffolded yet
+**Last updated:** 30 Sep 2026 · **Current phase:** Phase 1 — Foundation (started 30 Sep 2026; Phase 0 decisions still open) · **Code:** scaffolded (Next.js 16.3.7 + Tailwind CSS v4), runs locally — see [Getting started](#getting-started-developers)
 
 ---
 
@@ -11,7 +11,7 @@
 | | |
 |---|---|
 | **What** | The company's brand portfolio and lead-generation website |
-| **Project name** | _TBD_ (working folder: `InkPixelNew`) |
+| **Project name** | _TBD_ (repository and package: `inkpixel`) |
 | **Client** | Internal — our own office/brand |
 | **Project head** | _add name_ — owns architecture, tech stack, scope, and sign-offs |
 | **Reference site** | [tekrevol.com](https://www.tekrevol.com/) — for scope and feel, not to copy |
@@ -60,6 +60,19 @@ Details: [architecture plan §2](architecture-plan.md#2-goals-and-measurable-tar
 | Framework | **Next.js (App Router) with React** — one application; React is the component layer inside Next.js | Project head | 30 Sep 2026 |
 | CMS | **Contentful** — replaces Sanity. Editors use the Contentful web app with Live Preview | Project head | 30 Sep 2026 |
 | Database | **None — Postgres dropped.** Contentful is the only data store | Project head | 30 Sep 2026 |
+| Framework version | **Next.js 16.3.7** (App Router, Turbopack), **React 19.2.8**, all pinned to exact versions | Project head (scaffold) | 30 Sep 2026 |
+| Language | **TypeScript 5**, `strict` mode; import alias `@/*` | Project head (scaffold) | 30 Sep 2026 |
+| Styling | **Tailwind CSS v4** through the `@tailwindcss/postcss` plugin; design tokens go in `@theme` in `app/globals.css` | Project head (scaffold) | 30 Sep 2026 |
+| Linting | **ESLint 9** (flat config) with `eslint-config-next` (Core Web Vitals + TypeScript rules) | Project head (scaffold) | 30 Sep 2026 |
+
+### Scaffold vs. plan — needs a decision
+
+The scaffold differs from the architecture plan in two places. Both are cheap to change now and expensive later.
+
+| Item | Plan says | Scaffold has | Options |
+|---|---|---|---|
+| Package manager | pnpm ([§4](architecture-plan.md#4-tech-stack--one-decision-per-layer)) | npm (`package-lock.json`) | Keep npm and update the plan and CI, or switch to pnpm in task P1-03 |
+| Source folder | `src/` ([§7](architecture-plan.md#7-folder-structure) and every path in the plans) | `app/` at the repository root; `@/*` points to `./*` | Keep the root layout and drop `src/` from the plans, or move `app/` into `src/` and point `@/*` to `./src/*` |
 
 ### Proposed — awaiting project-head confirmation
 
@@ -67,9 +80,9 @@ From the [v2 architecture plan §4](architecture-plan.md#4-tech-stack--one-decis
 
 | Layer | Proposal |
 |---|---|
-| Framework version | Next.js 16.3.x (≥ 16.3.6), TypeScript strict, Node.js 24 LTS, pnpm |
+| Runtime | Node.js 24 LTS (Next.js 16 needs ≥ 20.9) |
 | Rendering | Static pages + instant refresh on CMS publish (Cache Components) |
-| Styling / UI | Tailwind CSS v4 + shadcn/ui |
+| UI primitives | shadcn/ui (on top of Tailwind) |
 | Animation | Motion (formerly Framer Motion); GSAP only if the design needs it — never both |
 | Content access | Contentful GraphQL API with generated TypeScript types; content model as code (migration scripts) |
 | Images / video | `next/image` (Vercel optimisation) for Contentful images / Mux for video |
@@ -79,6 +92,7 @@ From the [v2 architecture plan §4](architecture-plan.md#4-tech-stack--one-decis
 | Analytics and consent | GA4 via GTM (after consent), Vercel Speed Insights, cookie-consent platform + Google Consent Mode v2 |
 | Monitoring | Sentry, uptime monitor |
 | Testing | Vitest, Playwright + axe, Lighthouse CI |
+| Code quality | Prettier, Husky + lint-staged, Conventional Commits (commitlint), Renovate |
 
 ---
 
@@ -137,6 +151,8 @@ Week numbers count from kickoff (Week 1). Real dates are added once kickoff is s
 | Document | Purpose |
 |---|---|
 | [README.md](README.md) | This file — living project brief and log |
+| [/README.md](../README.md) | Repository front page; points here |
+| [/AGENTS.md](../AGENTS.md) | Rules for AI coding assistants (`CLAUDE.md` includes it). `next dev` rewrites only the block between the `nextjs-agent-rules` markers; project rules go below it |
 | [docs/architecture-plan.md](architecture-plan.md) | Architecture and tech decisions (the *what* and *why*) |
 | [docs/execution-plan.md](execution-plan.md) | Tasks, owners, milestones, launch runbook (the *how*, *who*, *when*) |
 | `Brand Portfolio Project Architecture & Execution Plan.pdf` | Original v1 plan (no longer in the project folder), superseded by the two documents above |
@@ -146,7 +162,52 @@ Week numbers count from kickoff (Week 1). Real dates are added once kickoff is s
 
 ## Getting started (developers)
 
-The codebase has not been scaffolded yet. This section will hold prerequisites, setup steps, environment variables, and scripts once Phase 1 begins.
+First version, covering the scaffold only. It will grow as Phase 1 adds Contentful, environment variables, and tooling (task P1-12).
+
+### Prerequisites
+
+- **Node.js 24 LTS** (Next.js 16 needs at least 20.9)
+- **npm** (comes with Node.js). This may change to pnpm; see [Scaffold vs. plan](#scaffold-vs-plan--needs-a-decision)
+
+### Setup
+
+```bash
+npm install
+npm run dev        # http://localhost:3000
+```
+
+No environment variables are needed yet.
+
+### Scripts
+
+| Command | What it does |
+|---|---|
+| `npm run dev` | Development server with Turbopack (the default bundler in Next.js 16) |
+| `npm run build` | Production build |
+| `npm run start` | Serves the production build |
+| `npm run lint` | Runs ESLint directly. `next lint` no longer exists in Next.js 16 |
+| `npx tsc --noEmit` | Type check (no script yet; CI adds one in P1-08) |
+
+### Project layout
+
+| Path | Contents |
+|---|---|
+| `app/` | App Router routes. `layout.tsx` is the root layout (loads the Geist fonts with `next/font`); `page.tsx` is the home page; `globals.css` holds Tailwind and the design tokens |
+| `public/` | Static files served from `/`. Favicons and small SVGs only — no photos or video |
+| `docs/` | Project brief, architecture plan, execution plan |
+| `next.config.ts` | Next.js configuration (empty so far) |
+| `postcss.config.mjs` | Loads the Tailwind PostCSS plugin |
+| `eslint.config.mjs` | ESLint flat config |
+
+### Styling with Tailwind CSS v4
+
+- Tailwind v4 has **no `tailwind.config.js`**. It is set up in CSS: `app/globals.css` starts with `@import "tailwindcss";`, and `postcss.config.mjs` loads `@tailwindcss/postcss`.
+- **Design tokens** (colours, fonts, spacing, radius) go in the `@theme` block in `app/globals.css`. Each token becomes a CSS variable and a utility class; for example, `--color-background` gives `bg-background`.
+- The current tokens (`background`, `foreground`, Geist fonts) are template placeholders. Task P2-01 replaces them with the tokens from the Figma designs.
+
+### Next.js 16 note
+
+Next.js 16 differs from older versions and from what many tutorials show. Before using a Next.js API, check the docs bundled with the installed version in `node_modules/next/dist/docs/`.
 
 ---
 
@@ -156,6 +217,9 @@ Newest first. Every new fact, decision, or change to the project is recorded her
 
 | Date | Update | Source |
 |---|---|---|
+| 30 Sep 2026 | **Rule for AI assistants** (in `AGENTS.md`): ask the project head and wait for a yes before creating, changing, or deleting anything, including commands that change the project | Project head |
+| 30 Sep 2026 | **Codebase scaffolded** with `create-next-app`: Next.js 16.3.7, React 19.2.8, TypeScript (strict), App Router, Turbopack, **Tailwind CSS v4**, ESLint 9 (flat config). These move to **Decided**. Two differences from the plan flagged for a decision: npm instead of pnpm, and no `src/` folder. First version of Getting started written; root `README.md` replaced with a pointer to this file. Architecture plan → v2.3 | Project head |
+| 30 Sep 2026 | **Execution started:** Phase 1 (Foundation) begun, in parallel with the open Phase 0 decisions. Project head runs the setup commands step by step | Project head |
 | 30 Sep 2026 | **Decided: no database — Postgres dropped.** Contentful is the only data store. Leads are emailed to a shared sales inbox; CRM is optional (D3). Proposed: Vercel Firewall rate limiting instead of Upstash. Architecture plan → v2.2 | Project head |
 | 30 Sep 2026 | **Proposed:** drop the SQL database entirely. Leads go to the CRM plus an email copy to sales; small Postgres table only if there is no CRM. Awaiting project-head confirmation | Recommendation |
 | 30 Sep 2026 | **CMS decided: Contentful.** Sanity dropped. Architecture plan updated to v2.1; execution plan tasks updated | Project head |

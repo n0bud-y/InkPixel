@@ -1,4 +1,4 @@
-# Brand Portfolio Platform — Architecture Plan (v2.2)
+# Brand Portfolio Platform — Architecture Plan (v2.3)
 
 | | |
 |---|---|
@@ -13,6 +13,7 @@
 
 | Version | Date | Change |
 |---|---|---|
+| v2.3 | 30 Sep 2026 | **Codebase scaffolded.** Framework, TypeScript strict, Tailwind CSS v4, and ESLint (flat config) are now in the code. The scaffold uses npm and has no `src/` folder; both are flagged in §4 and §7 until the project head decides |
 | v2.2 | 30 Sep 2026 | **Postgres dropped** (project head decision): Contentful is the only data store. Leads are emailed to a shared sales inbox; a CRM is optional (D3). Upstash replaced by a Vercel Firewall rate-limit rule |
 | v2.1 | 30 Sep 2026 | CMS changed to **Contentful** (project head decision); Sanity dropped. SQL database proposed for removal |
 | v2 | 30 Sep 2026 | Full review and rewrite of the v1 PDF |
@@ -139,10 +140,10 @@ This replaces v1's time-based `revalidate = 3600`, where editors could wait up t
 
 | Layer | Decision | Why | Switch to the alternative if |
 |---|---|---|---|
-| Framework | **Next.js 16.3.x** (App Router, React 19.2, TypeScript strict), `cacheComponents: true`, Turbopack (default) | Static generation + on-demand revalidation, Metadata API, image/font optimisation, Server Actions | — |
+| Framework | **Next.js 16.3.x** (App Router, React 19.2, TypeScript strict), `cacheComponents: true`, Turbopack (default). **In code:** Next.js 16.3.7, React 19.2.8 (`cacheComponents` not enabled yet) | Static generation + on-demand revalidation, Metadata API, image/font optimisation, Server Actions | — |
 | Runtime | **Node.js 24 LTS** (Next 16 needs ≥ 20.9) | Current LTS | — |
-| Package manager | **pnpm** | Fast, strict dependency resolution | — |
-| Styling | **Tailwind CSS v4**, design tokens in `@theme` | Small CSS output; tokens become CSS variables | — |
+| Package manager | **pnpm**. **Pending:** the scaffold uses npm (`package-lock.json`). Keep npm or switch in P1-03 | Fast, strict dependency resolution | — |
+| Styling | **Tailwind CSS v4**, design tokens in `@theme`. **In code:** via `@tailwindcss/postcss`; no `tailwind.config.js` | Small CSS output; tokens become CSS variables | — |
 | UI primitives | **shadcn/ui** (Radix underneath) | Accessible, code lives in our repo, no runtime lock-in | — |
 | Animation | **Motion** (`motion/react`, formerly Framer Motion) with `LazyMotion`; plain CSS for simple hover/fade | Declarative, React-first, smaller bundle with `LazyMotion` | Design needs scroll-scrubbed timelines, pinning, or text splitting → **GSAP + ScrollTrigger** (free since 2025) *instead*. Record in an ADR; never ship both |
 | CMS | **Contentful** — editors work in the Contentful web app with **Live Preview** (`@contentful/live-preview`) | **Decided by the project head (30 Sep 2026).** Hosted, nothing to run; field-level localisation built in; mature workflows and roles | — |
@@ -165,7 +166,7 @@ This replaces v1's time-based `revalidate = 3600`, where editors could wait up t
 | Error monitoring | **Sentry** | Server and client errors with source maps; alerts on failed lead delivery | — |
 | Uptime | **Better Stack** or **Checkly** | Alert when home, contact, or sitemap break | — |
 | Testing | **Vitest** + Testing Library (unit), **Playwright** (E2E + axe), **Lighthouse CI** | Covers logic, flows, accessibility, and performance budgets | — |
-| Code quality | ESLint (flat config) + Prettier, Husky + lint-staged, Conventional Commits, Renovate | `next lint` was removed in Next 16; ESLint runs directly | Biome instead of ESLint + Prettier, if the team prefers |
+| Code quality | ESLint (flat config) + Prettier, Husky + lint-staged, Conventional Commits, Renovate. **In code:** ESLint 9 with `eslint-config-next` (Core Web Vitals + TypeScript) | `next lint` was removed in Next 16; ESLint runs directly | Biome instead of ESLint + Prettier, if the team prefers |
 | i18n (only if D1) | **next-intl** for routing and UI strings + Contentful **field-level locales** for content | Locale routing, `hreflang`, one entry per piece of content across languages | — |
 
 ### Deliberately not using
@@ -242,6 +243,8 @@ Contentful has no nested objects. SEO fields and each page-builder section are *
 ---
 
 ## 7. Folder structure
+
+> **Pending decision:** the scaffold put `app/` at the repository root, with no `src/` folder, and `@/*` points to `./*`. Either move `app/` into `src/` (and point `@/*` to `./src/*`) or drop `src/` from the tree below and from every `src/…` path in these documents. It is cheapest to decide before P1-10 adds routes.
 
 Fixes over v1: one route group for all public pages (v1 left `case-studies/` outside the shared layout), a required root layout, error and 404 pages, webhook and draft-mode routes, blog routes, and a `server/` folder that client code cannot import. The `(site)` group also leaves room for a later `(landing)` group: campaign pages with minimal navigation.
 
