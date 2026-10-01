@@ -1,12 +1,17 @@
-import { siteConfig } from "@/lib/site";
+import { FeaturedWork } from "@/components/sections/home/FeaturedWork";
+import { Hero } from "@/components/sections/home/Hero";
+import { ServicesShowcase } from "@/components/sections/home/ServicesShowcase";
+import { Stats } from "@/components/sections/home/Stats";
+import { Testimonials } from "@/components/sections/home/Testimonials";
 
 export default function HomePage() {
   return (
-    <div className="mx-auto max-w-6xl px-4 py-16">
-      <h1 className="text-4xl font-semibold">{siteConfig.name}</h1>
-      <p className="mt-4 text-foreground/70">
-        Placeholder home page. Sections come from Contentful in Phase 3.
-      </p>
-    </div>
+    <>
+      <Hero />
+      <Stats />
+      <ServicesShowcase />
+      <FeaturedWork />
+      <Testimonials />
+    </>
   );
 }

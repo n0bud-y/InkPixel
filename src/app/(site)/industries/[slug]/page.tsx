@@ -10,7 +10,7 @@ export async function generateMetadata(
 export default async function IndustryPage(props: PageProps<"/industries/[slug]">) {
   const { slug } = await props.params;
   return (
-    <div className="mx-auto max-w-6xl px-4 py-16">
+    <div className="mx-auto max-w-6xl px-4 pt-32 pb-16">
       <h1 className="text-4xl font-semibold">Industry: {slug}</h1>
       <p className="mt-4 text-foreground/70">
         Placeholder. Industry details and related case studies come in P3-08.

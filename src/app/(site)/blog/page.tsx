@@ -5,7 +5,7 @@ export const metadata: Metadata = { title: "Blog" };
 
 export default function BlogPage() {
   return (
-    <div className="mx-auto max-w-6xl px-4 py-16">
+    <div className="mx-auto max-w-6xl px-4 pt-32 pb-16">
       <h1 className="text-4xl font-semibold">Blog</h1>
       <p className="mt-4 text-foreground/70">
         Placeholder. Articles are listed from Contentful in P3-11.

@@ -1,5 +1,6 @@
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
+import { SmoothScroll } from "@/components/motion/SmoothScroll";
 
 export default function SiteLayout({ children }: LayoutProps<"/">) {
   return (
@@ -10,11 +11,14 @@ export default function SiteLayout({ children }: LayoutProps<"/">) {
       >
         Skip to content
       </a>
+      {/* Fixed, so it stays outside the smooth-scrolling wrapper. */}
       <Header />
-      <main id="main" className="flex-1">
-        {children}
-      </main>
-      <Footer />
+      <SmoothScroll>
+        <main id="main" className="flex-1">
+          {children}
+        </main>
+        <Footer />
+      </SmoothScroll>
     </>
   );
 }

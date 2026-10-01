@@ -4,7 +4,7 @@
 |---|---|
 | **Status** | Draft — kickoff date _TBD_ |
 | **Owner** | Project Head |
-| **Last updated** | 30 Sep 2026 |
+| **Last updated** | 1 Oct 2026 |
 | **Companion** | [architecture-plan.md](architecture-plan.md) covers *what* we build and *why*. This document covers *how*, *who*, and *when* |
 
 ---
@@ -40,6 +40,7 @@ The 12-week timeline assumes the defaults below. If any of them change, re-plan 
 | Design starts from scratch | D7 default | Designs ready → Phase 0 shrinks to ~1 week |
 | English at launch, locale-ready routing | D1 default | Multilingual at launch → +2–3 weeks (translation, RTL, QA) |
 | Vercel hosting; Contentful CMS | D4 default; Contentful decided 30 Sep 2026 | AWS-mandated hosting → +1–2 weeks of infrastructure work |
+| Contentful holds only case studies and blog posts; every other page is static content in code | Project head, 30 Sep 2026 | Moving a page type into Contentful → +2–4 days per page type |
 | No database; leads are emailed to a shared sales inbox; no CRM at launch | Postgres dropped 30 Sep 2026; D3 default | Sales adopts a CRM → +1–2 days to integrate it |
 | Existing site with search traffic will be replaced | D2 default | No existing site → drop migration tasks |
 
@@ -56,8 +57,8 @@ A milestone is only **Done** when the gate owner signs off against the criteria.
 | M2 | Foundation live | W3 | _TBD_ | PH | CI green; preview URL per PR; Contentful connected (delivery + preview); performance baseline recorded | Not started |
 | M3 | Design sign-off | W3 | _TBD_ | MK + PH | Figma for every template at 3 breakpoints, including motion specs | Not started |
 | M4 | Design system complete | W5 | _TBD_ | DS + PH | Component gallery matches Figma; zero critical axe issues | Not started |
-| M5 | Feature complete | W9 | _TBD_ | PH | Every template on the CMS; lead pipeline complete; editor acceptance test passed | Not started |
-| M6 | Content complete | W10 | _TBD_ | MK | All launch content in the CMS; client approvals on file | Not started |
+| M5 | Feature complete | W9 | _TBD_ | PH | Case-study and blog templates on Contentful; static templates complete; lead pipeline complete; editor acceptance test passed | Not started |
+| M6 | Content complete | W10 | _TBD_ | MK | Case studies and posts in Contentful; static-page copy merged in code; client approvals on file | Not started |
 | M7 | Go / no-go | W11 | _TBD_ | PH + MK + management | Launch checklist (architecture plan §16) all green | Not started |
 | M8 | Go-live | W12 | _TBD_ | PH | Runbook (§8) completed; no error spike in 48 h | Not started |
 | M9 | Hypercare ends | W14 | _TBD_ | PH | No open critical issues; handover to business-as-usual | Not started |
@@ -108,27 +109,27 @@ A milestone is only **Done** when the gate owner signs off against the criteria.
 | ID | Task | Owner | Depends on | Output | Status |
 |---|---|---|---|---|---|
 | P1-01 | Create repository: branch protection, PR template, CODEOWNERS | PH | P0-03 | Repository | Not started |
-| P1-02 | Scaffold Next.js 16.3.x (TypeScript strict, App Router, `src/`, Tailwind v4). Scaffold in place (`create-next-app` tolerates `docs/`; remove other stray root files first) and replace the generated root `README.md` with a pointer to `docs/README.md`. **30 Sep:** scaffolded (Next.js 16.3.7, TS strict, App Router, Tailwind v4, ESLint) and root README replaced; no `src/` folder yet — pending decision | FA | P1-01 | Running app | In progress |
-| P1-03 | Tooling: pnpm, ESLint (flat config), Prettier, Husky + lint-staged, commitlint. ESLint flat config came with the scaffold; pnpm pending decision (scaffold uses npm) | FA | P1-02 | Pre-commit checks | Not started |
-| P1-04 | `env.ts` validation and `.env.example` | FB | P1-02 | Validated env vars | Not started |
+| P1-02 | Scaffold Next.js 16.3.x (TypeScript strict, App Router, `src/`, Tailwind v4). Scaffold in place (`create-next-app` tolerates `docs/`; remove other stray root files first) and replace the generated root `README.md` with a pointer to `docs/README.md`. **30 Sep:** scaffolded (Next.js 16.3.7, TS strict, App Router, Tailwind v4, ESLint), moved into `src/`, root README replaced | FA | P1-01 | Running app | Done |
+| P1-03 | Tooling (npm): ESLint (flat config), Prettier, Husky + lint-staged, commitlint. ESLint flat config came with the scaffold | FA | P1-02 | Pre-commit checks | Not started |
+| P1-04 | `env.ts` validation and `.env.example`. **30 Sep:** done for the Contentful variables; others are added as each service is connected | FB | P1-02 | Validated env vars | Done |
 | P1-05 | Vercel project: preview protection, env vars per environment, noindex outside production | PH | P1-02 | Preview URL per PR | Not started |
-| P1-06 | Contentful space, environments (`master`, `dev`), API tokens (delivery, preview, management in CI only), migration tooling, GraphQL type generation | FB | P1-02, P0-14 | Contentful connected | Not started |
+| P1-06 | Contentful space, API keys (delivery, preview), GraphQL client (`src/contentful/client.ts`). **1 Oct:** done; both tokens tested. Migration tooling, the `dev` environment, the management token, and type generation moved to P3-01, with the content types | FB | P1-02, P0-14 | Contentful connected | Done |
 | P1-07 | Sentry for client and server errors | FB | P1-05 | Error reporting | Not started |
 | P1-08 | CI: typecheck, lint, unit tests, build | FA | P1-03 | Required checks | Not started |
 | P1-09 | Playwright + axe + Lighthouse CI against the preview URL; record the performance baseline | FA | P1-05, P1-08 | Budgets in CI | Not started |
-| P1-10 | Skeleton routes per the folder structure (architecture plan §7) with placeholder content | FA + FB | P1-02 | Navigable skeleton | Not started |
+| P1-10 | Skeleton routes per the folder structure (architecture plan §7) with placeholder content. **30 Sep:** all public routes, header/footer, 404/error pages, sitemap/robots/manifest, API stubs | FA + FB | P1-02 | Navigable skeleton | Done |
 | P1-11 | Renovate; pin `next`, `react`, `react-dom` versions (already pinned exactly by the scaffold) | PH | P1-01 | Dependency updates | Not started |
-| P1-12 | Fill in the `docs/README.md` "Getting started" section. First version (scaffold, scripts, Tailwind v4) written 30 Sep | FA | P1-10 | Setup guide | In progress |
+| P1-12 | Fill in the `docs/README.md` "Getting started" section. **1 Oct:** setup, environment variables, project layout, content sources, Tailwind v4 written; tooling to add after P1-03 | FA | P1-10 | Setup guide | In progress |
 
 ### Phase 2 — Design system (W3–W5)
 
 | ID | Task | Owner | Depends on | Output | Status |
 |---|---|---|---|---|---|
 | P2-01 | Design tokens into Tailwind `@theme`: colour, type scale, spacing, radius, shadow | FA | P0-11 | `globals.css` tokens | Not started |
-| P2-02 | Fonts via `next/font` (≤ 2 families, subset) | FA | P2-01 | Font setup | Not started |
+| P2-02 | Fonts via `next/font` (≤ 3 families, subset). **1 Oct:** Bricolage Grotesque, Inter, JetBrains Mono | FA | P2-01 | Font setup | Done |
 | P2-03 | Theme shadcn primitives: Button, Input, Textarea, Select, Dialog, Sheet, Tabs, Accordion, Badge | FA | P2-01 | `components/ui` | Not started |
 | P2-04 | Header, footer, mobile navigation, skip link | FA | P2-03 | `components/layout` | Not started |
-| P2-05 | Motion primitives (Reveal, Stagger, Counter) with `LazyMotion` and reduced-motion support | FA | P2-01 | `components/motion` | Not started |
+| P2-05 | Motion primitives with reduced-motion support. **2 Oct:** done with GSAP — `Reveal` (with stagger), `Magnetic`, `SmoothScroll`, plus `CountUp` (no library) and CSS hero entrance | FA | P2-01 | `components/motion` | Done |
 | P2-06 | Section blocks as static UI: Hero, LogoWall, Stats, CTA, Testimonials, CaseStudyGrid, FAQ, RichText | FA + FB | P2-03 | `components/sections` | Not started |
 | P2-07 | Component gallery (development-only route or Storybook) | FA | P2-06 | Gallery | Not started |
 | P2-08 | Design QA against Figma at 3 breakpoints; accessibility pass | DS + QA | P2-07 | Signed-off components (M4) | Not started |
@@ -137,19 +138,19 @@ A milestone is only **Done** when the gate owner signs off against the criteria.
 
 | ID | Task | Owner | Depends on | Output | Status |
 |---|---|---|---|---|---|
-| P3-01 | Final Contentful content types as migration scripts, including `redirect`, `siteSettings`, `seo`, section types | FB | P0-09 | Migrations | Not started |
+| P3-01 | Contentful content types for case studies and blog as migration scripts (`caseStudy`, `post`, `category`, `person`, `client`, `testimonial`, `metric`, `seo`), done when those pages are built. Also: migration tooling, `dev` environment, management token (CI only), GraphQL type generation | FB | P0-09 | Migrations | Not started |
 | P3-02 | Typed GraphQL query layer with `'use cache'` + `cacheTag` | FB | P3-01 | `contentful/queries` | Not started |
 | P3-03 | `/api/revalidate` for Contentful publish/unpublish webhooks, verified with the signing secret | FB | P3-02 | Instant refresh on publish | Not started |
 | P3-04 | Draft mode + Contentful Live Preview (preview URLs configured per content type) | FB | P3-02 | Editor preview | Not started |
 | P3-05 | `next/image` for Contentful assets; Rich Text renderer; Mux video component | FB + FA | P3-01 | Media and rich-text components | Not started |
-| P3-06 | Home template | FA | P2-06, P3-02 | Page | Not started |
-| P3-07 | Services: listing + detail | FA | P3-02 | Pages | Not started |
-| P3-08 | Industries: listing + detail | FA | P3-02 | Pages | Not started |
+| P3-06 | Home template (static content; featured case studies from Contentful). **1–2 Oct:** hero, stats, services, "Ideas Engineered Into Impact", and testimonials sections built from Figma (services: Branding complete, other five categories "coming soon" until content arrives; featured project and testimonials are placeholder data until real content arrives); more sections to come | FA | P2-06, P3-02 | Page | In progress |
+| P3-07 | Services: listing + detail (static content in code) | FA | P2-06 | Pages | Not started |
+| P3-08 | Industries: listing + detail (static content; related case studies from Contentful) | FA | P2-06, P3-02 | Pages | Not started |
 | P3-09 | Case studies listing with client-side filters and URL state | FA | P3-02 | Page | Not started |
 | P3-10 | Case study detail + generated OG image | FA | P3-02 | Page | Not started |
 | P3-11 | Blog: listing, category, article + OG image | FA | P3-02 | Pages | Not started |
-| P3-12 | CMS page-builder route `/[slug]` (legal, landing pages) | FB | P2-06, P3-02 | Page | Not started |
-| P3-13 | About and Contact pages; SVG office map | FA | P3-02 | Pages | Not started |
+| P3-12 | Legal pages as static routes: `/privacy-policy`, `/cookie-policy`, `/terms` | FA | P2-04, C-09 | Pages | Not started |
+| P3-13 | About and Contact pages (static content); SVG office map | FA | P2-06 | Pages | Not started |
 | P3-14 | Contact form: Server Action, Zod, React Hook Form, Turnstile, honeypot; Vercel Firewall rate-limit rule | FB | P3-13 | Secure form | Not started |
 | P3-15 | Lead delivery: Resend email to the shared sales inbox (Reply-To = visitor) + visitor auto-reply; error with fallback address if sending fails; Sentry alerts without personal data; CRM integration only if D3 says so | FB | P3-14 | Lead pipeline | Not started |
 | P3-16 | Metadata, canonical, JSON-LD per template; `sitemap.ts`; `robots.ts` | FB | P3-06 → P3-13 | SEO plumbing | Not started |
@@ -167,13 +168,13 @@ A milestone is only **Done** when the gate owner signs off against the criteria.
 | C-02 | Client approval tracker; send approval requests for logos, names, and work | CS | C-01 | Tracker with dates and approvers | Not started |
 | C-03 | Brief per case study: challenge, solution, results, metrics, quotes | CS | C-01 | Briefs | Not started |
 | C-04 | Write 6–8 case studies for launch (rest after launch) | CS | C-03 | Final copy | Not started |
-| C-05 | Service and industry copy, aligned with the keyword map | CS | P0-06 | Final copy | Not started |
-| C-06 | Home and About copy; leadership bios and photos | CS + DS | P0-07 | Final copy and photos | Not started |
+| C-05 | Service and industry copy, aligned with the keyword map; handed to developers (static pages) | CS | P0-06 | Final copy | Not started |
+| C-06 | Home and About copy; leadership bios and photos; handed to developers (static pages) | CS + DS | P0-07 | Final copy and photos | Not started |
 | C-07 | Photography and video: produce or source | DS | C-01 | Media library | Not started |
 | C-08 | Migrate existing blog posts or write 3–5 launch articles | CS | P0-05 | Articles | Not started |
 | C-09 | Legal pages: privacy, cookies, terms — with legal review | PH | P3-18 | Approved legal copy | Not started |
 | C-10 | Editor training session | FB + MK | P3-19 | Trained editors | Not started |
-| C-11 | Enter all launch content into the CMS (M6) | CS | C-04 → C-09, C-10 | Content live in CMS | Not started |
+| C-11 | Enter launch case studies and blog posts into Contentful; confirm static-page copy is merged in code (M6) | CS | C-04 → C-09, C-10 | Content live | Not started |
 | C-12 | Translations (only if D1 requires) | CS | C-11 | Translated content | Not started |
 
 ### Phase 4 — Hardening & QA (W9–W11)
@@ -216,7 +217,7 @@ A template or feature is **Done** only when all of these hold:
 - [ ] Fully keyboard-accessible; zero critical axe issues; respects reduced motion
 - [ ] Title, description, canonical, and JSON-LD present and correct
 - [ ] Lighthouse budgets pass on the preview URL
-- [ ] All copy and media come from the CMS (only UI labels are hard-coded)
+- [ ] Case-study and blog content comes from Contentful; static-page copy sits in one place per page in code, not scattered through components
 - [ ] Unit tests for logic; E2E test for user flows
 - [ ] Code reviewed; CI green
 - [ ] Forms work without JavaScript
@@ -319,6 +320,8 @@ Live register. Background on each risk is in [architecture plan §17](architectu
 | R6 | Risk | Framework security vulnerability | PH | Renovate + 48-hour critical-patch policy | Open |
 | R7 | Risk | Contentful plan limits or cost (next tier ≈ $300/month) block editors or surprise the budget | PH | Plan check P0-14; monitor usage monthly | Open |
 | R8 | Risk | Lead emails land in spam or get buried in an inbox | PH | Shared inbox; SPF/DKIM/DMARC; weekly check; revisit a CRM (D3) as volume grows | Open |
+| R9 | Risk | Static-page copy changes need a developer, slowing marketing updates | PH | Copy in one place per page; move a page type into Contentful if edits become frequent | Open |
+| I1 | Issue | Header menu is too tight at ~1024px wide; "Our Work" wraps onto two lines | FA | Deferred by PH (1 Oct). Options: show the menu button below 1280px, or tighten the menu between 1024 and 1280px | Open |
 
 ---
 
@@ -328,6 +331,13 @@ Newest first.
 
 | Date | Update |
 |---|---|
+| 2 Oct 2026 | Home testimonials section built (carousel, video-ready). Waiting on real testimonials: client photos/videos, results, and written consent |
+| 2 Oct 2026 | Home section 4 ("Ideas Engineered Into Impact") built; P3-06 updated. Featured project uses placeholder data until P3-01 |
+| 2 Oct 2026 | GSAP adopted (smooth scroll, reveals, tab highlight, hovers); tab colour seam fixed. P2-05 → Done. JS size (~50–64 KB gz for GSAP) awaiting project-head sign-off against the +60 KB budget |
+| 2 Oct 2026 | Home services section built (tabs, `src/content/services.ts`). P3-06 updated. Waiting on content and icons for five service categories |
+| 1 Oct 2026 | Home stats section built with `CountUp` counters. P2-05 and P3-06 → In progress; issue I1 (header menu wraps at ~1024px) logged and deferred |
+| 1 Oct 2026 | Contentful connected (P1-06 → Done). Content types are created with the case-study and blog pages (P3-01, which also takes migration tooling and type generation). P1-12 updated |
+| 30 Sep 2026 | Content split: Contentful only for case studies and blog posts; other pages static. Updated assumptions, M5, M6, P3-01, P3-06 → P3-08, P3-12, P3-13, C-05, C-06, C-11, Definition of Done; added R9. npm and `src/` decided; P1-02, P1-04, P1-10 → Done |
 | 30 Sep 2026 | Codebase scaffolded: Next.js 16.3.7, React 19.2.8, TypeScript strict, Tailwind CSS v4, ESLint 9. P1-02 and P1-12 → In progress; notes added to P1-03 and P1-11. Pending decisions: npm vs pnpm, `src/` folder |
 | 30 Sep 2026 | Postgres dropped: no database. Leads emailed to a shared sales inbox; CRM optional; Upstash replaced by a Vercel Firewall rule. Updated assumptions, P0-03, P3-14, P3-15, runbook, R8 |
 | 30 Sep 2026 | CMS switched to Contentful (Sanity dropped); SQL database removed from the plan. Updated P0-03, P0-09, P1-06, P3-01 → P3-05, P3-15, P3-19, runbook; added P0-14, R7, R8 |

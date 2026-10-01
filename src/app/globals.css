@@ -1,26 +1,156 @@
 @import "tailwindcss";
 
+/* Fonts are self-hosted with next/font in src/app/layout.tsx, which sets
+   --font-bricolage, --font-inter, and --font-jetbrains-mono. */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --white: #ffffff;
+  --light: #f6efeb;
+  --black: #000000;
+  --primary: #151936;
+  --crimson: #c91d4c;
+  --coral: #fa6143;
+  --gradient: linear-gradient(0deg, rgba(255, 255, 255, 0.002), rgba(255, 255, 255, 0.002)), linear-gradient(132.34deg, #c91d4c 2%, #fa6143 97.77%);
+  /* Same colours, coral first: used on light sections (eyebrow pill, buttons). */
+  --gradient-reverse: linear-gradient(132.34deg, #fa6143 2%, #c91d4c 97.77%);
+
+  --background: var(--primary);
+  --foreground: var(--light);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-primary: var(--primary);
+  --color-light: var(--light);
+  --color-crimson: var(--crimson);
+  --color-coral: var(--coral);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* CSS entrance animations for the top of the page: they start on the first frame, without
+   waiting for JavaScript. Use with `motion-safe:` so reduced-motion visitors skip them.
+   Scroll and interaction animations use GSAP (src/lib/gsap.ts). */
+@theme {
+  --ease-out-soft: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --animate-rise: rise 0.9s var(--ease-out-soft) both;
+  --animate-line-up: line-up 1s var(--ease-out-soft) both;
+  --animate-hero-zoom: hero-zoom 2.4s var(--ease-out-soft) both;
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(1.25rem);
+    }
+  }
+
+  /* Text line rising out of an overflow-hidden mask. */
+  @keyframes line-up {
+    from {
+      transform: translateY(110%);
+    }
+  }
+
+  @keyframes hero-zoom {
+    from {
+      transform: scale(1.08);
+    }
+  }
+}
+
+@utility bg-brand-gradient {
+  background-image: var(--gradient);
+}
+
+@utility bg-brand-gradient-reverse {
+  background-image: var(--gradient-reverse);
+}
+
+/* Faint square grid on dark sections; the cell size scales with the 1920px design frame. */
+@utility bg-grid {
+  background-image:
+    linear-gradient(to right, rgb(255 255 255 / 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.035) 1px, transparent 1px);
+  background-size: clamp(3.5rem, 5.75vw, 7rem) clamp(3.5rem, 5.75vw, 7rem);
+  background-position: center top;
+}
+
+/* Page-width wrapper shared by the header, sections, and footer. The design frame is
+   1920px wide with ~7.5% side margins, so desktop margins scale with the viewport. */
+@utility container-site {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 120rem;
+  padding-inline: 1.25rem;
+
+  @media (width >= 40rem) {
+    padding-inline: 2rem;
+  }
+
+  @media (width >= 64rem) {
+    padding-inline: min(7.5vw, 9rem);
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+::selection {
+  background: var(--crimson);
+  color: var(--white);
+}
+
+:focus-visible {
+  outline: 2px solid var(--coral);
+  outline-offset: 3px;
+}
+
+/* Sliding highlight behind the active service tab (desktop; positioned and coloured by
+   ServiceTabs.tsx). Mask = tab body with rounded left corners + concave corners where it
+   joins the gradient panel. --r = gap between the panels (set from JS); --R = left radius. */
+.tab-indicator {
+  --r: 1.25rem;
+  --R: 0.875rem;
+  mask:
+    linear-gradient(#000 0 0) var(--R) var(--r) / calc(100% - var(--R)) calc(100% - 2 * var(--r)) no-repeat,
+    linear-gradient(#000 0 0) 0 calc(var(--r) + var(--R)) / var(--R) calc(100% - 2 * var(--r) - 2 * var(--R)) no-repeat,
+    radial-gradient(circle at 100% 100%, #000 calc(var(--R) - 0.5px), #0000 var(--R)) 0 var(--r) / var(--R) var(--R) no-repeat,
+    radial-gradient(circle at 100% 0, #000 calc(var(--R) - 0.5px), #0000 var(--R)) 0 calc(100% - var(--r)) / var(--R) var(--R) no-repeat,
+    radial-gradient(circle at 0 0, #0000 calc(var(--r) - 0.5px), #000 var(--r)) 100% 0 / var(--r) var(--r) no-repeat,
+    radial-gradient(circle at 0 100%, #0000 calc(var(--r) - 0.5px), #000 var(--r)) 100% 100% / var(--r) var(--r) no-repeat;
+}
+
+/* Stop the page scrolling behind the open mobile menu. */
+html:has(dialog[open]) {
+  overflow: hidden;
+}
+
+/* Header: transparent over the top of the page, solid navy once the page scrolls.
+   Driven by the scroll position, no JavaScript; browsers without scroll-driven
+   animations get the solid bar all the time. */
+@keyframes header-solid {
+  to {
+    background-color: color-mix(in oklab, var(--primary) 85%, transparent);
+    border-color: rgb(255 255 255 / 0.08);
+    backdrop-filter: blur(14px);
+  }
+}
+
+.site-header {
+  animation: header-solid linear both;
+  animation-timeline: scroll();
+  animation-range: 0 96px;
+}
+
+@supports not (animation-timeline: scroll()) {
+  .site-header {
+    background-color: color-mix(in oklab, var(--primary) 92%, transparent);
+    border-color: rgb(255 255 255 / 0.08);
+    backdrop-filter: blur(14px);
+  }
 }
