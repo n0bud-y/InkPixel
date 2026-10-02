@@ -57,3 +57,46 @@ const placeholderTestimonial: Testimonial = {
 // from the design). Replace each entry with a real client's photo, video, and results, with
 // their permission.
 export const testimonials: Testimonial[] = Array.from({ length: 6 }, () => placeholderTestimonial);
+
+export type ProcessStep = {
+  title: string;
+  description: string;
+};
+
+// "Our Process": the six phases, then the outcome ("Live").
+export const processSteps: ProcessStep[] = [
+  {
+    title: "Discovery",
+    description:
+      "Workshops, audits and stakeholder interviews to map the problem and the opportunity.",
+  },
+  {
+    title: "Define",
+    description:
+      "Strategy, scope, success metrics. We commit to a thesis before we commit to pixels.",
+  },
+  {
+    title: "Design",
+    description: "Prototypes, design systems and copy. Validated with users at every milestone.",
+  },
+  {
+    title: "Build",
+    description: "Two-week sprints, demos every Friday. Production-quality code from week one.",
+  },
+  {
+    title: "Launch",
+    description:
+      "Migration, training, comms. We treat go-live as the start of the relationship, not the end.",
+  },
+  {
+    title: "Iterate",
+    description: "Analytics, experiments, ongoing roadmap. We grow with you, quarter over quarter.",
+  },
+];
+
+export const processOutcome = {
+  label: "Live",
+  title: "Production & beyond",
+  description:
+    "From kickoff to launch in 12 weeks. Then we keep shipping with you, quarter after quarter.",
+};

@@ -138,12 +138,12 @@ A milestone is only **Done** when the gate owner signs off against the criteria.
 
 | ID | Task | Owner | Depends on | Output | Status |
 |---|---|---|---|---|---|
-| P3-01 | Contentful content types for case studies and blog as migration scripts (`caseStudy`, `post`, `category`, `person`, `client`, `testimonial`, `metric`, `seo`), done when those pages are built. Also: migration tooling, `dev` environment, management token (CI only), GraphQL type generation | FB | P0-09 | Migrations | Not started |
-| P3-02 | Typed GraphQL query layer with `'use cache'` + `cacheTag` | FB | P3-01 | `contentful/queries` | Not started |
+| P3-01 | Contentful content types for case studies and blog as migration scripts (`caseStudy`, `post`, `category`, `person`, `client`, `testimonial`, `metric`, `seo`), done when those pages are built. Also: migration tooling, `dev` environment, management token (CI only), GraphQL type generation. **3 Oct:** blog half done — `0001-blog-model.cjs` (`category`, `person`, `seo`, `post`), `npm run contentful:migrate` (asks before applying), sample posts via `npm run contentful:seed-posts`; management token in `.env.local` for now. Still to do: case-study types, `dev` environment, CI runner, type generation | FB | P0-09 | Migrations | In progress |
+| P3-02 | Typed GraphQL query layer with `'use cache'` + `cacheTag`. **3 Oct:** first query, `getLatestPosts()` (`src/contentful/queries/posts.ts`), using the fetch cache with tags for now (architecture plan §5); switch to `'use cache'` with the blog pages | FB | P3-01 | `contentful/queries` | In progress |
 | P3-03 | `/api/revalidate` for Contentful publish/unpublish webhooks, verified with the signing secret | FB | P3-02 | Instant refresh on publish | Not started |
 | P3-04 | Draft mode + Contentful Live Preview (preview URLs configured per content type) | FB | P3-02 | Editor preview | Not started |
 | P3-05 | `next/image` for Contentful assets; Rich Text renderer; Mux video component | FB + FA | P3-01 | Media and rich-text components | Not started |
-| P3-06 | Home template (static content; featured case studies from Contentful). **1–2 Oct:** hero, stats, services, "Ideas Engineered Into Impact", and testimonials sections built from Figma (services: Branding complete, other five categories "coming soon" until content arrives; featured project and testimonials are placeholder data until real content arrives); more sections to come | FA | P2-06, P3-02 | Page | In progress |
+| P3-06 | Home template (static content; featured case studies from Contentful). **1–2 Oct:** hero, stats, services, "Ideas Engineered Into Impact", testimonials, pinned "Our Process", "Industry-Specific Solutions", FAQ, "From the studio." (3 newest blog posts from Contentful), and closing CTA (line-by-line reveal, flowing gradient text, pulsing glows) sections built from Figma (services: Branding complete, other five categories "coming soon" until content arrives; featured project, testimonials, industry solutions, and FAQ answers 2–5 are placeholder data until real content arrives); more sections to come | FA | P2-06, P3-02 | Page | In progress |
 | P3-07 | Services: listing + detail (static content in code) | FA | P2-06 | Pages | Not started |
 | P3-08 | Industries: listing + detail (static content; related case studies from Contentful) | FA | P2-06, P3-02 | Pages | Not started |
 | P3-09 | Case studies listing with client-side filters and URL state | FA | P3-02 | Page | Not started |
@@ -331,6 +331,13 @@ Newest first.
 
 | Date | Update |
 |---|---|
+| 3 Oct 2026 | Closing CTA: animation changed to "gradient text + glows" (CSS); `LivingGlows` removed |
+| 3 Oct 2026 | Closing CTA: water ripples replaced by drifting glows and a cursor light (`LivingGlows`) |
+| 3 Oct 2026 | Home closing CTA built ("Let's build the next thing you ship.") with a cursor water-ripple effect (WebGL); P3-06 updated |
+| 3 Oct 2026 | Home "From the studio." section built on Contentful: blog content model migration and sample-post seed script added and run on `master` (P3-01, P3-02 → In progress). Sample posts must be replaced before launch |
+| 2 Oct 2026 | Home FAQ section built; P3-06 updated. Waiting on the studio to confirm FAQ answers 2–5 |
+| 2 Oct 2026 | Home "Industry-Specific Solutions" section built; P3-06 updated. Waiting on each industry's own solutions and an Ecommerce icon |
+| 2 Oct 2026 | Home "Our Process" section built (desktop: section locks while the timeline scrolls). P3-06 updated |
 | 2 Oct 2026 | Home testimonials section built (carousel, video-ready). Waiting on real testimonials: client photos/videos, results, and written consent |
 | 2 Oct 2026 | Home section 4 ("Ideas Engineered Into Impact") built; P3-06 updated. Featured project uses placeholder data until P3-01 |
 | 2 Oct 2026 | GSAP adopted (smooth scroll, reveals, tab highlight, hovers); tab colour seam fixed. P2-05 → Done. JS size (~50–64 KB gz for GSAP) awaiting project-head sign-off against the +60 KB budget |

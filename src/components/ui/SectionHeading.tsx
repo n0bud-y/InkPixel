@@ -15,8 +15,9 @@ type SectionHeadingProps = {
   /** "onDark" for navy sections, "onLight" for cream sections. */
   tone?: "onDark" | "onLight";
   /** md ≈ 70px and lg ≈ 84px at 1920, both scaling down with the viewport. "fluid" ≈ lg but
-   *  also shrinks with its column (needs an @container ancestor), so a long first line never wraps. */
-  size?: "md" | "lg" | "fluid";
+   *  also shrinks with its column (needs an @container ancestor), so a long first line never wraps.
+   *  "fluid-wide" is the same for a much longer first line (~12em, e.g. the Industries title). */
+  size?: "md" | "lg" | "fluid" | "fluid-wide";
   className?: string;
 };
 
@@ -26,12 +27,15 @@ const titleSizes = {
   // Bricolage draws relatively wider letters at small sizes (optical sizing), so the size is a
   // line fitted to keep a ~7em first line within 97% of the column at any width.
   fluid: "text-[clamp(2.25rem,min(calc(15.1cqw_-_6.2px),4.25vw),5.125rem)] leading-[1.02]",
+  // Same idea for a ~12em first line, fitted to stay within 96% of the column.
+  "fluid-wide": "text-[clamp(2.25rem,min(calc(8.95cqw_-_4px),4.25vw),5.125rem)] leading-[1.02]",
 };
 
 const descriptionSizes = {
   md: "text-[clamp(0.9375rem,1.05vw,1.25rem)] leading-[1.9]",
   lg: "text-[clamp(1rem,1.17vw,1.4rem)] leading-[1.85]",
   fluid: "text-[clamp(1rem,1.17vw,1.4rem)] leading-[1.85]",
+  "fluid-wide": "text-[clamp(1rem,1.17vw,1.4rem)] leading-[1.85]",
 };
 
 // Section title + optional eyebrow and description. Sizes follow the 1920px design frame.

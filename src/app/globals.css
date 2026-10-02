@@ -39,6 +39,9 @@
   --animate-rise: rise 0.9s var(--ease-out-soft) both;
   --animate-line-up: line-up 1s var(--ease-out-soft) both;
   --animate-hero-zoom: hero-zoom 2.4s var(--ease-out-soft) both;
+  /* Looping ambient motion (closing CTA): a glow breathing, a gradient flowing through text. */
+  --animate-glow-pulse: glow-pulse 7s ease-in-out infinite alternate;
+  --animate-gradient-flow: gradient-flow 6s ease-in-out infinite alternate;
 
   @keyframes rise {
     from {
@@ -57,6 +60,22 @@
   @keyframes hero-zoom {
     from {
       transform: scale(1.08);
+    }
+  }
+
+  /* Uses `scale` (not transform), so it combines with a translate-centred element. */
+  @keyframes glow-pulse {
+    to {
+      opacity: 0.65;
+      scale: 1.12;
+    }
+  }
+
+  /* For a 200%-wide gradient (e.g. orange → pink → orange): the start shows the first half,
+     so the still frame matches the design. */
+  @keyframes gradient-flow {
+    to {
+      background-position: 100% 50%;
     }
   }
 }
@@ -112,17 +131,19 @@ body {
 
 /* Sliding highlight behind the active service tab (desktop; positioned and coloured by
    ServiceTabs.tsx). Mask = tab body with rounded left corners + concave corners where it
-   joins the gradient panel. --r = gap between the panels (set from JS); --R = left radius. */
+   joins the gradient panel. --r = gap between the panels (set from JS); --R = left radius.
+   Where two pieces meet, one reaches 1px into the other: pieces that only touch leave a
+   faint line at fractional pixel positions (zoomed pages, 125% display scaling). */
 .tab-indicator {
   --r: 1.25rem;
   --R: 0.875rem;
   mask:
-    linear-gradient(#000 0 0) var(--R) var(--r) / calc(100% - var(--R)) calc(100% - 2 * var(--r)) no-repeat,
-    linear-gradient(#000 0 0) 0 calc(var(--r) + var(--R)) / var(--R) calc(100% - 2 * var(--r) - 2 * var(--R)) no-repeat,
+    linear-gradient(#000 0 0) calc(var(--R) - 1px) var(--r) / calc(100% - var(--R) + 1px) calc(100% - 2 * var(--r)) no-repeat,
+    linear-gradient(#000 0 0) 0 calc(var(--r) + var(--R) - 1px) / var(--R) calc(100% - 2 * var(--r) - 2 * var(--R) + 2px) no-repeat,
     radial-gradient(circle at 100% 100%, #000 calc(var(--R) - 0.5px), #0000 var(--R)) 0 var(--r) / var(--R) var(--R) no-repeat,
     radial-gradient(circle at 100% 0, #000 calc(var(--R) - 0.5px), #0000 var(--R)) 0 calc(100% - var(--r)) / var(--R) var(--R) no-repeat,
-    radial-gradient(circle at 0 0, #0000 calc(var(--r) - 0.5px), #000 var(--r)) 100% 0 / var(--r) var(--r) no-repeat,
-    radial-gradient(circle at 0 100%, #0000 calc(var(--r) - 0.5px), #000 var(--r)) 100% 100% / var(--r) var(--r) no-repeat;
+    radial-gradient(circle at 0 0, #0000 calc(var(--r) - 0.5px), #000 var(--r)) 100% 0 / var(--r) calc(var(--r) + 1px) no-repeat,
+    radial-gradient(circle at 0 100%, #0000 calc(var(--r) - 0.5px), #000 var(--r)) 100% 100% / var(--r) calc(var(--r) + 1px) no-repeat;
 }
 
 /* Stop the page scrolling behind the open mobile menu. */

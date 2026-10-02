@@ -11,6 +11,11 @@ const tones = {
     pill: "bg-brand-gradient-reverse px-4 py-2.5 tracking-[0.2em] text-white shadow-[0_10px_24px_-10px_rgb(250_97_67_/_0.7)] 2xl:px-5 2xl:py-3.5 2xl:text-sm",
     dot: "bg-white",
   },
+  /** White pill with a soft shadow and grey text, for cream sections, e.g. "● 08 · FAQ". */
+  light: {
+    pill: "bg-white px-4 py-2.5 tracking-[0.2em] text-primary/55 shadow-[0_8px_22px_-10px_rgb(201_29_76_/_0.3)] ring-1 ring-primary/5 2xl:px-5 2xl:py-3.5 2xl:text-sm",
+    dot: "bg-crimson shadow-[0_0_8px_1px_rgb(201_29_76_/_0.55)]",
+  },
 };
 
 // Small pill label above a section heading, e.g. "● Studio · Karachi + Worldwide".

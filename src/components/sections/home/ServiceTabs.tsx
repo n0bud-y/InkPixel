@@ -89,19 +89,25 @@ export function ServiceTabs({ categories }: { categories: ServiceCategory[] }) {
     const tab = list.querySelector<HTMLElement>('[role="tab"][data-state="active"]');
     if (!tab) return null;
 
+    // Exact (sub-pixel) boxes: offsetLeft/offsetWidth round to whole pixels, which can leave a
+    // hairline gap at the join. The highlight also reaches 1px under the panel for the same reason.
+    const listBox = list.getBoundingClientRect();
     const panelBox = content.getBoundingClientRect();
-    const gap = panelBox.left - list.getBoundingClientRect().right;
     const tabBox = tab.getBoundingClientRect();
+    const gap = panelBox.left - listBox.right;
+    const box = {
+      left: tabBox.left,
+      top: tabBox.top - gap,
+      width: panelBox.left + 1 - tabBox.left,
+      height: tabBox.height + gap * 2,
+    };
     return {
       gap,
-      x: tab.offsetLeft,
-      y: tab.offsetTop - gap,
-      width: tab.offsetWidth,
-      height: tab.offsetHeight + gap * 2,
-      stops: sliceStops(
-        { left: tabBox.left, top: tabBox.top - gap, width: tabBox.width, height: tabBox.height + gap * 2 },
-        panelBox,
-      ),
+      x: box.left - listBox.left - list.clientLeft,
+      y: box.top - listBox.top - list.clientTop,
+      width: box.width,
+      height: box.height,
+      stops: sliceStops(box, panelBox),
     };
   };
 
@@ -118,6 +124,7 @@ export function ServiceTabs({ categories }: { categories: ServiceCategory[] }) {
           height: target.height,
           "--r": `${target.gap}px`,
           backgroundImage: gradientCss(target.stops),
+          autoRound: false, // keep the exact sub-pixel size (GSAP rounds px sizes by default)
         });
         currentStops.current = target.stops;
         setIndicatorReady(true);
@@ -183,10 +190,12 @@ export function ServiceTabs({ categories }: { categories: ServiceCategory[] }) {
         onValueChange={setActive}
         className="grid grid-cols-[minmax(0,1fr)] gap-4 lg:grid-cols-[minmax(0,33.6%)_minmax(0,1fr)] lg:gap-5"
       >
-        {/* Glass panel on desktop; a plain sideways-scrolling row on smaller screens. */}
+        {/* Glass panel on desktop; a plain sideways-scrolling row on smaller screens.
+            Its padding (44px) must stay ≥ the gap (20px) + the gradient panel's corner radius
+            (24px), so the highlight's curved corners never run into the panel's rounded corner. */}
         <div
           ref={glass}
-          className="relative lg:rounded-3xl lg:border lg:border-white/10 lg:bg-white/20 lg:py-[min(3.6vw,4.375rem)] lg:backdrop-blur-md"
+          className="relative lg:rounded-3xl lg:border lg:border-white/10 lg:bg-white/20 lg:py-11 lg:backdrop-blur-md"
         >
           <div
             ref={indicator}
@@ -215,7 +224,7 @@ export function ServiceTabs({ categories }: { categories: ServiceCategory[] }) {
 
         <div
           ref={panel}
-          className="rounded-3xl bg-brand-gradient px-5 py-6 text-white sm:px-8 sm:py-8 lg:px-[min(3.1vw,3.75rem)] lg:py-[min(3.95vw,4.75rem)]"
+          className="rounded-3xl bg-brand-gradient px-5 py-6 text-white sm:px-8 sm:py-8 lg:px-[min(3.1vw,3.75rem)] lg:py-[min(2.4vw,2.875rem)]"
         >
           {categories.map((category) => (
             <TabPanel key={category.slug} value={category.slug} className="h-full rounded-2xl">
@@ -225,7 +234,7 @@ export function ServiceTabs({ categories }: { categories: ServiceCategory[] }) {
                     <li
                       key={service.title}
                       data-item
-                      className={`flex items-center justify-center border-white/30 px-4 py-8 xl:px-2 ${cellBorders(index)}`}
+                      className={`flex items-center justify-center border-white/30 px-4 py-8 xl:px-2 xl:py-6 ${cellBorders(index)}`}
                     >
                       <FeatureItem
                         icon={service.icon}

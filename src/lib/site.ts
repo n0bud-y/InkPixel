@@ -3,6 +3,7 @@ export const siteConfig = {
   name: "Ink Pixel Studios",
   description: "Brand portfolio, services, and case studies.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  email: "info@inkpixelstudios.com",
 };
 
 // "Insights" is the blog and "Our Work" the case studies; the URLs stay descriptive for SEO.

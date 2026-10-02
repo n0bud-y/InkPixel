@@ -1,10 +1,10 @@
-# Brand Portfolio Platform — Architecture Plan (v2.4)
+# Brand Portfolio Platform — Architecture Plan (v2.6)
 
 | | |
 |---|---|
 | **Status** | Draft for review |
 | **Owner** | Project Head |
-| **Last updated** | 1 Oct 2026 |
+| **Last updated** | 3 Oct 2026 |
 | **Supersedes** | `Brand Portfolio Project Architecture & Execution Plan.pdf` (v1) |
 | **Companion docs** | [README.md](README.md) (living brief) · [execution-plan.md](execution-plan.md) (tasks, owners, timeline) |
 | **Reference** | tekrevol.com — for scope and feel, not to copy |
@@ -13,6 +13,7 @@
 
 | Version | Date | Change |
 |---|---|---|
+| v2.6 | 3 Oct 2026 | **Blog content model created** (`contentful/migrations/0001-blog-model.cjs`: `category`, `person`, `seo`, `post`), run with `npm run contentful:migrate`; the home page shows the 3 newest posts. **Interim caching:** Contentful reads use the Next.js fetch cache (`force-cache`, hourly `revalidate`, `tags`) until the blog pages switch the site to Cache Components (§5, P3-02) |
 | v2.5 | 2 Oct 2026 | **Animation: GSAP** (ScrollTrigger, ScrollSmoother) decided by the project head, with smooth scrolling; Motion dropped. Static content moved into `src/content/` |
 | v2.4 | 1 Oct 2026 | **Content split** (project head decision): Contentful holds only case studies and blog posts; every other page is static content in code. Removed the `/[slug]` CMS-page route and the `service`, `industry`, `page`, section, `siteSettings`, `redirect`, `office`, and `faq` content types; redirects move to code. **npm** and **`src/`** confirmed. Contentful connected; content types are created as migrations when the case-study and blog pages are built. Static-page images live in `src/assets/images/` |
 | v2.3 | 30 Sep 2026 | **Codebase scaffolded.** Framework, TypeScript strict, Tailwind CSS v4, and ESLint (flat config) are now in the code. The scaffold uses npm and has no `src/` folder; both are flagged in §4 and §7 until the project head decides |
@@ -127,6 +128,8 @@ Pre-render everything that is the same for every visitor. SEO does not need per-
 4. The next visitor gets the cached page instantly while the new version renders in the background. Everyone after that sees the update.
 
 This replaces v1's time-based `revalidate = 3600`, where editors could wait up to an hour to see changes.
+
+**Until then (since 3 Oct 2026):** `cacheComponents` is not on yet, because turning it on means reworking the placeholder routes (`/blog/[slug]` and others) at the same time. `contentfulQuery()` uses the fetch cache instead: `cache: 'force-cache'`, `next.revalidate` (1 hour) and `next.tags` (e.g. `post`). The tags already match step 3, so the webhook works either way; the hourly refresh is only the fallback until it exists. Switch to steps 1–2 with P3-02, when the blog pages are built.
 
 **API usage:** visitors never call Contentful. Calls happen only at build time, on revalidation, and in editor preview. Every PR preview deployment is a full build, though, so watch the monthly API-call quota. Use GraphQL to fetch each page in one request, and cap build concurrency.
 
@@ -606,5 +609,6 @@ Short records (context, decision, alternatives, consequences) in `docs/adr/`:
 4. Internationalisation approach (D1)
 5. Analytics and consent
 6. Content Security Policy approach (allowlist vs nonce)
+
 7. Animation library: **GSAP** (decided 2 Oct 2026) — record why over Motion, the smooth-scrolling trade-offs, and the JS size cost
 8. Lead handling: email to a sales inbox, optional CRM, no database

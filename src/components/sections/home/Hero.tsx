@@ -54,7 +54,7 @@ export function Hero() {
               Each line rises out of its own mask; the padding keeps descenders visible. */}
           <h1
             id="hero-title"
-            className="mt-7 font-display text-[clamp(2.75rem,5.8vw,7rem)] leading-[1.04] font-normal tracking-[-0.02em] text-light sm:mt-8"
+            className="mt-7 font-display text-[clamp(2.75rem,5.8vw,7rem)] leading-[1.04] font-bold tracking-[-0.02em] text-light sm:mt-8"
           >
             {headlineLines.map((line, index) => (
               <span key={line.text} className="-mb-[0.14em] block overflow-hidden pb-[0.14em]">

@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "contentful:migrate": "node --env-file=.env.local scripts/contentful-migrate.mjs",
+    "contentful:seed-posts": "node --env-file=.env.local scripts/contentful-seed-posts.mjs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
@@ -22,6 +24,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "contentful-migration": "^5.1.1",
     "eslint": "^9",
     "eslint-config-next": "16.3.7",
     "tailwindcss": "^4",

@@ -27,7 +27,7 @@ export function ServicesShowcase() {
               </>
             }
             description="From startups finding product-market fit to enterprises modernizing at scale, we engineer digital products that perform in the market."
-          />
+          />  
         </Reveal>
 
         <Reveal y={60} start="top 80%" className="mt-[clamp(2.5rem,3.1vw,3.75rem)]">
