@@ -4,7 +4,7 @@
 |---|---|
 | **Status** | Draft — kickoff date _TBD_ |
 | **Owner** | Project Head |
-| **Last updated** | 1 Oct 2026 |
+| **Last updated** | 3 Oct 2026 |
 | **Companion** | [architecture-plan.md](architecture-plan.md) covers *what* we build and *why*. This document covers *how*, *who*, and *when* |
 
 ---
@@ -130,7 +130,7 @@ A milestone is only **Done** when the gate owner signs off against the criteria.
 | P2-03 | Theme shadcn primitives: Button, Input, Textarea, Select, Dialog, Sheet, Tabs, Accordion, Badge | FA | P2-01 | `components/ui` | Not started |
 | P2-04 | Header, footer, mobile navigation, skip link | FA | P2-03 | `components/layout` | Not started |
 | P2-05 | Motion primitives with reduced-motion support. **2 Oct:** done with GSAP — `Reveal` (with stagger), `Magnetic`, `SmoothScroll`, plus `CountUp` (no library) and CSS hero entrance | FA | P2-01 | `components/motion` | Done |
-| P2-06 | Section blocks as static UI: Hero, LogoWall, Stats, CTA, Testimonials, CaseStudyGrid, FAQ, RichText | FA + FB | P2-03 | `components/sections` | Not started |
+| P2-06 | Section blocks as static UI: Hero, LogoWall, Stats, CTA, Testimonials, CaseStudyGrid, FAQ, RichText. **3 Oct:** built while building the home page — Hero, Stats, Testimonials (carousel), CTA, FAQ (`Accordion`), Process timeline, service and industry tabs, `ProjectCard`, `PostCard`, `SectionHeading`, `FeatureItem`, `Eyebrow`, `Button`. Still to do: LogoWall, CaseStudyGrid, RichText | FA + FB | P2-03 | `components/sections` | In progress |
 | P2-07 | Component gallery (development-only route or Storybook) | FA | P2-06 | Gallery | Not started |
 | P2-08 | Design QA against Figma at 3 breakpoints; accessibility pass | DS + QA | P2-07 | Signed-off components (M4) | Not started |
 
@@ -149,7 +149,7 @@ A milestone is only **Done** when the gate owner signs off against the criteria.
 | P3-09 | Case studies listing with client-side filters and URL state | FA | P3-02 | Page | Not started |
 | P3-10 | Case study detail + generated OG image | FA | P3-02 | Page | Not started |
 | P3-11 | Blog: listing, category, article + OG image | FA | P3-02 | Pages | Not started |
-| P3-12 | Legal pages as static routes: `/privacy-policy`, `/cookie-policy`, `/terms` | FA | P2-04, C-09 | Pages | Not started |
+| P3-12 | Legal pages as static routes: `/privacy-policy`, `/cookie-policy`, `/terms`. **3 Oct:** placeholder `/privacy-policy` and `/terms` pages added (linked from the footer); legal text and `/cookie-policy` still needed | FA | P2-04, C-09 | Pages | In progress |
 | P3-13 | About and Contact pages (static content); SVG office map | FA | P2-06 | Pages | Not started |
 | P3-14 | Contact form: Server Action, Zod, React Hook Form, Turnstile, honeypot; Vercel Firewall rate-limit rule | FB | P3-13 | Secure form | Not started |
 | P3-15 | Lead delivery: Resend email to the shared sales inbox (Reply-To = visitor) + visitor auto-reply; error with fallback address if sending fails; Sentry alerts without personal data; CRM integration only if D3 says so | FB | P3-14 | Lead pipeline | Not started |
@@ -331,6 +331,9 @@ Newest first.
 
 | Date | Update |
 |---|---|
+| 3 Oct 2026 | Privacy page renamed to `/privacy-policy` to match the planned routes. P2-06 and P3-12 → In progress. Design polish from the 2–3 Oct reviews logged (services tabs, Process timeline, Industries sizes, Insights phone margin, Contentful error messages) |
+| 3 Oct 2026 | Closing CTA: magnetic glows (GSAP pointer pull, `PointerParallax`) added on top of the gradient-text animation |
+| 3 Oct 2026 | Footer rebuilt from the design (site-wide). Placeholder `/privacy` and `/terms` pages added; legal text needed before launch. Service links point to `/services/<slug>` (P3-07) |
 | 3 Oct 2026 | Closing CTA: animation changed to "gradient text + glows" (CSS); `LivingGlows` removed |
 | 3 Oct 2026 | Closing CTA: water ripples replaced by drifting glows and a cursor light (`LivingGlows`) |
 | 3 Oct 2026 | Home closing CTA built ("Let's build the next thing you ship.") with a cursor water-ripple effect (WebGL); P3-06 updated |

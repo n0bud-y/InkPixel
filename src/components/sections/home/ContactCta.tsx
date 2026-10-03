@@ -1,4 +1,5 @@
 import { Magnetic } from "@/components/motion/Magnetic";
+import { PointerParallax } from "@/components/motion/PointerParallax";
 import { Reveal } from "@/components/motion/Reveal";
 import { Button } from "@/components/ui/Button";
 import { Eyebrow } from "@/components/ui/Eyebrow";
@@ -6,14 +7,16 @@ import { ArrowUpRightIcon } from "@/components/ui/icons";
 import { contactCta, siteConfig } from "@/lib/site";
 
 // The design's two crimson glows (46rem across = a 23rem radius, as in the Figma export),
-// centred with translate so the pulse animation can scale them.
+// centred on their zero-size anchor with translate, so the pulse can scale them while the
+// anchor is pulled toward the pointer (PointerParallax).
 const glow =
-  "pointer-events-none absolute -z-10 size-[46rem] max-h-[160vw] max-w-[160vw] -translate-1/2 rounded-full bg-[radial-gradient(closest-side,#64293c,transparent)] motion-safe:animate-glow-pulse";
+  "absolute size-[46rem] max-h-[160vw] max-w-[160vw] -translate-1/2 rounded-full bg-[radial-gradient(closest-side,#64293c,transparent)] motion-safe:animate-glow-pulse";
 
 // "Let's build the next thing you ship.": the closing call to action.
-// Motion (all CSS except the scroll reveal, and all off for reduced motion): the label,
-// both heading lines, the paragraph and the buttons rise in one after another; the orange →
-// pink gradient slowly flows through the second line; the two glows pulse gently, out of step.
+// Motion (all off for reduced motion): the label, both heading lines, the paragraph and the
+// buttons rise in one after another; the orange → pink gradient slowly flows through the
+// second line; the two glows pulse gently, out of step, and are pulled toward the pointer,
+// stretching a little as it moves (mouse and trackpad).
 // The border sits outside the background (bg-clip-padding), so its line shows over the
 // navy page, as in the design.
 export function ContactCta() {
@@ -22,10 +25,16 @@ export function ContactCta() {
       aria-labelledby="cta-title"
       className="relative isolate overflow-hidden border-y border-white/15 bg-[#311f38] bg-clip-padding"
     >
-      <div aria-hidden="true" className={`${glow} top-[20%] left-[8%]`} />
-      {/* Half a cycle behind the first. Inline, because the animation shorthand in
-          `animate-glow-pulse` would reset a delay class. */}
-      <div aria-hidden="true" className={`${glow} top-[83%] left-[91%]`} style={{ animationDelay: "-3.5s" }} />
+      <PointerParallax>
+        <div data-pointer-layer data-strength="0.35" className="absolute top-[20%] left-[8%] size-0">
+          <div className={glow} />
+        </div>
+        <div data-pointer-layer data-strength="0.28" className="absolute top-[83%] left-[91%] size-0">
+          {/* Half a cycle behind the first. Inline, because the animation shorthand in
+              `animate-glow-pulse` would reset a delay class. */}
+          <div className={glow} style={{ animationDelay: "-3.5s" }} />
+        </div>
+      </PointerParallax>
 
       <div className="container-site py-[clamp(4.5rem,6.25vw,7.5rem)]">
         <Reveal y={50} stagger={0.12} className="flex flex-col items-center text-center">

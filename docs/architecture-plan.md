@@ -267,6 +267,7 @@ brand-portfolio/
 │   └── adr/                          # one file per architecture decision (§18)
 ├── e2e/                              # Playwright specs, including axe checks
 ├── public/                           # favicons and small SVGs only — no photos or video
+├── scripts/                          # developer scripts: contentful-migrate.mjs (runs a migration), contentful-seed-posts.mjs (sample posts)
 ├── src/
 │   ├── app/
 │   │   ├── layout.tsx                # <html lang>, fonts, metadataBase, consent, analytics, Organization JSON-LD
