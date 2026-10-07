@@ -10,9 +10,11 @@ export default function CaseStudiesPage() {
       <p className="mt-4 text-foreground/70">
         Placeholder. The filterable listing comes in P3-09.
       </p>
-      <Link href="/case-studies/example" className="mt-6 inline-block underline">
-        Example case study
-      </Link>
+      <div className="mt-8 flex flex-col gap-4">
+        <Link href="/case-studies/gulbaan" className="inline-block text-lg font-medium text-coral hover:underline">
+          → Gulbaan Case Study
+        </Link>
+      </div>
     </div>
   );
 }

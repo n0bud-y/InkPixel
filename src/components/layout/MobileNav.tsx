@@ -9,7 +9,7 @@ import { isActive } from "./NavLinks";
 
 // Phone and tablet menu: a full-screen native <dialog>, which gives focus trapping,
 // Esc to close, and an inert page behind it for free.
-export function MobileNav({ logo }: { logo: ReactNode }) {
+export function MobileNav({ logo, isLightHeader = false }: { logo: ReactNode; isLightHeader?: boolean }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const pathname = usePathname();
 
@@ -41,7 +41,12 @@ export function MobileNav({ logo }: { logo: ReactNode }) {
         type="button"
         onClick={() => dialogRef.current?.showModal()}
         aria-haspopup="dialog"
-        className="inline-flex size-11 items-center justify-center rounded-full border border-white/15 bg-white/[0.04] text-light transition-colors hover:bg-white/10 lg:hidden"
+        className={[
+          "inline-flex size-11 items-center justify-center rounded-full border transition-colors lg:hidden",
+          isLightHeader
+            ? "border-slate-300 bg-slate-100 text-slate-800 hover:bg-slate-200"
+            : "border-white/15 bg-white/[0.04] text-light hover:bg-white/10",
+        ].join(" ")}
       >
         <span className="sr-only">Open menu</span>
         <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="size-5">
