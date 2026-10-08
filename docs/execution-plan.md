@@ -4,7 +4,7 @@
 |---|---|
 | **Status** | Draft — kickoff date _TBD_ |
 | **Owner** | Project Head |
-| **Last updated** | 3 Oct 2026 |
+| **Last updated** | 8 Oct 2026 |
 | **Companion** | [architecture-plan.md](architecture-plan.md) covers *what* we build and *why*. This document covers *how*, *who*, and *when* |
 
 ---
@@ -138,16 +138,16 @@ A milestone is only **Done** when the gate owner signs off against the criteria.
 
 | ID | Task | Owner | Depends on | Output | Status |
 |---|---|---|---|---|---|
-| P3-01 | Contentful content types for case studies and blog as migration scripts (`caseStudy`, `post`, `category`, `person`, `client`, `testimonial`, `metric`, `seo`), done when those pages are built. Also: migration tooling, `dev` environment, management token (CI only), GraphQL type generation. **3 Oct:** blog half done — `0001-blog-model.cjs` (`category`, `person`, `seo`, `post`), `npm run contentful:migrate` (asks before applying), sample posts via `npm run contentful:seed-posts`; management token in `.env.local` for now. Still to do: case-study types, `dev` environment, CI runner, type generation | FB | P0-09 | Migrations | In progress |
-| P3-02 | Typed GraphQL query layer with `'use cache'` + `cacheTag`. **3 Oct:** first query, `getLatestPosts()` (`src/contentful/queries/posts.ts`), using the fetch cache with tags for now (architecture plan §5); switch to `'use cache'` with the blog pages | FB | P3-01 | `contentful/queries` | In progress |
+| P3-01 | Contentful content types for case studies and blog as migration scripts (`caseStudy`, `post`, `category`, `person`, `client`, `testimonial`, `metric`, `seo`), done when those pages are built. Also: migration tooling, `dev` environment, management token (CI only), GraphQL type generation. **3 Oct:** blog half done — `0001-blog-model.cjs` (`category`, `person`, `seo`, `post`), `npm run contentful:migrate` (asks before applying), sample posts via `npm run contentful:seed-posts`; management token in `.env.local` for now. **8 Oct:** case-study half done — `0002-case-study-model.cjs` (`client`, `caseStudy`, `caseStudySection`, `caseStudyTechStack`, `techStackGroup`; sections instead of fixed fields, architecture plan §6); Gulbaan via `npm run contentful:seed-case-studies`. `0003-case-study-sections.cjs` (hero layout, `caseStudyFeatureGrid`, `caseStudyShowcase`) for the Terminal Gateway CRM design. `metric`, `testimonial` and the remaining planned fields come when a design uses them. Still to do: `dev` environment, CI runner, type generation | FB | P0-09 | Migrations | In progress |
+| P3-02 | Typed GraphQL query layer with `'use cache'` + `cacheTag`. **3 Oct:** first query, `getLatestPosts()` (`src/contentful/queries/posts.ts`), using the fetch cache with tags for now (architecture plan §5); switch to `'use cache'` with the blog pages. **8 Oct:** `getCaseStudy()` and `getCaseStudies()` (`src/contentful/queries/case-studies.ts`), tags `caseStudy` and `caseStudy:<slug>` | FB | P3-01 | `contentful/queries` | In progress |
 | P3-03 | `/api/revalidate` for Contentful publish/unpublish webhooks, verified with the signing secret | FB | P3-02 | Instant refresh on publish | Not started |
 | P3-04 | Draft mode + Contentful Live Preview (preview URLs configured per content type) | FB | P3-02 | Editor preview | Not started |
-| P3-05 | `next/image` for Contentful assets; Rich Text renderer; Mux video component | FB + FA | P3-01 | Media and rich-text components | Not started |
+| P3-05 | `next/image` for Contentful assets; Rich Text renderer; Mux video component. **8 Oct:** Contentful images through `next/image` (`images.ctfassets.net` for our space in `next.config.ts`); Rich Text renderer of our own (`src/contentful/rich-text.tsx`: paragraphs, marks, links, lists — `@contentful/rich-text-react-renderer` not installed). Still to do: Mux | FB + FA | P3-01 | Media and rich-text components | In progress |
 | P3-06 | Home template (static content; featured case studies from Contentful). **1–2 Oct:** hero, stats, services, "Ideas Engineered Into Impact", testimonials, pinned "Our Process", "Industry-Specific Solutions", FAQ, "From the studio." (3 newest blog posts from Contentful), and closing CTA (line-by-line reveal, flowing gradient text, pulsing glows) sections built from Figma (services: Branding complete, other five categories "coming soon" until content arrives; featured project, testimonials, industry solutions, and FAQ answers 2–5 are placeholder data until real content arrives); more sections to come | FA | P2-06, P3-02 | Page | In progress |
 | P3-07 | Services: listing + detail (static content in code) | FA | P2-06 | Pages | Not started |
 | P3-08 | Industries: listing + detail (static content; related case studies from Contentful) | FA | P2-06, P3-02 | Pages | Not started |
 | P3-09 | Case studies listing with client-side filters and URL state | FA | P3-02 | Page | Not started |
-| P3-10 | Case study detail + generated OG image | FA | P3-02 | Page | Not started |
+| P3-10 | Case study detail + generated OG image. **8 Oct:** template built at `/case-studies/[slug]` — hero, text + image and tech-stack sections from Contentful (alternating navy / white), metadata with SEO fallbacks; the white header on case-study pages. First case study: Gulbaan (placeholder copy, issue I2). Second: Terminal Gateway CRM, with a Centered hero, numbered features, and a wide image (placeholder copy, issue I3); its seven hero screenshots float (hero layers, `0004`). Still to do: OG image | FA | P3-02 | Page | In progress |
 | P3-11 | Blog: listing, category, article + OG image | FA | P3-02 | Pages | Not started |
 | P3-12 | Legal pages as static routes: `/privacy-policy`, `/cookie-policy`, `/terms`. **3 Oct:** placeholder `/privacy-policy` and `/terms` pages added (linked from the footer); legal text and `/cookie-policy` still needed | FA | P2-04, C-09 | Pages | In progress |
 | P3-13 | About and Contact pages (static content); SVG office map | FA | P2-06 | Pages | Not started |
@@ -322,6 +322,8 @@ Live register. Background on each risk is in [architecture plan §17](architectu
 | R8 | Risk | Lead emails land in spam or get buried in an inbox | PH | Shared inbox; SPF/DKIM/DMARC; weekly check; revisit a CRM (D3) as volume grows | Open |
 | R9 | Risk | Static-page copy changes need a developer, slowing marketing updates | PH | Copy in one place per page; move a page type into Contentful if edits become frequent | Open |
 | I1 | Issue | Header menu is too tight at ~1024px wide; "Our Work" wraps onto two lines | FA | Deferred by PH (1 Oct). Options: show the menu button below 1280px, or tighten the menu between 1024 and 1280px | Open |
+| I2 | Issue | Gulbaan case study has placeholder content: 6 of 8 sections are lorem ipsum, "The Idea Behind Gulbaan" describes another project (Al Hussaini Trading Company), the BigCommerce and Node.js logos are hand-drawn approximations, and its industry (`ecommerce`) and service (`development`) are unconfirmed | CS | Write the real copy in Contentful; replace the logos in `src/assets/images/technologies/` with official SVGs | Open |
+| I3 | Issue | Terminal Gateway CRM case study has placeholder content. Its design's text was copied from another agency's case study (Tekrevol's "Project Impact / S.E.L.F app", incl. "480M downloads"), so the site uses stand-ins: renamed titles, six features read from the product screens, lorem ipsum paragraphs, and a neutral closing section. Industries and services are empty | CS | Write the real copy in Contentful; confirm the features, industries, and services; ask the designer to remove the copied text from the design | Open |
 
 ---
 
@@ -331,6 +333,10 @@ Newest first.
 
 | Date | Update |
 |---|---|
+| 8 Oct 2026 | Terminal Gateway CRM hero animated: the flattened hero cut into seven floating layers; migration `0004` (hero layers), seed script updated. P3-10 updated |
+| 8 Oct 2026 | Second case study, Terminal Gateway CRM: migration `0003` (Centered hero, numbered features, wide image), images exported from the design, added to the seed script. P3-01 and P3-10 updated; issue I3 logged |
+| 8 Oct 2026 | Case studies on Contentful: migration `0002` (sections instead of fixed fields), `/case-studies/[slug]` template, Gulbaan seed script; the hard-coded Gulbaan page and its nine components removed; case-study layout made consistent with the home page; header back to a Server Component (phone-menu logo fixed). P3-01, P3-02 updated; P3-05 and P3-10 → In progress; issue I2 logged |
+| 8 Oct 2026 | First Gulbaan case-study page built as a hard-coded page (not logged at the time); restructured the same day (row above) |
 | 3 Oct 2026 | Privacy page renamed to `/privacy-policy` to match the planned routes. P2-06 and P3-12 → In progress. Design polish from the 2–3 Oct reviews logged (services tabs, Process timeline, Industries sizes, Insights phone margin, Contentful error messages) |
 | 3 Oct 2026 | Closing CTA: magnetic glows (GSAP pointer pull, `PointerParallax`) added on top of the gradient-text animation |
 | 3 Oct 2026 | Footer rebuilt from the design (site-wide). Placeholder `/privacy` and `/terms` pages added; legal text needed before launch. Service links point to `/services/<slug>` (P3-07) |

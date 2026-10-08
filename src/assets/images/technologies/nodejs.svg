@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="115" height="32" viewBox="0 0 115 32" fill="none">
+  <g fill="#339933">
+    <path d="M14 2L2 9v14l12 7 12-7V9L14 2zm0 3.2l8.8 5.1v10.3L14 25.7l-8.8-5.1V10.3L14 5.2z"/>
+    <path d="M14 9.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9z"/>
+  </g>
+  <text x="32" y="23" font-family="sans-serif" font-weight="800" font-size="21" fill="#333333">node<tspan fill="#339933" font-size="15">.js</tspan></text>
+</svg>

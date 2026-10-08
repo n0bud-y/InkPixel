@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "contentful:migrate": "node --env-file=.env.local scripts/contentful-migrate.mjs",
-    "contentful:seed-posts": "node --env-file=.env.local scripts/contentful-seed-posts.mjs"
+    "contentful:seed-posts": "node --env-file=.env.local scripts/contentful-seed-posts.mjs",
+    "contentful:seed-case-studies": "node --env-file=.env.local scripts/contentful-seed-case-studies.mjs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",

@@ -42,6 +42,9 @@
   /* Looping ambient motion (closing CTA): a glow breathing, a gradient flowing through text. */
   --animate-glow-pulse: glow-pulse 7s ease-in-out infinite alternate;
   --animate-gradient-flow: gradient-flow 6s ease-in-out infinite alternate;
+  /* Float up and down (case-study hero layers): 4s each way. Give each element a slightly
+     different negative delay so they move in a gentle wave rather than together. */
+  --animate-float: float 4s ease-in-out infinite alternate;
 
   @keyframes rise {
     from {
@@ -78,6 +81,16 @@
       background-position: 100% 50%;
     }
   }
+
+  /* Uses `translate` (not transform), so it combines with other transforms. 6px each way. */
+  @keyframes float {
+    from {
+      translate: 0 -6px;
+    }
+    to {
+      translate: 0 6px;
+    }
+  }
 }
 
 @utility bg-brand-gradient {
@@ -93,6 +106,15 @@
   background-image:
     linear-gradient(to right, rgb(255 255 255 / 0.035) 1px, transparent 1px),
     linear-gradient(to bottom, rgb(255 255 255 / 0.035) 1px, transparent 1px);
+  background-size: clamp(3.5rem, 5.75vw, 7rem) clamp(3.5rem, 5.75vw, 7rem);
+  background-position: center top;
+}
+
+/* The same grid for white sections (case studies): navy lines at 5%, as in the designs. */
+@utility bg-grid-light {
+  background-image:
+    linear-gradient(to right, rgb(21 25 54 / 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(21 25 54 / 0.05) 1px, transparent 1px);
   background-size: clamp(3.5rem, 5.75vw, 7rem) clamp(3.5rem, 5.75vw, 7rem);
   background-position: center top;
 }

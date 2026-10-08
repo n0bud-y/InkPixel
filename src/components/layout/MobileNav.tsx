@@ -5,11 +5,11 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, type MouseEvent, type ReactNode } from "react";
 import { Button } from "@/components/ui/Button";
 import { contactCta, mainNav } from "@/lib/site";
-import { isActive } from "./NavLinks";
+import { hasLightHeader, isActive } from "./NavLinks";
 
 // Phone and tablet menu: a full-screen native <dialog>, which gives focus trapping,
 // Esc to close, and an inert page behind it for free.
-export function MobileNav({ logo, isLightHeader = false }: { logo: ReactNode; isLightHeader?: boolean }) {
+export function MobileNav({ logo }: { logo: ReactNode }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const pathname = usePathname();
 
@@ -43,8 +43,8 @@ export function MobileNav({ logo, isLightHeader = false }: { logo: ReactNode; is
         aria-haspopup="dialog"
         className={[
           "inline-flex size-11 items-center justify-center rounded-full border transition-colors lg:hidden",
-          isLightHeader
-            ? "border-slate-300 bg-slate-100 text-slate-800 hover:bg-slate-200"
+          hasLightHeader(pathname)
+            ? "border-primary/15 bg-primary/[0.04] text-primary hover:bg-primary/10"
             : "border-white/15 bg-white/[0.04] text-light hover:bg-white/10",
         ].join(" ")}
       >

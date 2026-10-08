@@ -1,10 +1,10 @@
-# Brand Portfolio Platform — Architecture Plan (v2.6)
+# Brand Portfolio Platform — Architecture Plan (v2.9)
 
 | | |
 |---|---|
 | **Status** | Draft for review |
 | **Owner** | Project Head |
-| **Last updated** | 3 Oct 2026 |
+| **Last updated** | 8 Oct 2026 |
 | **Supersedes** | `Brand Portfolio Project Architecture & Execution Plan.pdf` (v1) |
 | **Companion docs** | [README.md](README.md) (living brief) · [execution-plan.md](execution-plan.md) (tasks, owners, timeline) |
 | **Reference** | tekrevol.com — for scope and feel, not to copy |
@@ -13,6 +13,9 @@
 
 | Version | Date | Change |
 |---|---|---|
+| v2.9 | 8 Oct 2026 | Optional **hero layers** on `caseStudy` (`0004-case-study-hero-layers.cjs`): the hero image as stacked pieces that float (§6) |
+| v2.8 | 8 Oct 2026 | **Case-study template extended for the CRM Terminal Gateway design** (`0003-case-study-sections.cjs`): hero layout (Split or Centered), `caseStudyFeatureGrid` (numbered features) and `caseStudyShowcase` (wide image) sections (§6) |
+| v2.7 | 8 Oct 2026 | **Case-study content model created** (`contentful/migrations/0002-case-study-model.cjs`): a case study is a hero plus **ordered sections** (text + image, tech stack) instead of fixed challenge / solution / results fields, because each case-study design has its own sections (project head decision, §6). `/case-studies/[slug]` renders it; the hard-coded Gulbaan page is gone. Rich Text uses our own small renderer for now (§4). Folder structure updated (§7) |
 | v2.6 | 3 Oct 2026 | **Blog content model created** (`contentful/migrations/0001-blog-model.cjs`: `category`, `person`, `seo`, `post`), run with `npm run contentful:migrate`; the home page shows the 3 newest posts. **Interim caching:** Contentful reads use the Next.js fetch cache (`force-cache`, hourly `revalidate`, `tags`) until the blog pages switch the site to Cache Components (§5, P3-02) |
 | v2.5 | 2 Oct 2026 | **Animation: GSAP** (ScrollTrigger, ScrollSmoother) decided by the project head, with smooth scrolling; Motion dropped. Static content moved into `src/content/` |
 | v2.4 | 1 Oct 2026 | **Content split** (project head decision): Contentful holds only case studies and blog posts; every other page is static content in code. Removed the `/[slug]` CMS-page route and the `service`, `industry`, `page`, section, `siteSettings`, `redirect`, `office`, and `faq` content types; redirects move to code. **npm** and **`src/`** confirmed. Contentful connected; content types are created as migrations when the case-study and blog pages are built. Static-page images live in `src/assets/images/` |
@@ -156,7 +159,7 @@ This replaces v1's time-based `revalidate = 3600`, where editors could wait up t
 | CMS | **Contentful**, for **case studies and blog posts only** — editors work in the Contentful web app with **Live Preview** (`@contentful/live-preview`). All other page content is static in code | **Decided by the project head (30 Sep 2026).** Hosted, nothing to run; field-level localisation built in; mature workflows and roles | A static page type needs frequent edits by marketing → move it into Contentful (about 2–4 days per page type) |
 | Content access | Contentful **GraphQL Content API**, called with `fetch` from server-only `src/contentful/client.ts` (no SDK). **In code** since 30 Sep 2026. TypeScript types generated with `graphql-codegen` once content types exist | Each page fetches exactly the fields it needs in one request; typed end to end | — |
 | Content model | Managed **as code** with Contentful migration scripts, run in CI. Created when the case-study and blog pages are built (P3-01) | Reviewable, repeatable changes; no clicking in production | — |
-| Rich text | `@contentful/rich-text-react-renderer` with our own components per node type | Editors get rich text; output stays on-brand and accessible | — |
+| Rich text | `@contentful/rich-text-react-renderer` with our own components per node type. **In code (8 Oct 2026):** a small renderer of our own, `src/contentful/rich-text.tsx`, covering what case-study sections allow (paragraphs, bold/italic/underline, links, lists); the package was not installed | Editors get rich text; output stays on-brand and accessible | Fields need embedded entries or assets, or blog articles need the full node set → install the package and keep our components per node type |
 | Images | `next/image` with **Vercel image optimisation**. Case-study and blog images: Contentful as the source (`images.ctfassets.net` in `remotePatterns`). Static-page images: files in `src/assets/images/`, statically imported so their size is known at build time (project head, 1 Oct 2026) | Vercel caches optimised images, so Contentful's bandwidth quota is hit once per image variant, not on every visit | Vercel image cost grows → custom loader using Contentful's Images API (`fm`, `w`, `q` parameters) |
 | Video | **Mux** (adaptive streaming, posters; Contentful app available) | Contentful stores files but does not stream adaptively; hero and case-study video must not hurt LCP | Cloudinary, if already licensed |
 | Forms | **Server Action + Zod** (one schema shared by client and server) + **React Hook Form** for client UX | Works without JavaScript; one source of validation truth | — |
@@ -227,14 +230,21 @@ Content source: case studies and the blog come from Contentful; every other rout
 
 Contentful holds **only case studies and blog posts**, plus the small types they link to (project head decision, 30 Sep 2026). Services, industries, offices, FAQs, navigation, page sections, and site settings are static content in code. Contentful has no nested objects, so SEO fields are their own content type, linked by reference. The model uses about 8 content types, far under the plan limit (free tier ≈ 48).
 
-**When:** the content types are created as migration scripts in `contentful/migrations/` when the case-study and blog pages are built (P3-01), not by hand in the web app. The fields below are the starting draft.
+**When:** the content types are created as migration scripts in `contentful/migrations/` when the case-study and blog pages are built (P3-01), not by hand in the web app. **Created so far:** blog (`0001`, 3 Oct 2026) and case studies (`0002`–`0004`, 8 Oct 2026). Rows marked _planned_ are the remaining draft.
+
+**Case studies are sections, not fixed fields** (project head, 8 Oct 2026). The designs give each case study its own section titles and order (Gulbaan: "The Idea Behind Gulbaan", "Platform Features", "Insights from Client"…; CRM Terminal Gateway: "Introduction", "The Challenge", "The Solution", a numbered features grid…), so fixed challenge / solution / results fields cannot build them. A case study is a hero plus an ordered list of section entries; one template renders them all, alternating navy and white so every case study stays consistent. New section types are added as new migrations when a design needs them; the CRM Terminal Gateway design added the Centered hero layout, numbered features, and the wide image (`0003`).
 
 | Content type | Key fields |
 |---|---|
-| `caseStudy` | title, slug, client → `client`, excerpt, hero image, hero video (Mux), **industries** and **services** (lists limited to the slugs defined in code, §3), technologies, region/country, year, challenge / solution / results (Rich Text), metrics → `metric[]`, testimonial → `testimonial`, gallery (assets), related case studies, featured flag, **confidential flag** (show anonymised), seo → `seo` |
-| `metric` | value, suffix, label (e.g., "3×", "conversion rate") |
-| `client` | name, logo, website, **logo usage approved** (yes/no, date, approver) |
-| `testimonial` | quote, person, role, company, photo |
+| `caseStudy` | title, slug, client → `client`, excerpt, **hero layout** (Split or Centered), hero heading, hero text, hero image, hero layers (optional: the hero image as full-size pieces, back to front, that float), **sections** → `caseStudySection` / `caseStudyTechStack` / `caseStudyFeatureGrid` / `caseStudyShowcase` (in page order), **industries** and **services** (lists limited to the slugs defined in code, §3), region, year, featured flag, seo → `seo`. _Planned:_ hero video (Mux), metrics → `metric[]`, testimonial → `testimonial`, gallery, related case studies, **confidential flag** (show anonymised) |
+| `caseStudySection` | title, text (Rich Text: paragraphs, lists, links), image, layout (image left, right, or below) |
+| `caseStudyTechStack` | title, cards → `techStackGroup[]` |
+| `caseStudyFeatureGrid` | title, intro, features (2–9 short texts, numbered 01, 02… on the page) |
+| `caseStudyShowcase` | name (Contentful only), image (full width, no text) |
+| `techStackGroup` | label (e.g. "Web Architecture"), technologies (limited to the slugs in `src/content/technologies.ts`, which holds the logos) |
+| `client` | name, logo, website, **logo use approved** (yes/no) + approval details (date, approver). The site shows the logo only when approved |
+| `metric` | _Planned:_ value, suffix, label (e.g., "3×", "conversion rate") |
+| `testimonial` | _Planned:_ quote, person, role, company, photo |
 | `post` | title, slug, author → `person`, category → `category`, cover image, body (Rich Text), published/updated dates, seo |
 | `category` | title, slug |
 | `person` | name, role, photo, bio, social links (blog authors; supports E-E-A-T). Leadership on the About page is static |
@@ -259,7 +269,8 @@ brand-portfolio/
 │   ├── workflows/ci.yml              # typecheck, lint, test, build; E2E + Lighthouse on preview URL
 │   └── pull_request_template.md
 ├── contentful/
-│   └── migrations/                   # content model as code; run in CI with the management token
+│   ├── migrations/                   # content model as code; run in CI with the management token
+│   └── seed/                         # source files for the seed scripts (e.g. gulbaan/ images); never imported by the site
 ├── docs/
 │   ├── README.md                     # living project brief
 │   ├── architecture-plan.md          # this document
@@ -267,7 +278,7 @@ brand-portfolio/
 │   └── adr/                          # one file per architecture decision (§18)
 ├── e2e/                              # Playwright specs, including axe checks
 ├── public/                           # favicons and small SVGs only — no photos or video
-├── scripts/                          # developer scripts: contentful-migrate.mjs (runs a migration), contentful-seed-posts.mjs (sample posts)
+├── scripts/                          # developer scripts: contentful-migrate.mjs (runs a migration), contentful-seed-posts.mjs (sample posts), contentful-seed-case-studies.mjs (Gulbaan)
 ├── src/
 │   ├── app/
 │   │   ├── layout.tsx                # <html lang>, fonts, metadataBase, consent, analytics, Organization JSON-LD
@@ -297,7 +308,7 @@ brand-portfolio/
 │   │   │   ├── case-studies/
 │   │   │   │   ├── page.tsx          # static listing + client-side filters
 │   │   │   │   └── [slug]/
-│   │   │   │       ├── page.tsx
+│   │   │   │       ├── page.tsx      # every case study: hero + sections from Contentful (no per-client routes)
 │   │   │   │       └── opengraph-image.tsx
 │   │   │   └── blog/
 │   │   │       ├── page.tsx
@@ -310,19 +321,19 @@ brand-portfolio/
 │   │       ├── draft-mode/enable/route.ts   # called by Contentful's preview URL
 │   │       └── draft-mode/disable/route.ts
 │   ├── assets/images/                # static-page photos, imported with next/image (compressed, ≤ ~500 KB each)
-│   ├── content/                      # static content as typed data (services.ts …); copy lives here, not in components
+│   ├── content/                      # static content as typed data (services.ts, technologies.ts …); copy lives here, not in components
 │   ├── components/
 │   │   ├── ui/                       # shadcn primitives (Button, Dialog, Input…)
-│   │   ├── layout/                   # Header, Footer, MobileNav
+│   │   ├── layout/                   # Header (+ HeaderShell, client), Footer, MobileNav
 │   │   ├── sections/                 # page sections for the static pages (Hero, Stats, CTA…)
-│   │   ├── case-studies/             # CaseStudyCard, FilterBar (client), MetricCard
+│   │   ├── case-studies/             # CaseStudyHero, CaseStudySection, TechStackSection, FeatureGridSection, ShowcaseSection; later CaseStudyCard, FilterBar (client)
 │   │   ├── motion/                   # Reveal, Stagger — LazyMotion, reduced-motion aware
 │   │   └── seo/JsonLd.tsx
 │   ├── contentful/
 │   │   ├── client.ts                 # GraphQL client, delivery + preview tokens (server-only)
 │   │   ├── queries/                  # GraphQL queries + typed fetchers with cacheTag
 │   │   ├── generated/                # graphql-codegen output — do not edit
-│   │   ├── rich-text.tsx             # Rich Text → React components
+│   │   ├── rich-text.tsx             # Rich Text → React components (in code since 8 Oct 2026)
 │   │   └── live-preview.tsx          # Live Preview provider (draft mode only)
 │   ├── server/                       # server-only code; every file starts with import 'server-only'
 │   │   ├── leads.ts                  # validate → email to sales (+ CRM if adopted)
