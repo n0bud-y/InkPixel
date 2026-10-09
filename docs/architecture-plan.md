@@ -1,10 +1,10 @@
-# Brand Portfolio Platform — Architecture Plan (v2.9)
+# Brand Portfolio Platform — Architecture Plan (v2.11)
 
 | | |
 |---|---|
 | **Status** | Draft for review |
 | **Owner** | Project Head |
-| **Last updated** | 8 Oct 2026 |
+| **Last updated** | 9 Oct 2026 |
 | **Supersedes** | `Brand Portfolio Project Architecture & Execution Plan.pdf` (v1) |
 | **Companion docs** | [README.md](README.md) (living brief) · [execution-plan.md](execution-plan.md) (tasks, owners, timeline) |
 | **Reference** | tekrevol.com — for scope and feel, not to copy |
@@ -13,6 +13,8 @@
 
 | Version | Date | Change |
 |---|---|---|
+| v2.11 | 9 Oct 2026 | **About page built** as static content (`src/content/about.ts`, `src/components/sections/about/`), reusing home sections; office map on About is a static picture linking to Google Maps (§9). Folder structure updated (§7) |
+| v2.10 | 9 Oct 2026 | **Case-study template extended for the app design (Cathy O’Bryan’s Books)** (`0005-case-study-app-sections.cjs`): Light hero with eyebrow and button; `caseStudyItem`, `caseStudyCards` (four layouts), `caseStudyGallery`, `testimonial` (no longer planned), `caseStudyTestimonials`, and `caseStudyCallToAction`; facts and highlight box on `caseStudySection`; tech stack tiles; five more technologies (§6). Testimonials need written approval before publishing (§10). Folder structure updated (§7) |
 | v2.9 | 8 Oct 2026 | Optional **hero layers** on `caseStudy` (`0004-case-study-hero-layers.cjs`): the hero image as stacked pieces that float (§6) |
 | v2.8 | 8 Oct 2026 | **Case-study template extended for the CRM Terminal Gateway design** (`0003-case-study-sections.cjs`): hero layout (Split or Centered), `caseStudyFeatureGrid` (numbered features) and `caseStudyShowcase` (wide image) sections (§6) |
 | v2.7 | 8 Oct 2026 | **Case-study content model created** (`contentful/migrations/0002-case-study-model.cjs`): a case study is a hero plus **ordered sections** (text + image, tech stack) instead of fixed challenge / solution / results fields, because each case-study design has its own sections (project head decision, §6). `/case-studies/[slug]` renders it; the hard-coded Gulbaan page is gone. Rich Text uses our own small renderer for now (§4). Folder structure updated (§7) |
@@ -230,21 +232,26 @@ Content source: case studies and the blog come from Contentful; every other rout
 
 Contentful holds **only case studies and blog posts**, plus the small types they link to (project head decision, 30 Sep 2026). Services, industries, offices, FAQs, navigation, page sections, and site settings are static content in code. Contentful has no nested objects, so SEO fields are their own content type, linked by reference. The model uses about 8 content types, far under the plan limit (free tier ≈ 48).
 
-**When:** the content types are created as migration scripts in `contentful/migrations/` when the case-study and blog pages are built (P3-01), not by hand in the web app. **Created so far:** blog (`0001`, 3 Oct 2026) and case studies (`0002`–`0004`, 8 Oct 2026). Rows marked _planned_ are the remaining draft.
+**When:** the content types are created as migration scripts in `contentful/migrations/` when the case-study and blog pages are built (P3-01), not by hand in the web app. **Created so far:** blog (`0001`, 3 Oct 2026) and case studies (`0002`–`0004`, 8 Oct 2026; `0005`, 9 Oct 2026). Rows marked _planned_ are the remaining draft.
 
-**Case studies are sections, not fixed fields** (project head, 8 Oct 2026). The designs give each case study its own section titles and order (Gulbaan: "The Idea Behind Gulbaan", "Platform Features", "Insights from Client"…; CRM Terminal Gateway: "Introduction", "The Challenge", "The Solution", a numbered features grid…), so fixed challenge / solution / results fields cannot build them. A case study is a hero plus an ordered list of section entries; one template renders them all, alternating navy and white so every case study stays consistent. New section types are added as new migrations when a design needs them; the CRM Terminal Gateway design added the Centered hero layout, numbered features, and the wide image (`0003`).
+**Case studies are sections, not fixed fields** (project head, 8 Oct 2026). The designs give each case study its own section titles and order (Gulbaan: "The Idea Behind Gulbaan", "Platform Features", "Insights from Client"…; CRM Terminal Gateway: "Introduction", "The Challenge", "The Solution", a numbered features grid…), so fixed challenge / solution / results fields cannot build them. A case study is a hero plus an ordered list of section entries; one template renders them all, alternating navy and white so every case study stays consistent. New section types are added as new migrations when a design needs them: the CRM Terminal Gateway design added the Centered hero layout, numbered features, and the wide image (`0003`); the app design (Cathy O’Bryan’s Books) added the Light hero, cards, screens, testimonials, and the call-to-action panel (`0005`). Titles from Contentful can mark \*accent\* words, shown in the brand gradient.
 
 | Content type | Key fields |
 |---|---|
-| `caseStudy` | title, slug, client → `client`, excerpt, **hero layout** (Split or Centered), hero heading, hero text, hero image, hero layers (optional: the hero image as full-size pieces, back to front, that float), **sections** → `caseStudySection` / `caseStudyTechStack` / `caseStudyFeatureGrid` / `caseStudyShowcase` (in page order), **industries** and **services** (lists limited to the slugs defined in code, §3), region, year, featured flag, seo → `seo`. _Planned:_ hero video (Mux), metrics → `metric[]`, testimonial → `testimonial`, gallery, related case studies, **confidential flag** (show anonymised) |
-| `caseStudySection` | title, text (Rich Text: paragraphs, lists, links), image, layout (image left, right, or below) |
-| `caseStudyTechStack` | title, cards → `techStackGroup[]` |
+| `caseStudy` | title, slug, client → `client`, excerpt, **hero layout** (Split, Centered, or Light), hero eyebrow, hero heading, hero text, hero button (label + link), hero image, hero layers (optional: the hero image as full-size pieces, back to front, that float), **sections** → `caseStudySection` / `caseStudyTechStack` / `caseStudyFeatureGrid` / `caseStudyShowcase` / `caseStudyCards` / `caseStudyGallery` / `caseStudyTestimonials` / `caseStudyCallToAction` (in page order), **industries** and **services** (lists limited to the slugs defined in code, §3), region, year, featured flag, seo → `seo`. _Planned:_ hero video (Mux), metrics → `metric[]`, related case studies, **confidential flag** (show anonymised) |
+| `caseStudySection` | eyebrow, title, text (Rich Text: paragraphs, lists, links), image, layout (image left, right, or below), facts → `caseStudyItem[]` (label + value), highlight box → `caseStudyItem` |
+| `caseStudyTechStack` | title, layout (Cards or Tiles), cards → `techStackGroup[]` |
 | `caseStudyFeatureGrid` | title, intro, features (2–9 short texts, numbered 01, 02… on the page) |
 | `caseStudyShowcase` | name (Contentful only), image (full width, no text) |
-| `techStackGroup` | label (e.g. "Web Architecture"), technologies (limited to the slugs in `src/content/technologies.ts`, which holds the logos) |
+| `caseStudyCards` | eyebrow, title, intro, layout (timeline beside text, icon grid, around image, numbered steps), image (for the first and third layouts), cards → `caseStudyItem[]` (2–9) |
+| `caseStudyGallery` | title, intro, screens (2–12 images, four per row) |
+| `caseStudyTestimonials` | title, subtitle, testimonials → `testimonial[]`; hidden while none is published |
+| `caseStudyCallToAction` | title, text, button label + link, image (cut off by the panel's bottom edge) |
+| `caseStudyItem` | title, text: a card, a fact (label + value), or a highlight box |
+| `techStackGroup` | label (e.g. "Web Architecture"), technologies (limited to the slugs in `src/content/technologies.ts`, which holds the logos; the current list is in `0005`) |
 | `client` | name, logo, website, **logo use approved** (yes/no) + approval details (date, approver). The site shows the logo only when approved |
+| `testimonial` | quote, name, role, company, photo. Published only with the person's written approval; kept as a draft until then (§10) |
 | `metric` | _Planned:_ value, suffix, label (e.g., "3×", "conversion rate") |
-| `testimonial` | _Planned:_ quote, person, role, company, photo |
 | `post` | title, slug, author → `person`, category → `category`, cover image, body (Rich Text), published/updated dates, seo |
 | `category` | title, slug |
 | `person` | name, role, photo, bio, social links (blog authors; supports E-E-A-T). Leadership on the About page is static |
@@ -270,7 +277,7 @@ brand-portfolio/
 │   └── pull_request_template.md
 ├── contentful/
 │   ├── migrations/                   # content model as code; run in CI with the management token
-│   └── seed/                         # source files for the seed scripts (e.g. gulbaan/ images); never imported by the site
+│   └── seed/                         # source files for the seed scripts (gulbaan/, crm-terminal-gateway/, cathy-obryans-books/ images); never imported by the site
 ├── docs/
 │   ├── README.md                     # living project brief
 │   ├── architecture-plan.md          # this document
@@ -278,7 +285,7 @@ brand-portfolio/
 │   └── adr/                          # one file per architecture decision (§18)
 ├── e2e/                              # Playwright specs, including axe checks
 ├── public/                           # favicons and small SVGs only — no photos or video
-├── scripts/                          # developer scripts: contentful-migrate.mjs (runs a migration), contentful-seed-posts.mjs (sample posts), contentful-seed-case-studies.mjs (Gulbaan)
+├── scripts/                          # developer scripts: contentful-migrate.mjs (runs a migration), contentful-seed-posts.mjs (sample posts), contentful-seed-case-studies.mjs (the three case studies)
 ├── src/
 │   ├── app/
 │   │   ├── layout.tsx                # <html lang>, fonts, metadataBase, consent, analytics, Organization JSON-LD
@@ -321,12 +328,12 @@ brand-portfolio/
 │   │       ├── draft-mode/enable/route.ts   # called by Contentful's preview URL
 │   │       └── draft-mode/disable/route.ts
 │   ├── assets/images/                # static-page photos, imported with next/image (compressed, ≤ ~500 KB each)
-│   ├── content/                      # static content as typed data (services.ts, technologies.ts …); copy lives here, not in components
+│   ├── content/                      # static content as typed data (services.ts, technologies.ts, about.ts …); copy lives here, not in components
 │   ├── components/
 │   │   ├── ui/                       # shadcn primitives (Button, Dialog, Input…)
 │   │   ├── layout/                   # Header (+ HeaderShell, client), Footer, MobileNav
-│   │   ├── sections/                 # page sections for the static pages (Hero, Stats, CTA…)
-│   │   ├── case-studies/             # CaseStudyHero, CaseStudySection, TechStackSection, FeatureGridSection, ShowcaseSection; later CaseStudyCard, FilterBar (client)
+│   │   ├── sections/                 # page sections for the static pages: home/ (Hero, Stats, CTA…), about/
+│   │   ├── case-studies/             # CaseStudyHero, CaseStudySection, TechStackSection, FeatureGridSection, ShowcaseSection, CardsSection, GallerySection, TestimonialsSection, CallToActionSection; later CaseStudyCard, FilterBar (client)
 │   │   ├── motion/                   # Reveal, Stagger — LazyMotion, reduced-motion aware
 │   │   └── seo/JsonLd.tsx
 │   ├── contentful/
@@ -412,7 +419,7 @@ Google shows FAQ rich results only for well-known government and health sites (s
 - Server Components by default; `'use client'` only on interactive leaf components. The Contentful Live Preview provider loads only in draft mode, never for visitors.
 - Animate only `transform` and `opacity`. Use `LazyMotion`. Respect `prefers-reduced-motion`.
 - Heavy interactive pieces (sliders, video players, maps) load with `next/dynamic` below the fold, or behind a click (facade pattern).
-- **Office map:** an SVG world map with office pins, not a map SDK. A real interactive map only on `/contact`, behind a click.
+- **Office map:** an SVG world map with office pins, not a map SDK. A real interactive map only on `/contact`, behind a click. **On `/about` (9 Oct 2026):** a static picture of the map from the design that opens Google Maps in a new tab — no map scripts on the page.
 - Always set image dimensions or aspect ratio, and reserve space for embeds, so nothing shifts (CLS).
 - Never read `cookies()`, `headers()`, or `searchParams` in a shared layout. That forces every page under it to render per request.
 - Every new GTM tag needs project-head approval and a Lighthouse re-check. Tag creep is the most common way marketing sites get slow after launch.
@@ -447,6 +454,7 @@ Google shows FAQ rich results only for well-known government and health sites (s
 - **Lead data retention:** set a retention period for lead emails in the sales inbox (e.g., 24 months), and the same in the CRM if one is adopted. Personal data from the form lives only there.
 - **Accessibility:** WCAG 2.2 AA.
 - **Client permissions:** written approval before showing any client's logo, name, or work. This is tracked in Contentful (`client` → logo usage approved) and is a real legal and relationship risk for an agency.
+- **Testimonials:** a quote is published only with the person's written approval; until then the `testimonial` entry stays a draft, and the site doesn't show it. Never publish a quote attributed to someone who didn't say it, or claims (revenue, download counts) the client hasn't confirmed.
 
 ---
 

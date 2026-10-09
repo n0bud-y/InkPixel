@@ -14,21 +14,32 @@ export type ContentfulImage = {
   isSvg: boolean;
 };
 
+/** A title and a short text: a card, a fact (title = label, text = value), or a highlight box. */
+export type CaseStudyItem = { title: string; text: string | null };
+
+/** A link button; only set when both its label and its link are. */
+export type CaseStudyButton = { label: string; href: string };
+
 export type CaseStudySectionLayout = "image-left" | "image-right" | "image-below";
 
 export type CaseStudyTextImageSection = {
   type: "textImage";
   id: string;
+  eyebrow: string | null;
   title: string;
   body: RichTextNode;
   image: ContentfulImage;
   layout: CaseStudySectionLayout;
+  facts: CaseStudyItem[];
+  highlight: CaseStudyItem | null;
 };
 
 export type CaseStudyTechStackSection = {
   type: "techStack";
   id: string;
   title: string;
+  /** "cards": one card per group, with its label. "tiles": every technology as a tile, in a panel. */
+  layout: "cards" | "tiles";
   groups: { label: string; technologies: TechnologySlug[] }[];
 };
 
@@ -46,29 +57,84 @@ export type CaseStudyShowcaseSection = {
   image: ContentfulImage;
 };
 
+export type CaseStudyCardsLayout = "timeline" | "icon-grid" | "around-image" | "steps";
+
+export type CaseStudyCardsSection = {
+  type: "cards";
+  id: string;
+  eyebrow: string | null;
+  title: string;
+  intro: string | null;
+  layout: CaseStudyCardsLayout;
+  image: ContentfulImage | null;
+  items: CaseStudyItem[];
+};
+
+export type CaseStudyGallerySection = {
+  type: "gallery";
+  id: string;
+  title: string;
+  intro: string | null;
+  images: ContentfulImage[];
+};
+
+export type Testimonial = {
+  quote: string;
+  name: string;
+  role: string | null;
+  company: string | null;
+  photo: ContentfulImage | null;
+};
+
+export type CaseStudyTestimonialsSection = {
+  type: "testimonials";
+  id: string;
+  title: string;
+  subtitle: string | null;
+  /** Published testimonials only; the section is left out when there are none. */
+  testimonials: Testimonial[];
+};
+
+export type CaseStudyCallToActionSection = {
+  type: "callToAction";
+  id: string;
+  title: string;
+  text: string | null;
+  button: CaseStudyButton | null;
+  image: ContentfulImage | null;
+};
+
+export type CaseStudySectionData =
+  | CaseStudyTextImageSection
+  | CaseStudyTechStackSection
+  | CaseStudyFeatureGridSection
+  | CaseStudyShowcaseSection
+  | CaseStudyCardsSection
+  | CaseStudyGallerySection
+  | CaseStudyTestimonialsSection
+  | CaseStudyCallToActionSection;
+
 /** "split": logo, heading, and text beside the image, on white. "centered": white heading on
- *  the brand gradient with an arch, image below. */
-export type CaseStudyHeroLayout = "split" | "centered";
+ *  the brand gradient with an arch, image below. "light": eyebrow, heading, text, and button
+ *  centred on cream, image below. */
+export type CaseStudyHeroLayout = "split" | "centered" | "light";
 
 export type CaseStudy = {
   title: string;
   slug: string;
   excerpt: string;
   heroLayout: CaseStudyHeroLayout;
+  heroEyebrow: string | null;
   heroHeading: string;
   heroText: string | null;
+  heroButton: CaseStudyButton | null;
   heroImage: ContentfulImage;
   /** The hero image cut into pieces, back to front, each the size of the hero image; shown
    *  instead of it, floating. Empty when not set or when any piece is missing. */
   heroLayers: ContentfulImage[];
   /** The logo is only included once the client has approved its use. */
   client: { name: string; logo: ContentfulImage | null } | null;
-  sections: (
-    | CaseStudyTextImageSection
-    | CaseStudyTechStackSection
-    | CaseStudyFeatureGridSection
-    | CaseStudyShowcaseSection
-  )[];
+  sections: CaseStudySectionData[];
   seo: { title: string | null; description: string | null; image: ContentfulImage | null; noIndex: boolean };
 };
 
@@ -89,19 +155,25 @@ type AssetData = {
   contentType: string | null;
 } | null;
 
+type ItemData = { title: string | null; text: string | null } | null;
+
 type SectionData =
   | {
       __typename: "CaseStudySection";
       sys: { id: string };
+      eyebrow: string | null;
       title: string | null;
       layout: string | null;
       body: { json: RichTextNode } | null;
       image: AssetData;
+      factsCollection: { items: ItemData[] } | null;
+      highlight: ItemData;
     }
   | {
       __typename: "CaseStudyTechStack";
       sys: { id: string };
       title: string | null;
+      layout: string | null;
       groupsCollection: { items: ({ label: string | null; technologies: string[] | null } | null)[] } | null;
     }
   | {
@@ -115,6 +187,47 @@ type SectionData =
       __typename: "CaseStudyShowcase";
       sys: { id: string };
       image: AssetData;
+    }
+  | {
+      __typename: "CaseStudyCards";
+      sys: { id: string };
+      eyebrow: string | null;
+      title: string | null;
+      intro: string | null;
+      layout: string | null;
+      image: AssetData;
+      itemsCollection: { items: ItemData[] } | null;
+    }
+  | {
+      __typename: "CaseStudyGallery";
+      sys: { id: string };
+      title: string | null;
+      intro: string | null;
+      imagesCollection: { items: AssetData[] } | null;
+    }
+  | {
+      __typename: "CaseStudyTestimonials";
+      sys: { id: string };
+      title: string | null;
+      subtitle: string | null;
+      testimonialsCollection: {
+        items: ({
+          quote: string | null;
+          name: string | null;
+          role: string | null;
+          company: string | null;
+          photo: AssetData;
+        } | null)[];
+      } | null;
+    }
+  | {
+      __typename: "CaseStudyCallToAction";
+      sys: { id: string };
+      title: string | null;
+      text: string | null;
+      buttonLabel: string | null;
+      buttonLink: string | null;
+      image: AssetData;
     };
 
 type CaseStudyData = {
@@ -124,8 +237,11 @@ type CaseStudyData = {
       slug: string | null;
       excerpt: string | null;
       heroLayout: string | null;
+      heroEyebrow: string | null;
       heroHeading: string | null;
       heroText: string | null;
+      heroButtonLabel: string | null;
+      heroButtonLink: string | null;
       heroImage: AssetData;
       heroLayersCollection: { items: AssetData[] } | null;
       client: { name: string | null; logoApproved: boolean | null; logo: AssetData } | null;
@@ -159,8 +275,11 @@ const CASE_STUDY = /* GraphQL */ `
         slug
         excerpt
         heroLayout
+        heroEyebrow
         heroHeading
         heroText
+        heroButtonLabel
+        heroButtonLink
         heroImage {
           ...ImageFields
         }
@@ -183,6 +302,7 @@ const CASE_STUDY = /* GraphQL */ `
               sys {
                 id
               }
+              eyebrow
               title
               layout
               body {
@@ -191,12 +311,23 @@ const CASE_STUDY = /* GraphQL */ `
               image {
                 ...ImageFields
               }
+              factsCollection(limit: 6) {
+                items {
+                  title
+                  text
+                }
+              }
+              highlight {
+                title
+                text
+              }
             }
             ... on CaseStudyTechStack {
               sys {
                 id
               }
               title
+              layout
               groupsCollection(limit: 6) {
                 items {
                   label
@@ -216,6 +347,66 @@ const CASE_STUDY = /* GraphQL */ `
               sys {
                 id
               }
+              image {
+                ...ImageFields
+              }
+            }
+            ... on CaseStudyCards {
+              sys {
+                id
+              }
+              eyebrow
+              title
+              intro
+              layout
+              image {
+                ...ImageFields
+              }
+              itemsCollection(limit: 9) {
+                items {
+                  title
+                  text
+                }
+              }
+            }
+            ... on CaseStudyGallery {
+              sys {
+                id
+              }
+              title
+              intro
+              imagesCollection(limit: 12) {
+                items {
+                  ...ImageFields
+                }
+              }
+            }
+            ... on CaseStudyTestimonials {
+              sys {
+                id
+              }
+              title
+              subtitle
+              testimonialsCollection(limit: 6) {
+                items {
+                  quote
+                  name
+                  role
+                  company
+                  photo {
+                    ...ImageFields
+                  }
+                }
+              }
+            }
+            ... on CaseStudyCallToAction {
+              sys {
+                id
+              }
+              title
+              text
+              buttonLabel
+              buttonLink
               image {
                 ...ImageFields
               }
@@ -258,6 +449,15 @@ const layouts: Record<string, CaseStudySectionLayout> = {
   "Image below": "image-below",
 };
 
+const cardsLayouts: Record<string, CaseStudyCardsLayout> = {
+  "Timeline beside text": "timeline",
+  "Icon grid": "icon-grid",
+  "Around image": "around-image",
+  "Numbered steps": "steps",
+};
+
+const heroLayouts: Record<string, CaseStudyHeroLayout> = { Centered: "centered", Light: "light" };
+
 function toImage(asset: AssetData): ContentfulImage | null {
   if (!asset?.url || !asset.width || !asset.height) return null;
   return {
@@ -268,6 +468,13 @@ function toImage(asset: AssetData): ContentfulImage | null {
     isSvg: asset.contentType === "image/svg+xml",
   };
 }
+
+// Items without a title (e.g. not published) are skipped.
+const toItems = (items: ItemData[] | undefined): CaseStudyItem[] =>
+  (items ?? []).flatMap((item) => (item?.title ? [{ title: item.title, text: item.text }] : []));
+
+const toButton = (label: string | null, href: string | null): CaseStudyButton | null =>
+  label && href ? { label, href } : null;
 
 // Hero layers are all or nothing: with one missing (e.g. not published), the picture would
 // have a hole, so the single hero image is shown instead.
@@ -295,31 +502,99 @@ async function caseStudyQuery<T>(query: string, options: Parameters<typeof conte
   }
 }
 
-function toSection(item: SectionData | null): CaseStudy["sections"] {
-  if (item?.__typename === "CaseStudySection") {
-    const image = toImage(item.image);
-    const layout = item.layout ? layouts[item.layout] : undefined;
-    if (!item.title || !item.body || !image || !layout) return [];
-    return [{ type: "textImage", id: item.sys.id, title: item.title, body: item.body.json, image, layout }];
+function toSection(item: SectionData | null): CaseStudySectionData[] {
+  switch (item?.__typename) {
+    case "CaseStudySection": {
+      const image = toImage(item.image);
+      const layout = item.layout ? layouts[item.layout] : undefined;
+      if (!item.title || !item.body || !image || !layout) return [];
+      const [highlight = null] = toItems([item.highlight]);
+      return [
+        {
+          type: "textImage",
+          id: item.sys.id,
+          eyebrow: item.eyebrow,
+          title: item.title,
+          body: item.body.json,
+          image,
+          layout,
+          facts: toItems(item.factsCollection?.items),
+          highlight,
+        },
+      ];
+    }
+    case "CaseStudyTechStack": {
+      const groups = (item.groupsCollection?.items ?? []).flatMap((group) => {
+        const technologies = (group?.technologies ?? []).filter(isTechnologySlug);
+        return group?.label && technologies.length ? [{ label: group.label, technologies }] : [];
+      });
+      if (!item.title || !groups.length) return [];
+      return [{ type: "techStack", id: item.sys.id, title: item.title, layout: item.layout === "Tiles" ? "tiles" : "cards", groups }];
+    }
+    case "CaseStudyFeatureGrid": {
+      const items = (item.items ?? []).filter((feature) => feature.trim());
+      if (!item.title || !items.length) return [];
+      return [{ type: "featureGrid", id: item.sys.id, title: item.title, intro: item.intro, items }];
+    }
+    case "CaseStudyShowcase": {
+      const image = toImage(item.image);
+      return image ? [{ type: "showcase", id: item.sys.id, image }] : [];
+    }
+    case "CaseStudyCards": {
+      const layout = item.layout ? cardsLayouts[item.layout] : undefined;
+      const items = toItems(item.itemsCollection?.items);
+      if (!item.title || !layout || !items.length) return [];
+      return [
+        {
+          type: "cards",
+          id: item.sys.id,
+          eyebrow: item.eyebrow,
+          title: item.title,
+          intro: item.intro,
+          layout,
+          image: toImage(item.image),
+          items,
+        },
+      ];
+    }
+    case "CaseStudyGallery": {
+      const images = (item.imagesCollection?.items ?? []).flatMap((asset) => toImage(asset) ?? []);
+      if (!item.title || !images.length) return [];
+      return [{ type: "gallery", id: item.sys.id, title: item.title, intro: item.intro, images }];
+    }
+    case "CaseStudyTestimonials": {
+      const testimonials = (item.testimonialsCollection?.items ?? []).flatMap((testimonial) =>
+        testimonial?.quote && testimonial.name
+          ? [
+              {
+                quote: testimonial.quote,
+                name: testimonial.name,
+                role: testimonial.role,
+                company: testimonial.company,
+                photo: toImage(testimonial.photo),
+              },
+            ]
+          : [],
+      );
+      if (!item.title || !testimonials.length) return [];
+      return [{ type: "testimonials", id: item.sys.id, title: item.title, subtitle: item.subtitle, testimonials }];
+    }
+    case "CaseStudyCallToAction": {
+      if (!item.title) return [];
+      return [
+        {
+          type: "callToAction",
+          id: item.sys.id,
+          title: item.title,
+          text: item.text,
+          button: toButton(item.buttonLabel, item.buttonLink),
+          image: toImage(item.image),
+        },
+      ];
+    }
+    default:
+      return [];
   }
-  if (item?.__typename === "CaseStudyTechStack") {
-    const groups = (item.groupsCollection?.items ?? []).flatMap((group) => {
-      const technologies = (group?.technologies ?? []).filter(isTechnologySlug);
-      return group?.label && technologies.length ? [{ label: group.label, technologies }] : [];
-    });
-    if (!item.title || !groups.length) return [];
-    return [{ type: "techStack", id: item.sys.id, title: item.title, groups }];
-  }
-  if (item?.__typename === "CaseStudyFeatureGrid") {
-    const items = (item.items ?? []).filter((feature) => feature.trim());
-    if (!item.title || !items.length) return [];
-    return [{ type: "featureGrid", id: item.sys.id, title: item.title, intro: item.intro, items }];
-  }
-  if (item?.__typename === "CaseStudyShowcase") {
-    const image = toImage(item.image);
-    return image ? [{ type: "showcase", id: item.sys.id, image }] : [];
-  }
-  return [];
 }
 
 // One published case study, or null if there is none with this slug. Incomplete sections
@@ -343,9 +618,11 @@ export const getCaseStudy = cache(async (slug: string): Promise<CaseStudy | null
     title: item.title,
     slug: item.slug,
     excerpt: item.excerpt,
-    heroLayout: item.heroLayout === "Centered" ? "centered" : "split",
+    heroLayout: (item.heroLayout && heroLayouts[item.heroLayout]) || "split",
+    heroEyebrow: item.heroEyebrow,
     heroHeading: item.heroHeading,
     heroText: item.heroText,
+    heroButton: toButton(item.heroButtonLabel, item.heroButtonLink),
     heroImage,
     heroLayers: toLayers(item.heroLayersCollection?.items ?? []),
     client: item.client?.name

@@ -5,8 +5,14 @@ const endpoint = `https://graphql.contentful.com/content/v1/spaces/${env.CONTENT
 
 type GraphQLResponse<T> = {
   data?: T;
-  errors?: { message: string }[];
+  errors?: { message: string; extensions?: { contentful?: { code?: string } } }[];
 };
+
+// A link to an entry or asset that isn't published (e.g. a testimonial kept as a draft until
+// it's approved). Contentful reports it as an error, but the rest of the data is complete and
+// the link is null in it, which the queries skip; so it isn't treated as a failure.
+const isUnresolvableLink = (error: NonNullable<GraphQLResponse<unknown>["errors"]>[number]) =>
+  error.extensions?.contentful?.code === "UNRESOLVABLE_LINK";
 
 // A failed Contentful request, with Contentful's own error messages.
 export class ContentfulError extends Error {
@@ -53,10 +59,11 @@ export async function contentfulQuery<T>(
 
   // GraphQL errors (e.g. a field that doesn't exist) arrive as JSON, often with a 400 status.
   const json = (await response.json().catch(() => ({}))) as GraphQLResponse<T>;
-  if (!response.ok || json.errors?.length) {
+  const errors = json.errors?.filter((error) => !isUnresolvableLink(error));
+  if (!response.ok || errors?.length) {
     throw new ContentfulError(
       response.status,
-      json.errors?.map((e) => e.message) ?? [response.statusText],
+      errors?.length ? errors.map((e) => e.message) : [response.statusText],
     );
   }
   if (!json.data) {

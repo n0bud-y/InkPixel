@@ -17,6 +17,34 @@ function cellBorders(index: number) {
   ].join(" ");
 }
 
+// Colours for navy sections (home) and cream ones (About). Class names are written out in
+// full, because Tailwind only generates classes it can find in the source.
+const tones = {
+  onDark: {
+    band: "from-white/[0.01] via-white/[0.15] via-25% to-white/20",
+    activeBand:
+      "lg:data-[state=active]:from-white/[0.01] lg:data-[state=active]:via-white/[0.15] lg:data-[state=active]:via-25% lg:data-[state=active]:to-white/20",
+    pill: "border-white/15 text-light/85",
+    row: "lg:text-white",
+    rowDescription: "text-white/55",
+    panelDescription: "text-white/70",
+    solutions: "text-white",
+    cells: "border-white/25",
+  },
+  onLight: {
+    band: "from-coral/0 via-coral/15 via-25% to-coral/[0.22]",
+    activeBand:
+      "lg:data-[state=active]:from-coral/0 lg:data-[state=active]:via-coral/15 lg:data-[state=active]:via-25% lg:data-[state=active]:to-coral/[0.22]",
+    pill: "border-primary/15 text-primary/80",
+    // The active pill's white text (phones) would otherwise stay white on the desktop band.
+    row: "lg:text-primary lg:data-[state=active]:text-primary",
+    rowDescription: "text-primary/60",
+    panelDescription: "text-primary/70",
+    solutions: "text-primary",
+    cells: "border-crimson/20",
+  },
+};
+
 // Industry tabs: the list on the left picks which solutions show on the right.
 // - Desktop: a soft band behind the active industry reaches from the screen's left edge; it
 //   slides to the new industry on change, and the new solutions cascade in (GSAP; instant
@@ -24,7 +52,14 @@ function cellBorders(index: number) {
 //   paints the band itself.
 // - Phones and tablets: the industries become a sideways-scrolling row of pills, and the
 //   active industry's description shows above its solutions.
-export function IndustryTabs({ industries }: { industries: Industry[] }) {
+export function IndustryTabs({
+  industries,
+  tone = "onDark",
+}: {
+  industries: Industry[];
+  tone?: "onDark" | "onLight";
+}) {
+  const colors = tones[tone];
   const root = useRef<HTMLDivElement>(null);
   const list = useRef<HTMLDivElement>(null);
   const band = useRef<HTMLDivElement>(null);
@@ -94,7 +129,7 @@ export function IndustryTabs({ industries }: { industries: Industry[] }) {
           <div
             ref={band}
             aria-hidden="true"
-            className={`pointer-events-none absolute top-0 right-0 -left-[min(7.5vw,9rem)] hidden bg-linear-to-r from-white/[0.01] via-white/[0.15] via-25% to-white/20 lg:block ${bandReady ? "opacity-100" : "opacity-0"}`}
+            className={`pointer-events-none absolute top-0 right-0 -left-[min(7.5vw,9rem)] hidden bg-linear-to-r ${colors.band} lg:block ${bandReady ? "opacity-100" : "opacity-0"}`}
           />
           <TabList
             label="Industries"
@@ -105,15 +140,14 @@ export function IndustryTabs({ industries }: { industries: Industry[] }) {
                 key={industry.slug}
                 value={industry.slug}
                 className={[
-                  "group relative flex shrink-0 items-center gap-3 rounded-full border border-white/15 py-2 pr-4 pl-2 text-left text-[15px] text-light/85 transition-colors duration-300",
+                  `group relative flex shrink-0 items-center gap-3 rounded-full border py-2 pr-4 pl-2 text-left text-[15px] transition-colors duration-300 ${colors.pill}`,
                   "data-[state=active]:border-crimson data-[state=active]:bg-crimson data-[state=active]:text-white",
-                  "lg:gap-[clamp(1.25rem,2vw,2.4rem)] lg:rounded-none lg:border-0 lg:border-b lg:border-crimson/50 lg:bg-transparent lg:py-[clamp(1.25rem,1.6vw,1.95rem)] lg:pr-0 lg:pl-0 lg:text-white lg:last:border-b-0",
+                  `lg:gap-[clamp(1.25rem,2vw,2.4rem)] lg:rounded-none lg:border-0 lg:border-b lg:border-crimson/50 lg:bg-transparent lg:py-[clamp(1.25rem,1.6vw,1.95rem)] lg:pr-0 lg:pl-0 lg:last:border-b-0 ${colors.row}`,
                   "lg:data-[state=active]:bg-transparent",
                   // Before the band is measured (and without JavaScript), the active row paints it.
-                  // (Tailwind only generates classes written out in full, so they are listed here.)
                   bandReady
                     ? ""
-                    : "lg:data-[state=active]:-ml-[min(7.5vw,9rem)] lg:data-[state=active]:pl-[min(7.5vw,9rem)] lg:data-[state=active]:bg-linear-to-r lg:data-[state=active]:from-white/[0.01] lg:data-[state=active]:via-white/[0.15] lg:data-[state=active]:via-25% lg:data-[state=active]:to-white/20",
+                    : `lg:data-[state=active]:-ml-[min(7.5vw,9rem)] lg:data-[state=active]:pl-[min(7.5vw,9rem)] lg:data-[state=active]:bg-linear-to-r ${colors.activeBand}`,
                 ].join(" ")}
               >
                 <span className="grid size-9 shrink-0 place-items-center rounded-full bg-brand-gradient shadow-[0_10px_24px_-10px_rgb(250_97_67_/_0.8)] transition-transform duration-300 group-hover:scale-105 lg:size-[clamp(3.5rem,4.15vw,5rem)]">
@@ -124,7 +158,7 @@ export function IndustryTabs({ industries }: { industries: Industry[] }) {
                   <span className="block font-display leading-[1.2] font-medium lg:text-[clamp(1.375rem,1.67vw,2rem)] lg:tracking-[-0.015em]">
                     {industry.label}
                   </span>
-                  <span className="mt-1 hidden text-[clamp(0.9375rem,1.05vw,1.25rem)] leading-[1.3] text-white/55 lg:block">
+                  <span className={`mt-1 hidden text-[clamp(0.9375rem,1.05vw,1.25rem)] leading-[1.3] lg:block ${colors.rowDescription}`}>
                     {industry.description}
                   </span>
                 </span>
@@ -137,13 +171,13 @@ export function IndustryTabs({ industries }: { industries: Industry[] }) {
           {industries.map((industry) => (
             <TabPanel key={industry.slug} value={industry.slug} className="rounded-2xl">
               {/* Phones and tablets: the description the desktop list shows in each row. */}
-              <p className="mb-6 text-[15px] leading-relaxed text-white/70 lg:hidden">{industry.description}</p>
-              <ul className="grid grid-cols-1 text-white sm:grid-cols-2">
+              <p className={`mb-6 text-[15px] leading-relaxed lg:hidden ${colors.panelDescription}`}>{industry.description}</p>
+              <ul className={`grid grid-cols-1 sm:grid-cols-2 ${colors.solutions}`}>
                 {industry.solutions.map((solution, index) => (
                   <li
                     key={solution.title}
                     data-item
-                    className={`flex items-center justify-center border-white/25 px-4 py-8 lg:px-2 lg:py-[clamp(1rem,1.2vw,1.45rem)] ${cellBorders(index)}`}
+                    className={`flex items-center justify-center px-4 py-8 lg:px-2 lg:py-[clamp(1rem,1.2vw,1.45rem)] ${colors.cells} ${cellBorders(index)}`}
                   >
                     <FeatureItem
                       icon={solution.icon}

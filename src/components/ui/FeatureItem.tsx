@@ -59,7 +59,7 @@ export function FeatureItem({
         <Image src={icon} alt="" width={96} height={96} className={`${sizes[size].icon} ${lift}`} />
       )}
       <h3 className={`leading-snug ${sizes[size].title}`}>{title}</h3>
-      <p className={`max-w-[20rem] text-white/90 ${sizes[size].description}`}>
+      <p className={`max-w-[20rem] opacity-90 ${sizes[size].description}`}>
         {description}
       </p>
     </div>

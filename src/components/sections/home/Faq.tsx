@@ -6,13 +6,14 @@ import { faqs } from "@/content/faq";
 import { siteConfig } from "@/lib/site";
 
 // "Common questions.": heading and an email prompt on the left, the questions on the right.
-export function Faq() {
+// The eyebrow numbers the section on its page.
+export function Faq({ eyebrow = "08 · FAQ" }: { eyebrow?: string }) {
   return (
     <section aria-labelledby="faq-title" className="relative isolate bg-[#fffdfa]">
       <div className="container-site grid grid-cols-[minmax(0,1fr)] gap-10 pt-[clamp(3.5rem,3.7vw,4.5rem)] pb-[clamp(3.5rem,3.6vw,4.4rem)] lg:grid-cols-[minmax(0,646fr)_minmax(0,951fr)] lg:gap-x-[1.8vw]">
         <Reveal className="self-start">
           <div data-reveal className="mb-7">
-            <Eyebrow tone="light">08 · FAQ</Eyebrow>
+            <Eyebrow tone="light">{eyebrow}</Eyebrow>
           </div>
           <SectionHeading
             id="faq-title"

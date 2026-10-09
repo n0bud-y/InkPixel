@@ -1,20 +1,34 @@
 import Image from "next/image";
+import network from "@/assets/images/process-network.webp";
+import { Magnetic } from "@/components/motion/Magnetic";
+import { withAccent } from "@/components/ui/accent";
+import { Button } from "@/components/ui/Button";
+import { Eyebrow } from "@/components/ui/Eyebrow";
 import type { CaseStudy } from "@/contentful/queries/case-studies";
 
 type HeroProps = {
   layout: CaseStudy["heroLayout"];
+  eyebrow: string | null;
   heading: string;
   text: string | null;
+  button: CaseStudy["heroButton"];
   image: CaseStudy["heroImage"];
   layers: CaseStudy["heroLayers"];
   client: CaseStudy["client"];
 };
 
-// Top of a case study, in one of two layouts (picked per case study in Contentful). The text
+// Top of a case study, in one of three layouts (picked per case study in Contentful). The text
 // entrance is CSS, like the home hero, so it starts on the first frame; the hero image is the
-// LCP element, so it is preloaded and never hidden.
+// LCP element, so it is preloaded and never hidden. Headings can mark *accent* words.
 export function CaseStudyHero(props: HeroProps) {
-  return props.layout === "centered" ? <CenteredHero {...props} /> : <SplitHero {...props} />;
+  switch (props.layout) {
+    case "centered":
+      return <CenteredHero {...props} />;
+    case "light":
+      return <LightHero {...props} />;
+    default:
+      return <SplitHero {...props} />;
+  }
 }
 
 // The hero image, or, when it has layers, the layers stacked back to front in a box of the
@@ -85,7 +99,7 @@ function SplitHero({ heading, text, image, layers, client }: HeroProps) {
             id="case-study-title"
             className="max-w-[22em] bg-brand-gradient-reverse bg-clip-text font-display text-[clamp(1.75rem,2.35vw,2.8rem)] leading-[1.18] font-bold tracking-[-0.015em] text-transparent"
           >
-            {heading}
+            {withAccent(heading)}
           </h1>
           {text && (
             <p className="mt-5 max-w-[36em] text-[clamp(0.9375rem,1.05vw,1.25rem)] leading-[1.9] text-primary/85">
@@ -145,15 +159,53 @@ function CenteredHero({ heading, image, layers }: HeroProps) {
         <path d={innerArc} fill="url(#case-study-hero-arc-inner)" />
       </svg>
 
-      <div className="container-site pt-32 pb-[clamp(2.5rem,3.5vw,4rem)] text-center sm:pt-36 lg:pt-40 2xl:pt-48">
-        <h1
-          id="case-study-title"
-          className="mx-auto max-w-[13em] font-display text-[clamp(2.25rem,4.6vw,5.5rem)] leading-[1.08] font-bold tracking-[-0.02em] text-balance text-white motion-safe:animate-rise"
-        >
-          {heading}
+        <div className="container-site pt-32 pb-[clamp(2.5rem,3.5vw,4rem)] text-center sm:pt-36 lg:pt-40 2xl:pt-48">
+          <h1
+            id="case-study-title"
+            className="mx-auto max-w-[13em] font-display text-[clamp(2.25rem,4.6vw,5.5rem)] leading-[1.08] font-bold tracking-[-0.02em] text-balance text-white motion-safe:animate-rise"
+          >
+            {withAccent(heading)}
         </h1>
         <div className="mt-[clamp(2rem,2.5vw,3rem)] flex justify-center">
           <HeroVisual image={image} layers={layers} sizes="(min-width: 1280px) 61vw, 100vw" />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// On cream with the faint network lines (the home page's Process background): the eyebrow,
+// heading, text, and button centred, then the image, which runs to the bottom of the section.
+function LightHero({ eyebrow, heading, text, button, image, layers }: HeroProps) {
+  return (
+    <section aria-labelledby="case-study-title" className="relative isolate overflow-hidden bg-[#fffdfa]">
+      <Image src={network} alt="" fill sizes="100vw" className="-z-10 object-cover" />
+      <div className="container-site pt-[clamp(8rem,13.4vw,16rem)] text-center">
+        <div className="motion-safe:animate-rise">
+          {eyebrow && <Eyebrow tone="brand">{eyebrow}</Eyebrow>}
+          <h1
+            id="case-study-title"
+            className="mx-auto mt-[clamp(1.25rem,1.6vw,2rem)] max-w-[24em] font-display text-[clamp(2rem,2.95vw,3.6rem)] leading-[1.15] font-bold tracking-[-0.015em] text-balance text-primary"
+          >
+            {withAccent(heading)}
+          </h1>
+          {text && (
+            <p className="mx-auto mt-5 max-w-[46em] text-[clamp(0.9375rem,1.05vw,1.25rem)] leading-[1.9] text-primary/80">
+              {text}
+            </p>
+          )}
+          {button && (
+            <div className="mt-[clamp(1.5rem,1.8vw,2.25rem)]">
+              <Magnetic>
+                <Button href={button.href} variant="primary-reverse" icon>
+                  {button.label}
+                </Button>
+              </Magnetic>
+            </div>
+          )}
+        </div>
+        <div className="mt-[clamp(1.5rem,2vw,2.5rem)] flex justify-center">
+          <HeroVisual image={image} layers={layers} sizes="(min-width: 1024px) 55vw, 100vw" />
         </div>
       </div>
     </section>

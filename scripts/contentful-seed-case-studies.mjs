@@ -5,9 +5,11 @@
 // - Terminal Gateway CRM (from CRM-terminalgateway-case-study.svg). PLACEHOLDER copy: the
 //   design's text came from another agency's case study, so titles and features are neutral
 //   stand-ins based on the product screens, and paragraphs are lorem ipsum.
-// Replace the text in Contentful before launch.
+// - Cathy O’Bryan’s Books (from application-Cathy-O’Bryan’s-Books.svg). The design's copy,
+//   except the parts copied from other projects (see that section below).
+// Replace the placeholder text in Contentful before launch.
 // Usage: npm run contentful:seed-case-studies
-// (needs the model: migrations 0002, 0003, and 0004)
+// (needs the model: migrations 0002 to 0005)
 // Everything has a fixed id, so running it again skips what already exists.
 import { readFile } from "node:fs/promises";
 
@@ -405,5 +407,163 @@ await upsert("case-study-crm-terminal-gateway", "caseStudy", {
 });
 // Spaces seeded before the hero layers existed (0004) get them added here.
 await addMissingFields("case-study-crm-terminal-gateway", { heroLayers });
+
+// Cathy O’Bryan’s Books (from application-Cathy-O’Bryan’s-Books.svg). The copy is the design's,
+// except where it came from another project: the hero eyebrow ("Swipe, Watch, Order"),
+// "Web Interface for Restaurant Partners", the "$1.2M in revenue" result, a second testimonial
+// from another company, and the closing panel (which named another agency and its "50+ food
+// delivery platforms") were replaced or left out. Cathy approved her quote in writing
+// (confirmed by the project head on 9 Oct 2026).
+const cathyAssets = [
+  ["cathy-img-hero", "hero.webp", "The Cathy O’Bryan app: book cards, the home screen, the author profile, the gallery, and sign-in"],
+  ["cathy-img-about", "about.webp", "The app’s home screen: Good Morning, Jessica, with featured books"],
+  ["cathy-img-screen-1", "screen-1.webp", "Opening screen with a wall of Cathy O’Bryan’s book covers"],
+  ["cathy-img-screen-2", "screen-2.webp", "Sign-in screen: Log In To Dive Into Your Next Adventure"],
+  ["cathy-img-screen-3", "screen-3.webp", "Home screen featuring A Chance Encounter and Top This Week"],
+  ["cathy-img-screen-4", "screen-4.webp", "Home screen featuring Growing Up In The Cold War"],
+  ["cathy-img-screen-5", "screen-5.webp", "Book page for Lost in Texas with a reader review and About The Book"],
+  ["cathy-img-screen-6", "screen-6.webp", "Author profile with Cathy O’Bryan’s photo and biography"],
+  ["cathy-img-screen-7", "screen-7.webp", "Gallery with paintings and illustrations categories"],
+  ["cathy-img-screen-8", "screen-8.webp", "Artwork overview with artist, size, and location"],
+  ["cathy-img-problem", "problem.webp", "Four app screens: book page, author profile, gallery, and artwork overview"],
+  ["cathy-img-results", "results.webp", "The app’s home screen with featured books and Top This Week"],
+  ["cathy-img-cta", "cta.webp", "Three app screens: the gallery, the home screen, and a chapter in the reader"],
+];
+for (const [id, fileName, description] of cathyAssets) {
+  await upsertAsset(id, `cathy-obryans-books/${fileName}`, "image/webp", description);
+}
+const asset = (id) => link(id, "Asset");
+
+// Items: cards, facts, and the highlight box. [id, title, text]
+const cathyItems = [
+  ["cathy-fact-industry", "Industry", "Books, Art & Entertainment"],
+  ["cathy-fact-platform", "Platform", "iOS & Android Mobile App"],
+  ["cathy-fact-core", "Core Experience", "Reading & Digital Library"],
+  ["cathy-fact-additional", "Additional Experience", "Art Gallery & Author Portfolio"],
+  ["cathy-services", "Services Provided", "Custom Mobile App Development, Integrated Secure Payment Gateway, Social Features"],
+  ["cathy-problem-1", "Content Organization & Navigation", "Multiple books, reading content, author information, and artwork needed to be organized into a simple and intuitive experience."],
+  ["cathy-problem-2", "Immersive Reading Experience", "Readers needed a distraction-free interface that made longer chapters comfortable to read directly on mobile devices."],
+  ["cathy-problem-3", "Visual Presentation of Artwork", "Original paintings and illustrations required a gallery experience that preserved their visual impact while remaining easy to browse."],
+  ["cathy-solution-1", "Unified Book Discovery", "A centralized home screen was designed to feature books, recommended titles, and popular content within an easy-to-browse interface."],
+  ["cathy-solution-2", "Dedicated Digital Reader", "A clean, dark reading interface provides readers with a comfortable environment for exploring chapters and stories."],
+  ["cathy-solution-3", "Interactive Art Gallery", "Paintings and illustrations are presented through dedicated gallery categories with detailed artwork views and information."],
+  ["cathy-result-1", "One Creative Ecosystem", "Books, artwork, author information, and reading experiences are now available through a single platform."],
+  // PLACEHOLDER: the design claimed "$1.2M in revenue generated within the first quarter after launch".
+  ["cathy-result-2", "Unified Book Discovery", "Featured books, recommended titles, and popular reads now sit together on one home screen."],
+  ["cathy-result-3", "Improved Content Discovery", "Users can move naturally between featured books, recommendations, author information, and artwork."],
+  ["cathy-result-4", "More Engaging Reading", "A dedicated reader interface gives users a focused and comfortable way to experience Cathy’s stories."],
+  ["cathy-result-5", "Stronger Author Connection", "Readers can learn more about Cathy’s life, books, artwork, and creative journey beyond individual publications."],
+  ["cathy-result-6", "Rich Visual Experience", "The gallery transforms Cathy’s artwork into an interactive digital portfolio accessible directly through the app."],
+  ["cathy-step-1", "Discovery & Content Planning", "We organized the author’s books, artwork, biography, and reading content to determine the ideal application structure."],
+  ["cathy-step-2", "UX Strategy & Information Architecture", "User journeys were mapped to make books, chapters, profiles, libraries, and galleries easily accessible."],
+  ["cathy-step-3", "UI/UX Design", "A premium dark interface was developed around Cathy’s existing book covers and artwork, allowing the content itself to remain the visual focus."],
+  ["cathy-step-4", "Book & Reader Integration", "Book information and chapter-reading functionality were structured into an intuitive mobile reading experience."],
+  ["cathy-step-5", "Gallery Experience", "Dedicated painting and illustration galleries were developed with individual artwork detail views."],
+  ["cathy-step-6", "Testing & Optimization", "Every core interaction was refined for readability, usability, smooth navigation, and consistent performance across mobile screens."],
+];
+for (const [id, title, text] of cathyItems) await upsert(id, "caseStudyItem", { title, text });
+const items = (prefix) => cathyItems.filter(([id]) => id.startsWith(prefix)).map(([id]) => link(id));
+
+await upsert("client-cathy-obryan", "client", { name: "Cathy O’Bryan" });
+
+await upsert("cathy-about", "caseStudySection", {
+  title: "About The *Cathy O’Bryan* App",
+  body: richText(
+    "The Cathy O’Bryan App was created as a dedicated digital space where readers and art enthusiasts can discover Cathy’s creative world in one place. From browsing her published books and reading chapters to exploring original paintings and illustrations, the platform combines literature and visual art into an immersive mobile experience.",
+  ),
+  image: asset("cathy-img-about"),
+  layout: "Image right",
+  facts: items("cathy-fact-"),
+  highlight: link("cathy-services"),
+});
+await upsert("cathy-gallery", "caseStudyGallery", {
+  title: "*App Screens*",
+  intro:
+    "A thoughtfully designed interface that makes discovering books, reading stories, exploring artwork, and learning about the author simple and engaging.",
+  images: cathyAssets.filter(([id]) => id.startsWith("cathy-img-screen-")).map(([id]) => asset(id)),
+});
+await upsert("cathy-problem", "caseStudyCards", {
+  eyebrow: "The Problem",
+  title: "The Thoughtful Tech Hurdles We Faced",
+  intro:
+    "Cathy’s creative work spans multiple areas, including novels, personal storytelling, paintings, and illustrations. The primary challenge was creating one digital experience that could showcase all of these elements without making the app feel crowded or difficult to navigate.",
+  layout: "Timeline beside text",
+  image: asset("cathy-img-problem"),
+  items: items("cathy-problem-"),
+});
+await upsert("cathy-solution", "caseStudyCards", {
+  eyebrow: "Our Solution",
+  title: "*Innovative Solutions* That Transformed Content Into a Seamless Experience",
+  layout: "Icon grid",
+  items: items("cathy-solution-"),
+});
+await upsert("cathy-results", "caseStudyCards", {
+  title: "The *Results* We Delivered",
+  layout: "Around image",
+  image: asset("cathy-img-results"),
+  items: items("cathy-result-"),
+});
+await upsert("cathy-process", "caseStudyCards", {
+  title: "How We Brought *Cathy O’Bryan’s* Creative World to Life",
+  intro:
+    "From initial brainstorming to successful launch, our comprehensive process blends creativity, strategy, and technology to bring app vision to life, ensuring seamless user experiences at every step.",
+  layout: "Numbered steps",
+  items: items("cathy-step-"),
+});
+await upsert("cathy-tech-group", "techStackGroup", {
+  label: "Tech stack",
+  technologies: ["getstream", "stripe", "tensorflow", "postgresql", "react"],
+});
+await upsert("cathy-tech-stack", "caseStudyTechStack", {
+  title: "Tech Stack Behind The *Cathy O’Bryan Digital Experience*",
+  layout: "Tiles",
+  groups: [link("cathy-tech-group")],
+});
+await upsert("cathy-testimonial", "testimonial", {
+  quote:
+    "The goal was to create more than a traditional book app. We wanted readers to experience the stories, artwork, and personality behind the author through one beautifully connected digital platform.",
+  name: "Cathy O’Bryan",
+  role: "Author & Artist",
+});
+await upsert("cathy-testimonials", "caseStudyTestimonials", {
+  title: "Hear Directly From Our Clients",
+  subtitle: "Real stories, real success with us",
+  testimonials: [link("cathy-testimonial")],
+});
+// PLACEHOLDER copy: the design's panel named another agency and its "50+ food delivery platforms".
+await upsert("cathy-cta", "caseStudyCallToAction", {
+  title: "*Your Story* Deserves a Beautiful App. Let’s Build Yours Next!",
+  text: "From books and artwork to communities and commerce, we design and build mobile apps that bring your work closer to the people who love it.",
+  buttonLabel: "Get Free Consultation Today!",
+  buttonLink: "/contact",
+  image: asset("cathy-img-cta"),
+});
+
+await upsert("case-study-cathy-obryans-books", "caseStudy", {
+  title: "Cathy O’Bryan’s Books",
+  slug: "cathy-obryans-books",
+  client: link("client-cathy-obryan"),
+  excerpt: "A mobile app that brings Cathy O’Bryan’s books, stories, and artwork together in one reading and gallery experience.",
+  heroLayout: "Light",
+  heroEyebrow: "Read · Explore · Discover",
+  heroHeading: "The Digital Experience That Brought *Cathy O’Bryan’s Books & Art Together*",
+  heroText:
+    "A personalized mobile platform designed to connect readers with Cathy O’Bryan’s books, stories, artwork, and creative journey through one seamless digital experience.",
+  // The button shows once it has a link too (e.g. the app's store page).
+  heroButtonLabel: "Explore The App",
+  heroImage: asset("cathy-img-hero"),
+  sections: [
+    "cathy-about",
+    "cathy-gallery",
+    "cathy-problem",
+    "cathy-solution",
+    "cathy-results",
+    "cathy-process",
+    "cathy-tech-stack",
+    "cathy-testimonials",
+    "cathy-cta",
+  ].map((id) => link(id)),
+  services: ["applications"],
+});
 
 console.log("Done.");

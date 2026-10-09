@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="15" height="23" viewBox="685.5 1369 15 23" fill="none">
+<defs>
+<linearGradient id="awr-paint69_linear" x1="690.267" y1="1376.6" x2="700.212" y2="1379.53" gradientUnits="userSpaceOnUse">
+<stop stop-color="#DC2760"/>
+<stop offset="1" stop-color="#EF6327"/>
+</linearGradient>
+<linearGradient id="awr-paint70_linear" x1="688.916" y1="1364.99" x2="703.35" y2="1370.06" gradientUnits="userSpaceOnUse">
+<stop stop-color="#DC2760"/>
+<stop offset="1" stop-color="#EF6327"/>
+</linearGradient>
+</defs>
+<path d="M688.97 1390.53L692.97 1388.53L696.97 1390.53V1381C695.871 1381.99 694.446 1382.53 692.97 1382.53C691.494 1382.53 690.069 1381.99 688.97 1381V1390.53Z" stroke="url(#awr-paint69_linear)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M698.97 1376.53C698.971 1377.37 698.793 1378.21 698.448 1378.98C698.104 1379.75 697.6 1380.44 696.97 1381C695.871 1381.99 694.446 1382.53 692.97 1382.53C691.494 1382.53 690.069 1381.99 688.97 1381C688.34 1380.44 687.836 1379.75 687.491 1378.98C687.147 1378.21 686.969 1377.37 686.97 1376.53C686.97 1373.22 689.656 1370.53 692.97 1370.53C696.283 1370.53 698.97 1373.22 698.97 1376.53Z" stroke="url(#awr-paint70_linear)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

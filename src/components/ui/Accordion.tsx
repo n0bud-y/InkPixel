@@ -1,5 +1,6 @@
 "use client";
 
+import Image, { type StaticImageData } from "next/image";
 import { useRef } from "react";
 import { MOTION_OK, gsap, useGSAP } from "@/lib/gsap";
 
@@ -7,6 +8,8 @@ export type AccordionItem = {
   question: string;
   /** The answer, one entry per line. */
   answer: string[];
+  /** Optional decorative icon before the question. */
+  icon?: StaticImageData;
 };
 
 type AccordionProps = {
@@ -15,7 +18,14 @@ type AccordionProps = {
   name: string;
   /** Index of the item that is open on load; -1 for none. */
   defaultOpen?: number;
+  /** "onLight" for cream sections (FAQ), "onDark" for navy ones. */
+  tone?: "onLight" | "onDark";
   className?: string;
+};
+
+const tones = {
+  onLight: { border: "border-primary/10", question: "text-primary", answer: "text-primary/85" },
+  onDark: { border: "border-white/10", question: "text-white", answer: "text-light/80" },
 };
 
 // Questions and answers, one answer open at a time (FAQ).
@@ -25,7 +35,8 @@ type AccordionProps = {
 // instant for reduced motion) and the script keeps one item open itself, because with `name`
 // the browser would close the other item instantly. Items are marked data-reveal, so they
 // cascade in when the list is wrapped in <Reveal>.
-export function Accordion({ items, name, defaultOpen = 0, className }: AccordionProps) {
+export function Accordion({ items, name, defaultOpen = 0, tone = "onLight", className }: AccordionProps) {
+  const colors = tones[tone];
   const root = useRef<HTMLDivElement>(null);
 
   useGSAP(
@@ -107,18 +118,25 @@ export function Accordion({ items, name, defaultOpen = 0, className }: Accordion
   );
 
   return (
-    <div ref={root} className={["border-t border-primary/10", className].filter(Boolean).join(" ")}>
+    <div ref={root} className={["border-t", colors.border, className].filter(Boolean).join(" ")}>
       {items.map((item, index) => (
         <details
           key={item.question}
           name={name}
           open={index === defaultOpen}
           data-reveal
-          className="group border-b border-primary/10"
+          className={`group border-b ${colors.border}`}
         >
           <summary className="group/summary flex cursor-pointer list-none items-center justify-between gap-6 py-[clamp(1.25rem,1.97vw,2.4rem)] [&::-webkit-details-marker]:hidden">
-            <span className="font-display text-[clamp(1.125rem,1.7vw,2.05rem)] leading-tight font-medium tracking-[-0.01em] text-primary transition-colors duration-300 group-hover/summary:text-crimson">
-              {item.question}
+            <span className="flex items-center gap-[clamp(0.75rem,1vw,1.25rem)]">
+              {item.icon && (
+                <Image src={item.icon} alt="" className="size-[clamp(2.25rem,2.6vw,3.125rem)] shrink-0" />
+              )}
+              <span
+                className={`font-display text-[clamp(1.125rem,1.7vw,2.05rem)] leading-tight font-medium tracking-[-0.01em] ${colors.question} transition-colors duration-300 group-hover/summary:text-crimson`}
+              >
+                {item.question}
+              </span>
             </span>
             {/* "+" that turns into "×" while the item is open. */}
             <svg
@@ -130,7 +148,9 @@ export function Accordion({ items, name, defaultOpen = 0, className }: Accordion
             </svg>
           </summary>
           <div data-answer className="overflow-hidden">
-            <div className="max-w-3xl pb-[clamp(1.25rem,2.1vw,2.5rem)] text-[clamp(0.9375rem,1.05vw,1.25rem)] leading-[1.65] text-primary/85">
+            <div
+              className={`max-w-3xl pb-[clamp(1.25rem,2.1vw,2.5rem)] text-[clamp(0.9375rem,1.05vw,1.25rem)] leading-[1.65] ${colors.answer}`}
+            >
               {item.answer.map((line) => (
                 <p key={line}>{line}</p>
               ))}

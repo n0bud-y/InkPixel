@@ -8,8 +8,8 @@ import { getLatestPosts, type PostSummary } from "@/contentful/queries/posts";
 
 // "From the studio.": the three newest blog posts from Contentful.
 // The section hides itself when there are no posts yet, or when Contentful can't be reached,
-// so the home page never breaks because of it.
-export async function Insights() {
+// so the home page never breaks because of it. The eyebrow numbers the section on its page.
+export async function Insights({ eyebrow = "09 · Insights" }: { eyebrow?: string }) {
   let posts: PostSummary[] = [];
   try {
     posts = await getLatestPosts(3);
@@ -24,7 +24,7 @@ export async function Insights() {
         <Reveal className="flex flex-col items-start gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <div data-reveal className="mb-8">
-              <Eyebrow>09 · Insights</Eyebrow>
+              <Eyebrow>{eyebrow}</Eyebrow>
             </div>
             <SectionHeading id="insights-title" size="lg" title="From the studio." />
           </div>

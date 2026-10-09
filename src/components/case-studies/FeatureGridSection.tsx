@@ -1,7 +1,6 @@
 import { Reveal } from "@/components/motion/Reveal";
-import { SectionHeading } from "@/components/ui/SectionHeading";
 import type { CaseStudyFeatureGridSection } from "@/contentful/queries/case-studies";
-import { CaseStudySectionFrame, CaseStudyTitle, type SectionTone } from "./CaseStudySection";
+import { CaseStudyHeading, CaseStudySectionFrame, type SectionTone } from "./CaseStudySection";
 
 // Card: white with the brand gradient at 10%, and a 1px gradient border (both from the design).
 const cardBackground =
@@ -20,23 +19,7 @@ export function FeatureGridSection({
   return (
     <CaseStudySectionFrame headingId={headingId} tone={tone}>
       <Reveal>
-        <CaseStudyTitle centered>
-          <SectionHeading
-            id={headingId}
-            title={title}
-            tone={tone === "dark" ? "onDark" : "onLight"}
-            size="fluid-wide"
-            align="center"
-          />
-        </CaseStudyTitle>
-        {intro && (
-          <p
-            data-reveal
-            className={`mx-auto mt-5 max-w-[62em] text-center text-[clamp(0.9375rem,1.05vw,1.25rem)] leading-[1.9] ${tone === "dark" ? "text-light/80" : "text-primary/85"}`}
-          >
-            {intro}
-          </p>
-        )}
+        <CaseStudyHeading id={headingId} tone={tone} title={title} intro={intro} centered />
       </Reveal>
 
       <Reveal y={30} delay={0.1}>
