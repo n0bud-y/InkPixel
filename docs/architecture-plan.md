@@ -1,10 +1,10 @@
-# Brand Portfolio Platform — Architecture Plan (v2.11)
+# Brand Portfolio Platform — Architecture Plan (v2.13)
 
 | | |
 |---|---|
 | **Status** | Draft for review |
 | **Owner** | Project Head |
-| **Last updated** | 9 Oct 2026 |
+| **Last updated** | 10 Oct 2026 |
 | **Supersedes** | `Brand Portfolio Project Architecture & Execution Plan.pdf` (v1) |
 | **Companion docs** | [README.md](README.md) (living brief) · [execution-plan.md](execution-plan.md) (tasks, owners, timeline) |
 | **Reference** | tekrevol.com — for scope and feel, not to copy |
@@ -13,6 +13,8 @@
 
 | Version | Date | Change |
 |---|---|---|
+| v2.13 | 10 Oct 2026 | **Service page template built** (`/services/[slug]`, static content in `src/content/service-pages.ts`; only listed slugs are built, others 404). Its project cards are the case studies whose `services` field includes the page's service, read with a `services_contains_some` query; migration `0006-case-study-card.cjs` adds an optional card highlight and up to three card points to `caseStudy` (§6). The consultation and contact forms link to `/contact` until the lead pipeline (§11); the cost estimator sends its answers to `/contact` in the URL. Folder structure updated (§7) |
+| v2.12 | 10 Oct 2026 | **About page motion and team**: the "Who Are We" value cards (four) slide sideways while the section is pinned (`HorizontalPin`, GSAP ScrollTrigger pin + scrub, desktop only); the team row is an auto-sliding carousel (`TeamCarousel`: native scroll with snapping, dots, no pause button by project head decision) with all 17 people from the live site's About page. Folder structure updated (§7); the stale `LazyMotion` rule now names GSAP (§9) |
 | v2.11 | 9 Oct 2026 | **About page built** as static content (`src/content/about.ts`, `src/components/sections/about/`), reusing home sections; office map on About is a static picture linking to Google Maps (§9). Folder structure updated (§7) |
 | v2.10 | 9 Oct 2026 | **Case-study template extended for the app design (Cathy O’Bryan’s Books)** (`0005-case-study-app-sections.cjs`): Light hero with eyebrow and button; `caseStudyItem`, `caseStudyCards` (four layouts), `caseStudyGallery`, `testimonial` (no longer planned), `caseStudyTestimonials`, and `caseStudyCallToAction`; facts and highlight box on `caseStudySection`; tech stack tiles; five more technologies (§6). Testimonials need written approval before publishing (§10). Folder structure updated (§7) |
 | v2.9 | 8 Oct 2026 | Optional **hero layers** on `caseStudy` (`0004-case-study-hero-layers.cjs`): the hero image as stacked pieces that float (§6) |
@@ -238,7 +240,7 @@ Contentful holds **only case studies and blog posts**, plus the small types they
 
 | Content type | Key fields |
 |---|---|
-| `caseStudy` | title, slug, client → `client`, excerpt, **hero layout** (Split, Centered, or Light), hero eyebrow, hero heading, hero text, hero button (label + link), hero image, hero layers (optional: the hero image as full-size pieces, back to front, that float), **sections** → `caseStudySection` / `caseStudyTechStack` / `caseStudyFeatureGrid` / `caseStudyShowcase` / `caseStudyCards` / `caseStudyGallery` / `caseStudyTestimonials` / `caseStudyCallToAction` (in page order), **industries** and **services** (lists limited to the slugs defined in code, §3), region, year, featured flag, seo → `seo`. _Planned:_ hero video (Mux), metrics → `metric[]`, related case studies, **confidential flag** (show anonymised) |
+| `caseStudy` | title, slug, client → `client`, excerpt, card highlight and up to three card points (optional; project cards on service pages), **hero layout** (Split, Centered, or Light), hero eyebrow, hero heading, hero text, hero button (label + link), hero image, hero layers (optional: the hero image as full-size pieces, back to front, that float), **sections** → `caseStudySection` / `caseStudyTechStack` / `caseStudyFeatureGrid` / `caseStudyShowcase` / `caseStudyCards` / `caseStudyGallery` / `caseStudyTestimonials` / `caseStudyCallToAction` (in page order), **industries** and **services** (lists limited to the slugs defined in code, §3), region, year, featured flag, seo → `seo`. _Planned:_ hero video (Mux), metrics → `metric[]`, related case studies, **confidential flag** (show anonymised) |
 | `caseStudySection` | eyebrow, title, text (Rich Text: paragraphs, lists, links), image, layout (image left, right, or below), facts → `caseStudyItem[]` (label + value), highlight box → `caseStudyItem` |
 | `caseStudyTechStack` | title, layout (Cards or Tiles), cards → `techStackGroup[]` |
 | `caseStudyFeatureGrid` | title, intro, features (2–9 short texts, numbered 01, 02… on the page) |
@@ -308,7 +310,7 @@ brand-portfolio/
 │   │   │   │   └── actions.ts        # submitLead Server Action
 │   │   │   ├── services/
 │   │   │   │   ├── page.tsx
-│   │   │   │   └── [slug]/page.tsx
+│   │   │   │   └── [slug]/page.tsx   # every service page: content from src/content/service-pages.ts; unlisted slugs 404
 │   │   │   ├── industries/
 │   │   │   │   ├── page.tsx
 │   │   │   │   └── [slug]/page.tsx
@@ -328,13 +330,13 @@ brand-portfolio/
 │   │       ├── draft-mode/enable/route.ts   # called by Contentful's preview URL
 │   │       └── draft-mode/disable/route.ts
 │   ├── assets/images/                # static-page photos, imported with next/image (compressed, ≤ ~500 KB each)
-│   ├── content/                      # static content as typed data (services.ts, technologies.ts, about.ts …); copy lives here, not in components
+│   ├── content/                      # static content as typed data (services.ts, service-pages.ts, technologies.ts, about.ts …); copy lives here, not in components
 │   ├── components/
 │   │   ├── ui/                       # shadcn primitives (Button, Dialog, Input…)
 │   │   ├── layout/                   # Header (+ HeaderShell, client), Footer, MobileNav
-│   │   ├── sections/                 # page sections for the static pages: home/ (Hero, Stats, CTA…), about/
+│   │   ├── sections/                 # page sections for the static pages: home/ (Hero, Stats, CTA…), about/ (… TeamCarousel, client), services/ (ServiceHero … ServiceProjects; OfferingsList and EstimatorQuiz, client)
 │   │   ├── case-studies/             # CaseStudyHero, CaseStudySection, TechStackSection, FeatureGridSection, ShowcaseSection, CardsSection, GallerySection, TestimonialsSection, CallToActionSection; later CaseStudyCard, FilterBar (client)
-│   │   ├── motion/                   # Reveal, Stagger — LazyMotion, reduced-motion aware
+│   │   ├── motion/                   # GSAP helpers (client): Reveal, CountUp, HorizontalPin, Magnetic, PointerParallax, SmoothScroll — reduced-motion aware
 │   │   └── seo/JsonLd.tsx
 │   ├── contentful/
 │   │   ├── client.ts                 # GraphQL client, delivery + preview tokens (server-only)
@@ -417,7 +419,7 @@ Google shows FAQ rich results only for well-known government and health sites (s
 ### Rules
 
 - Server Components by default; `'use client'` only on interactive leaf components. The Contentful Live Preview provider loads only in draft mode, never for visitors.
-- Animate only `transform` and `opacity`. Use `LazyMotion`. Respect `prefers-reduced-motion`.
+- Animate only `transform` and `opacity`. Use GSAP through `src/lib/gsap.ts` (plugins registered once). Respect `prefers-reduced-motion`.
 - Heavy interactive pieces (sliders, video players, maps) load with `next/dynamic` below the fold, or behind a click (facade pattern).
 - **Office map:** an SVG world map with office pins, not a map SDK. A real interactive map only on `/contact`, behind a click. **On `/about` (9 Oct 2026):** a static picture of the map from the design that opens Google Maps in a new tab — no map scripts on the page.
 - Always set image dimensions or aspect ratio, and reserve space for embeds, so nothing shifts (CLS).

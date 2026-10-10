@@ -147,6 +147,14 @@ export type CaseStudySummary = {
   image: ContentfulImage;
 };
 
+// A case study as a project card on a service page.
+export type CaseStudyCard = CaseStudySummary & {
+  /** The logo is only included once the client has approved its use. */
+  client: { name: string; logo: ContentfulImage | null } | null;
+  highlight: string | null;
+  points: string[];
+};
+
 type AssetData = {
   url: string | null;
   width: number | null;
@@ -254,6 +262,20 @@ type CaseStudyData = {
 type CaseStudiesData = {
   caseStudyCollection: {
     items: ({ title: string | null; slug: string | null; excerpt: string | null; heroImage: AssetData } | null)[];
+  };
+};
+
+type ServiceCaseStudiesData = {
+  caseStudyCollection: {
+    items: ({
+      title: string | null;
+      slug: string | null;
+      excerpt: string | null;
+      cardHighlight: string | null;
+      cardPoints: (string | null)[] | null;
+      heroImage: AssetData;
+      client: { name: string | null; logoApproved: boolean | null; logo: AssetData } | null;
+    } | null)[];
   };
 };
 
@@ -436,6 +458,32 @@ const CASE_STUDIES = /* GraphQL */ `
         excerpt
         heroImage {
           ...ImageFields
+        }
+      }
+    }
+  }
+  ${IMAGE_FIELDS}
+`;
+
+// Case studies tagged with one service (the slugs in contentful/migrations/0002), newest first.
+const SERVICE_CASE_STUDIES = /* GraphQL */ `
+  query ServiceCaseStudies($service: String!) {
+    caseStudyCollection(where: { services_contains_some: [$service] }, limit: 12, order: [sys_firstPublishedAt_DESC]) {
+      items {
+        title
+        slug
+        excerpt
+        cardHighlight
+        cardPoints
+        heroImage {
+          ...ImageFields
+        }
+        client {
+          name
+          logoApproved
+          logo {
+            ...ImageFields
+          }
         }
       }
     }
@@ -646,5 +694,32 @@ export const getCaseStudies = cache(async (): Promise<CaseStudySummary[]> => {
     const image = toImage(item?.heroImage ?? null);
     if (!item?.title || !item.slug || !item.excerpt || !image) return [];
     return [{ title: item.title, slug: item.slug, href: `/case-studies/${item.slug}`, excerpt: item.excerpt, image }];
+  });
+});
+
+// The published case studies tagged with a service, as project cards, newest first.
+export const getServiceCaseStudies = cache(async (service: string): Promise<CaseStudyCard[]> => {
+  const data = await caseStudyQuery<ServiceCaseStudiesData>(SERVICE_CASE_STUDIES, {
+    variables: { service },
+    tags: ["caseStudy"],
+  });
+
+  return (data?.caseStudyCollection.items ?? []).flatMap((item) => {
+    const image = toImage(item?.heroImage ?? null);
+    if (!item?.title || !item.slug || !item.excerpt || !image) return [];
+    return [
+      {
+        title: item.title,
+        slug: item.slug,
+        href: `/case-studies/${item.slug}`,
+        excerpt: item.excerpt,
+        image,
+        client: item.client?.name
+          ? { name: item.client.name, logo: item.client.logoApproved ? toImage(item.client.logo) : null }
+          : null,
+        highlight: item.cardHighlight,
+        points: (item.cardPoints ?? []).filter((point): point is string => Boolean(point)),
+      },
+    ];
   });
 });

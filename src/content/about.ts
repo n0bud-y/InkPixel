@@ -15,15 +15,29 @@ import statProjects from "@/assets/images/about/icons/stat-projects.svg";
 import statSatisfaction from "@/assets/images/about/icons/stat-satisfaction.svg";
 import statYears from "@/assets/images/about/icons/stat-years.svg";
 import valueBulb from "@/assets/images/about/icons/value-bulb.svg";
+import valueHandshake from "@/assets/images/about/icons/value-handshake.svg";
 import valueMonitor from "@/assets/images/about/icons/value-monitor.svg";
 import valueShield from "@/assets/images/about/icons/value-shield.svg";
 import valuesIcon from "@/assets/images/about/icons/values.svg";
 import visionIcon from "@/assets/images/about/icons/vision.svg";
 import monisBari from "@/assets/images/about/monis-bari.webp";
 import aliHassan from "@/assets/images/about/team/ali-hassan.webp";
+import aliyan from "@/assets/images/about/team/aliyan.webp";
+import danishKhalidBari from "@/assets/images/about/team/danish-khalid-bari.webp";
+import isfahanAli from "@/assets/images/about/team/isfahan-ali.webp";
+import monisBariTeam from "@/assets/images/about/team/monis-bari.webp";
+import muhammadAyyan from "@/assets/images/about/team/muhammad-ayyan.webp";
+import muhammadDaniyal from "@/assets/images/about/team/muhammad-daniyal.webp";
+import muhammadZeeshan from "@/assets/images/about/team/muhammad-zeeshan.webp";
 import mussyabKhan from "@/assets/images/about/team/mussyab-khan.webp";
+import osamaAhmed from "@/assets/images/about/team/osama-ahmed.webp";
+import shahzaibMoin from "@/assets/images/about/team/shahzaib-moin.webp";
+import syedHassan from "@/assets/images/about/team/syed-hassan.webp";
+import moazzamAli from "@/assets/images/about/team/syed-moazzam-ali.webp";
 import shahnoorHamza from "@/assets/images/about/team/syed-shahnoor-hamza.webp";
 import tahaAli from "@/assets/images/about/team/syed-taha-ali.webp";
+import tassinAhmed from "@/assets/images/about/team/tassin-ahmed.webp";
+import wali from "@/assets/images/about/team/wali.webp";
 
 const lorem =
   "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing.";
@@ -92,23 +106,42 @@ export const whoWeAre = {
       text: "Our process is designed around client satisfaction. We focus on clear communication, understanding your goals, and delivering results that exceed expectations.",
       icon: valueMonitor,
     },
+    // Not in the design; added on 10 Oct 2026 (project head).
+    {
+      title: "Long-Term Partnership",
+      text: "We don't disappear after launch. From ongoing support to new features, we grow with your business and stay the team you can call.",
+      icon: valueHandshake,
+    },
   ],
 };
 
 export type TeamMember = { name: string; role: string; photo: StaticImageData };
 
-// "Meet The People Behind Ink Pixel Studios". Each person agreed to appear with their photo
-// (confirmed by the project head on 9 Oct 2026).
+// "Meet The People Behind Ink Pixel Studios". The intro, the people, their order, and the photos
+// come from the live site's About page (inkpixelstudios.com/about-us), added at the project
+// head's request on 10 Oct 2026; the first four on 9 Oct (photos from the design).
 export const team = {
   title: "Meet The People Behind *Ink Pixel Studios*",
-  // PLACEHOLDER: the design's line was copied from another agency's site; confirm or rewrite.
   intro:
-    "Strategists, designers, and engineers who work side by side on every project: the people you'll actually talk to, from the first call to launch and beyond.",
+    "Behind every project at Ink Pixel Studios is a team of developers, designers, and strategists who bring ideas to life with precision and creativity. Get to know the people who turn your vision into reliable, high-quality digital solutions.",
   members: [
-    { name: "Ali Hassan", role: "Senior Manager - Marketing", photo: aliHassan },
+    { name: "Monis Bari", role: "Founder & CEO", photo: monisBariTeam },
+    { name: "Danish Khalid Bari", role: "COO", photo: danishKhalidBari },
+    { name: "Osama Ahmed", role: "CRO", photo: osamaAhmed },
+    { name: "Isfahan Ali", role: "CFO", photo: isfahanAli },
+    { name: "Syed Moazzam Ali", role: "CTO", photo: moazzamAli },
+    { name: "Muhammad Zeeshan", role: "Vice President - Customer Representative", photo: muhammadZeeshan },
+    { name: "Aliyan", role: "Senior Manager - Customer Representative", photo: aliyan },
+    { name: "Tassin Ahmed", role: "Senior Executive - Customer Representative", photo: tassinAhmed },
+    { name: "Wali", role: "Senior Executive - Customer Representative", photo: wali },
+    { name: "Syed Hassan", role: "Senior Executive - Customer Representative", photo: syedHassan },
     { name: "Mussyab Khan", role: "Senior Manager - Web Application", photo: mussyabKhan },
-    { name: "Syed Taha Ali", role: "Senior Manager - Design", photo: tahaAli },
+    { name: "Ali Hassan", role: "Senior Manager - Marketing", photo: aliHassan },
     { name: "Syed Shahnoor Hamza", role: "Senior Manager - Performance Marketing", photo: shahnoorHamza },
+    { name: "Syed Taha Ali", role: "Senior Manager - Design", photo: tahaAli },
+    { name: "Muhammad Daniyal", role: "Senior Executive - Web Developer", photo: muhammadDaniyal },
+    { name: "Muhammad Ayyan", role: "Executive - Web Developer", photo: muhammadAyyan },
+    { name: "Shahzaib Moin", role: "Executive - Marketing", photo: shahzaibMoin },
   ] satisfies TeamMember[],
 };
 

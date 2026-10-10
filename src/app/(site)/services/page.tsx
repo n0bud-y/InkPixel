@@ -10,8 +10,8 @@ export default function ServicesPage() {
       <p className="mt-4 text-foreground/70">
         Placeholder. Services are listed from Contentful in P3-07.
       </p>
-      <Link href="/services/example" className="mt-6 inline-block underline">
-        Example service
+      <Link href="/services/web-development" className="mt-6 inline-block underline">
+        Web Development
       </Link>
     </div>
   );

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { CountUp } from "@/components/motion/CountUp";
+import { HorizontalPin } from "@/components/motion/HorizontalPin";
 import { Reveal } from "@/components/motion/Reveal";
 import { withAccent } from "@/components/ui/accent";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -8,11 +9,15 @@ import { whoWeAre } from "@/content/about";
 // White card with a 1px brand-gradient border; the first card is filled with the gradient.
 const outlinedCard = { background: "linear-gradient(#fff, #fff) padding-box, var(--gradient-reverse) border-box" };
 
-// "Who Are We": the intro on the left, four counting stats on the right, then three value cards.
+// "Who Are We": the intro on the left, four counting stats on the right, then the value cards
+// in a row that runs off the screen's right edge. Desktop (motion allowed): the section locks
+// while the cards slide in from the right (HorizontalPin), then the page scrolls on.
+// Phones, tablets, and reduced motion: the cards are a sideways-scrolling row.
 export function WhoWeAre() {
   return (
-    <section aria-labelledby="who-title" className="relative isolate overflow-hidden bg-primary">
-      <div className="container-site py-[clamp(4rem,6.25vw,7.5rem)]">
+    <HorizontalPin aria-labelledby="who-title" className="relative isolate overflow-hidden bg-primary">
+      {/* Less padding while locked, so the section fits on laptop screens below the header. */}
+      <div className="container-site py-[clamp(4rem,6.25vw,7.5rem)] group-data-[pinned=true]/hpin:py-[clamp(3rem,4vw,5rem)]">
         <div className="grid grid-cols-[minmax(0,1fr)] items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.95fr)] lg:gap-[clamp(2rem,6vw,8rem)]">
           <Reveal>
             <SectionHeading
@@ -42,14 +47,19 @@ export function WhoWeAre() {
         </div>
 
         <Reveal y={40} stagger={0.12} className="mt-[clamp(3rem,4vw,5rem)]">
-          <ul className="grid grid-cols-[minmax(0,1fr)] gap-[clamp(0.75rem,0.6vw,1rem)] md:grid-cols-3">
+          {/* The track: a sideways-scrolling row, which overflows the page instead (and is moved
+              by HorizontalPin) while the section is locked. */}
+          <ul
+            data-horizontal-track
+            className="relative -mx-5 flex snap-x snap-mandatory scroll-px-5 gap-[clamp(0.75rem,0.6vw,1rem)] overflow-x-auto px-5 pb-2 [scrollbar-width:none] sm:-mx-8 sm:scroll-px-8 sm:px-8 lg:mx-0 lg:px-0 lg:pb-0 group-data-[pinned=true]/hpin:overflow-visible"
+          >
             {whoWeAre.values.map((value, index) => {
               const filled = index === 0;
               return (
                 <li
                   key={value.title}
                   data-reveal
-                  className={`rounded-[1.25rem] border border-transparent px-[clamp(1.25rem,1.4vw,1.75rem)] py-[clamp(1.75rem,2.6vw,3.1rem)] ${filled ? "bg-brand-gradient-reverse" : ""}`}
+                  className={`w-[min(82vw,26rem)] shrink-0 snap-start rounded-[1.25rem] border border-transparent px-[clamp(1.25rem,1.4vw,1.75rem)] py-[clamp(1.75rem,2.6vw,3.1rem)] lg:w-[33.2vw] ${filled ? "bg-brand-gradient-reverse" : ""}`}
                   style={filled ? undefined : outlinedCard}
                 >
                   <span
@@ -73,6 +83,6 @@ export function WhoWeAre() {
           </ul>
         </Reveal>
       </div>
-    </section>
+    </HorizontalPin>
   );
 }
