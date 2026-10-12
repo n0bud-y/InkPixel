@@ -15,7 +15,9 @@ if [ ! -d node_modules/next ] || ! git diff --quiet "$before" HEAD -- package-lo
   npm ci --include=dev
 fi
 
-npm run build
+# Webpack, not Turbopack (Next.js's default builder): Turbopack needs glibc 2.30, newer than
+# this server has.
+npx next build --webpack
 
 # The site restarts on its next visit when this file changes.
 mkdir -p tmp
