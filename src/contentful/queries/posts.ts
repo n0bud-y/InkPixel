@@ -1,5 +1,7 @@
 import "server-only";
+import { cache } from "react";
 import { ContentfulError, contentfulQuery } from "@/contentful/client";
+import { IMAGE_FIELDS, toImage, type AssetData, type ContentfulImage } from "./case-studies";
 
 // A blog post as shown on article cards (home page "From the studio.", later the blog listing).
 export type PostSummary = {
@@ -92,3 +94,95 @@ export async function getLatestPosts(limit = 3): Promise<PostSummary[]> {
     ];
   });
 }
+
+// A post's search and sharing fields, for its page's metadata (the article template is P3-11).
+export type PostSeo = {
+  title: string;
+  slug: string;
+  excerpt: string | null;
+  /** ISO dates. */
+  publishedDate: string;
+  updatedDate: string | null;
+  coverImage: ContentfulImage | null;
+  /** The linked SEO entry: the title is used as typed; canonical replaces the page's address. */
+  seo: {
+    title: string | null;
+    description: string | null;
+    canonical: string | null;
+    image: ContentfulImage | null;
+    noIndex: boolean;
+  };
+};
+
+type PostSeoData = {
+  postCollection: {
+    items: ({
+      title: string | null;
+      slug: string | null;
+      excerpt: string | null;
+      publishedDate: string | null;
+      updatedDate: string | null;
+      coverImage: AssetData;
+      seo: {
+        title: string | null;
+        description: string | null;
+        canonical: string | null;
+        noIndex: boolean | null;
+        image: AssetData;
+      } | null;
+    } | null)[];
+  };
+};
+
+const POST_SEO = /* GraphQL */ `
+  query PostSeo($slug: String!) {
+    postCollection(where: { slug: $slug }, limit: 1) {
+      items {
+        title
+        slug
+        excerpt
+        publishedDate
+        updatedDate
+        coverImage {
+          ...ImageFields
+        }
+        seo {
+          title
+          description
+          canonical
+          noIndex
+          image {
+            ...ImageFields
+          }
+        }
+      }
+    }
+  }
+  ${IMAGE_FIELDS}
+`;
+
+// A published post's search fields, or null when there is no such post. Cached per request, so
+// the page and its metadata share one query.
+export const getPostSeo = cache(async (slug: string): Promise<PostSeo | null> => {
+  const data = await contentfulQuery<PostSeoData>(POST_SEO, {
+    variables: { slug },
+    tags: ["post", `post:${slug}`],
+  });
+  const item = data.postCollection.items[0];
+  if (!item?.title || !item.slug || !item.publishedDate) return null;
+  return {
+    title: item.title,
+    slug: item.slug,
+    excerpt: item.excerpt,
+    publishedDate: item.publishedDate,
+    updatedDate: item.updatedDate,
+    coverImage: toImage(item.coverImage),
+    seo: {
+      title: item.seo?.title ?? null,
+      description: item.seo?.description ?? null,
+      canonical: item.seo?.canonical ?? null,
+      image: toImage(item.seo?.image ?? null),
+      noIndex: item.seo?.noIndex ?? false,
+    },
+  };
+});

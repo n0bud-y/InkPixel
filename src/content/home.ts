@@ -2,6 +2,7 @@
 import type { StaticImageData } from "next/image";
 import pakArmoring from "@/assets/images/pak-armoring.webp";
 import client1 from "@/assets/images/testimonials/client-1.webp";
+import clientReview from "@/assets/images/testimonials/client-review.webp";
 
 export type FeaturedProject = {
   name: string;
@@ -10,8 +11,10 @@ export type FeaturedProject = {
   image: StaticImageData;
 };
 
-// PLACEHOLDER: case studies come from Contentful (featured flag). Replace this with a query
-// for the featured case study once the case-study content types exist (P3-01, P3-06).
+// The first card in the home page's project stack (FeaturedWork), before the case studies
+// from Contentful. PLACEHOLDER: Pak Armoring is not a Contentful case study yet, so its page
+// (/case-studies/pak-armoring) does not exist; add it to Contentful to give it one, then remove
+// this entry.
 export const featuredProject: FeaturedProject = {
   name: "Pak Armoring (Pvt) Ltd",
   summary:
@@ -33,8 +36,11 @@ export type Testimonial = {
   image: StaticImageData;
   /** The testimonial text: one entry per paragraph. */
   quote: string[];
-  /** Video file URL (e.g. MP4). The play button only appears when this is set. */
-  video?: string;
+  /**
+   * Id of the testimonial's video in Contentful (an asset, e.g. an MP4), so the file can be
+   * replaced there. The play button only appears when this is set and the asset is published.
+   */
+  videoAssetId?: string;
   stats: TestimonialStat[];
 };
 
@@ -53,10 +59,22 @@ const placeholderTestimonial: Testimonial = {
   ],
 };
 
-// PLACEHOLDER: the design shows 6 testimonials; only one exists so far (with a stock photo
-// from the design). Replace each entry with a real client's photo, video, and results, with
-// their permission.
-export const testimonials: Testimonial[] = Array.from({ length: 6 }, () => placeholderTestimonial);
+// PLACEHOLDER (issue I8): stock footage standing in for a client's video (Contentful asset
+// "home-testimonial-video"), with a still from it (11 s in) as the photo; same text and results
+// as the others.
+const videoTestimonial: Testimonial = {
+  ...placeholderTestimonial,
+  image: clientReview,
+  videoAssetId: "home-testimonial-video",
+};
+
+// PLACEHOLDER: the design shows 6 testimonials; none is a real client's yet (stock photo from
+// the design, stock video). Replace each entry with a real client's photo, video, and results,
+// with their permission.
+export const testimonials: Testimonial[] = [
+  videoTestimonial,
+  ...Array.from({ length: 5 }, () => placeholderTestimonial),
+];
 
 export type ProcessStep = {
   title: string;

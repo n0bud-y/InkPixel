@@ -1,10 +1,10 @@
-# Brand Portfolio Platform — Architecture Plan (v2.13)
+# Brand Portfolio Platform — Architecture Plan (v2.14)
 
 | | |
 |---|---|
 | **Status** | Draft for review |
 | **Owner** | Project Head |
-| **Last updated** | 10 Oct 2026 |
+| **Last updated** | 15 Oct 2026 |
 | **Supersedes** | `Brand Portfolio Project Architecture & Execution Plan.pdf` (v1) |
 | **Companion docs** | [README.md](README.md) (living brief) · [execution-plan.md](execution-plan.md) (tasks, owners, timeline) |
 | **Reference** | tekrevol.com — for scope and feel, not to copy |
@@ -13,6 +13,7 @@
 
 | Version | Date | Change |
 |---|---|---|
+| v2.14 | 15 Oct 2026 | **Search settings editable in Contentful for every page** (manager decision): the pages whose content is in code get a `pageSeo` entry each, found by page address (migration `0007-page-seo.cjs`, 11 entries seeded); `seo` gets a canonical URL; meta titles from Contentful are used as typed; the text in code is the fallback (§6, §8). Technical SEO and JSON-LD per §8 built (`src/lib/seo.ts`) |
 | v2.13 | 10 Oct 2026 | **Service page template built** (`/services/[slug]`, static content in `src/content/service-pages.ts`; only listed slugs are built, others 404). Its project cards are the case studies whose `services` field includes the page's service, read with a `services_contains_some` query; migration `0006-case-study-card.cjs` adds an optional card highlight and up to three card points to `caseStudy` (§6). The consultation and contact forms link to `/contact` until the lead pipeline (§11); the cost estimator sends its answers to `/contact` in the URL. Folder structure updated (§7) |
 | v2.12 | 10 Oct 2026 | **About page motion and team**: the "Who Are We" value cards (four) slide sideways while the section is pinned (`HorizontalPin`, GSAP ScrollTrigger pin + scrub, desktop only); the team row is an auto-sliding carousel (`TeamCarousel`: native scroll with snapping, dots, no pause button by project head decision) with all 17 people from the live site's About page. Folder structure updated (§7); the stale `LazyMotion` rule now names GSAP (§9) |
 | v2.11 | 9 Oct 2026 | **About page built** as static content (`src/content/about.ts`, `src/components/sections/about/`), reusing home sections; office map on About is a static picture linking to Google Maps (§9). Folder structure updated (§7) |
@@ -232,9 +233,9 @@ Content source: case studies and the blog come from Contentful; every other rout
 
 ## 6. Content model (Contentful)
 
-Contentful holds **only case studies and blog posts**, plus the small types they link to (project head decision, 30 Sep 2026). Services, industries, offices, FAQs, navigation, page sections, and site settings are static content in code. Contentful has no nested objects, so SEO fields are their own content type, linked by reference. The model uses about 8 content types, far under the plan limit (free tier ≈ 48).
+Contentful holds **only case studies and blog posts**, plus the small types they link to (project head decision, 30 Sep 2026), and the **search settings of every other page** (`pageSeo`: meta title, description, canonical URL; manager decision, 15 Oct 2026), so they can be changed without a developer. Services, industries, offices, FAQs, navigation, page sections, and site settings are static content in code. Contentful has no nested objects, so SEO fields are their own content type, linked by reference. The model uses about 8 content types, far under the plan limit (free tier ≈ 48).
 
-**When:** the content types are created as migration scripts in `contentful/migrations/` when the case-study and blog pages are built (P3-01), not by hand in the web app. **Created so far:** blog (`0001`, 3 Oct 2026) and case studies (`0002`–`0004`, 8 Oct 2026; `0005`, 9 Oct 2026). Rows marked _planned_ are the remaining draft.
+**When:** the content types are created as migration scripts in `contentful/migrations/` when the case-study and blog pages are built (P3-01), not by hand in the web app. **Created so far:** blog (`0001`, 3 Oct 2026), case studies (`0002`–`0004`, 8 Oct 2026; `0005`, 9 Oct 2026; `0006`, 10 Oct 2026), and Page SEO (`0007`, 15 Oct 2026). Rows marked _planned_ are the remaining draft.
 
 **Case studies are sections, not fixed fields** (project head, 8 Oct 2026). The designs give each case study its own section titles and order (Gulbaan: "The Idea Behind Gulbaan", "Platform Features", "Insights from Client"…; CRM Terminal Gateway: "Introduction", "The Challenge", "The Solution", a numbered features grid…), so fixed challenge / solution / results fields cannot build them. A case study is a hero plus an ordered list of section entries; one template renders them all, alternating navy and white so every case study stays consistent. New section types are added as new migrations when a design needs them: the CRM Terminal Gateway design added the Centered hero layout, numbered features, and the wide image (`0003`); the app design (Cathy O’Bryan’s Books) added the Light hero, cards, screens, testimonials, and the call-to-action panel (`0005`). Titles from Contentful can mark \*accent\* words, shown in the brand gradient.
 
@@ -257,7 +258,8 @@ Contentful holds **only case studies and blog posts**, plus the small types they
 | `post` | title, slug, author → `person`, category → `category`, cover image, body (Rich Text), published/updated dates, seo |
 | `category` | title, slug |
 | `person` | name, role, photo, bio, social links (blog authors; supports E-E-A-T). Leadership on the About page is static |
-| `seo` | title, description, OG image, `noindex` |
+| `seo` | meta title (used as typed), description, canonical URL (optional), OG image, `noindex`. Linked from case studies and posts |
+| `pageSeo` | page (name), page address (unique, e.g. `/about`), meta title (used as typed), meta description, canonical URL (optional), share image, `noindex`. One per page whose content is in code; a page without one uses the text in code |
 
 **Rules**
 
@@ -368,7 +370,8 @@ If D1 says multilingual, everything under `(site)/` moves to `src/app/[locale]/(
 
 ### Technical SEO (built into every template in Phase 3, not bolted on)
 
-- `metadataBase` in the root layout. Each route exports `metadata` or `generateMetadata()`. Static pages define their metadata in code; case studies and posts read their linked `seo` entry, with sensible fallbacks.
+- `metadataBase` in the root layout. Each route exports `generateMetadata()` (helpers in `src/lib/seo.ts`). Pages whose content is in code read their `pageSeo` entry (by address); case studies and posts read their linked `seo` entry; the text in code (or the case study's / post's own title, excerpt, and image) is the fallback, also when Contentful can't be reached (manager decision, 15 Oct 2026). Changes show within the hour (fetch cache), at once with the publish webhook (P3-03).
+- Metadata of dynamically rendered pages is streamed (Next.js 15.2+): it lands in `<head>` for crawlers that don't run JavaScript (Bingbot, social previews, Google's testing tools) and at the end of `<body>` for browsers and Googlebot, which reads it there.
 - A canonical URL on every page. **Every non-production deployment is `noindex`** (driven by `VERCEL_ENV`), so preview URLs never compete with the real site.
 - Open Graph and Twitter images generated per case study and article with `opengraph-image.tsx`.
 - `sitemap.ts` lists the static routes from code plus every case study and post from Contentful, with real `lastModified`. `robots.ts` disallows `/api`.

@@ -7,6 +7,11 @@ import { CountUp } from "@/components/motion/CountUp";
 import type { Testimonial } from "@/content/home";
 import { MOTION_OK, gsap, useGSAP } from "@/lib/gsap";
 
+export type TestimonialSlide = Omit<Testimonial, "videoAssetId"> & {
+  /** The video's address (from Contentful); the play button only appears when it is set. */
+  video?: string;
+};
+
 // The whole testimonials layout, one testimonial at a time: heading + quote + action on the
 // left, the client's video card in the middle, results on the right.
 // - The quote, photo, and results change with the slide; the heading and action stay.
@@ -17,14 +22,15 @@ import { MOTION_OK, gsap, useGSAP } from "@/lib/gsap";
 // - Changing slide crossfades the photo and cascades the quote and stats in (skipped for
 //   reduced motion).
 // - The play button only appears when a testimonial has a video; it opens a full-screen
-//   native <dialog> (Esc closes it, focus stays inside).
+//   native <dialog> (Esc closes it, focus stays inside) and starts the video, which only
+//   downloads from then on. Portrait (phone) and landscape videos both fit the screen.
 // Children marked data-reveal cascade in when the carousel is wrapped in <Reveal>.
 export function TestimonialCarousel({
   testimonials,
   heading,
   action,
 }: {
-  testimonials: Testimonial[];
+  testimonials: TestimonialSlide[];
   heading: ReactNode;
   action: ReactNode;
 }) {
@@ -34,6 +40,12 @@ export function TestimonialCarousel({
   const [index, setIndex] = useState(0);
   const current = testimonials[index];
   const count = testimonials.length;
+
+  // The click that opens the player also starts the video, so browsers allow its sound.
+  const openVideo = () => {
+    video.current?.showModal();
+    video.current?.querySelector("video")?.play().catch(() => {});
+  };
 
   useGSAP(
     () => {
@@ -131,7 +143,7 @@ export function TestimonialCarousel({
             {current.video && (
               <button
                 type="button"
-                onClick={() => video.current?.showModal()}
+                onClick={openVideo}
                 className="group absolute top-1/2 left-1/2 grid size-[clamp(3.5rem,4.4vw,5.25rem)] -translate-1/2 place-items-center rounded-full border-[clamp(3px,0.26vw,5px)] border-crimson bg-black/10 backdrop-blur-[2px] transition-transform duration-300 hover:scale-105"
               >
                 <span
@@ -214,7 +226,7 @@ export function TestimonialCarousel({
           ref={video}
           aria-label={`${current.client} video`}
           onClose={(event) => event.currentTarget.querySelector("video")?.pause()}
-          className="m-auto w-[min(90vw,60rem)] max-w-none overflow-visible bg-transparent p-0 backdrop:bg-black/80 backdrop:backdrop-blur-sm"
+          className="m-auto w-fit max-w-[90vw] overflow-visible bg-transparent p-0 backdrop:bg-black/80 backdrop:backdrop-blur-sm"
         >
           <form method="dialog" className="mb-3 flex justify-end">
             <button
@@ -224,7 +236,15 @@ export function TestimonialCarousel({
               Close
             </button>
           </form>
-          <video src={current.video} controls autoPlay playsInline className="w-full rounded-2xl bg-black" />
+          {/* Sized by its height, so portrait videos fit too; the photo shows until it plays. */}
+          <video
+            src={current.video}
+            poster={current.image.src}
+            preload="none"
+            controls
+            playsInline
+            className="mx-auto block max-h-[80dvh] w-auto max-w-full rounded-2xl bg-black"
+          />
         </dialog>
       )}
     </div>

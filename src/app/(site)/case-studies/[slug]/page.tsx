@@ -10,7 +10,23 @@ import { ShowcaseSection } from "@/components/case-studies/ShowcaseSection";
 import { TechStackSection } from "@/components/case-studies/TechStackSection";
 import { TestimonialsSection } from "@/components/case-studies/TestimonialsSection";
 import { ContactCta } from "@/components/sections/home/ContactCta";
-import { getCaseStudies, getCaseStudy } from "@/contentful/queries/case-studies";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { getCaseStudies, getCaseStudy, type CaseStudy } from "@/contentful/queries/case-studies";
+import { breadcrumbSchema, caseStudySchema, pageMetadata, toShareImage } from "@/lib/seo";
+
+// Meta title, description, canonical URL, and share image: the case study's SEO entry in
+// Contentful (its title used as typed), or the case study's title, excerpt, address, and hero
+// image.
+function seoOf(caseStudy: CaseStudy) {
+  const { seo } = caseStudy;
+  return {
+    title: seo.title ? { absolute: seo.title } : `${caseStudy.title} Case Study`,
+    description: seo.description ?? caseStudy.excerpt,
+    path: `/case-studies/${caseStudy.slug}`,
+    canonical: seo.canonical,
+    image: toShareImage(seo.image ?? caseStudy.heroImage),
+  };
+}
 
 // Every published case study is built ahead of time; one published later renders on its
 // first visit and is then cached like the rest.
@@ -24,15 +40,11 @@ export async function generateMetadata(props: PageProps<"/case-studies/[slug]">)
   const caseStudy = await getCaseStudy(slug);
   if (!caseStudy) return {};
 
-  const { seo } = caseStudy;
-  const image = seo.image ?? caseStudy.heroImage;
-  return {
-    title: seo.title ?? `${caseStudy.title} Case Study`,
-    description: seo.description ?? caseStudy.excerpt,
-    alternates: { canonical: `/case-studies/${caseStudy.slug}` },
-    openGraph: { images: [{ url: image.url, width: image.width, height: image.height, alt: image.alt }] },
-    robots: seo.noIndex ? { index: false } : undefined,
-  };
+  return pageMetadata({
+    ...seoOf(caseStudy),
+    article: { publishedTime: caseStudy.publishedAt, modifiedTime: caseStudy.updatedAt },
+    noIndex: caseStudy.seo.noIndex,
+  });
 }
 
 // A case study from Contentful: the hero, its sections in order (alternating navy and white,
@@ -41,9 +53,27 @@ export default async function CaseStudyPage(props: PageProps<"/case-studies/[slu
   const { slug } = await props.params;
   const caseStudy = await getCaseStudy(slug);
   if (!caseStudy) notFound();
+  const seo = seoOf(caseStudy);
 
   return (
     <>
+      <JsonLd
+        items={[
+          breadcrumbSchema([
+            { name: "Case studies", path: "/case-studies" },
+            { name: caseStudy.title, path: seo.path },
+          ]),
+          caseStudySchema({
+            title: `${caseStudy.title} Case Study`,
+            description: seo.description,
+            path: seo.path,
+            image: seo.image.url,
+            publishedTime: caseStudy.publishedAt,
+            modifiedTime: caseStudy.updatedAt,
+            client: caseStudy.client?.name ?? null,
+          }),
+        ]}
+      />
       <CaseStudyHero
         layout={caseStudy.heroLayout}
         eyebrow={caseStudy.heroEyebrow}

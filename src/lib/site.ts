@@ -1,12 +1,30 @@
 // Site-wide settings. Static content: edited in code, not in Contentful.
 export const siteConfig = {
   name: "Ink Pixel Studios",
-  description: "Brand portfolio, services, and case studies.",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  /** The default search description (home page, and pages without their own). Stand-in, issue I9. */
+  description:
+    "Ink Pixel Studios is a digital studio in Karachi building websites, apps, custom software, brands, and AI automation for businesses worldwide.",
+  /** The live site's address, for canonical URLs, share links, the sitemap, and structured data,
+   *  on every deployment (previews and the demo point to the live site). */
+  url: process.env.NEXT_PUBLIC_SITE_URL || "https://inkpixelstudios.com",
   email: "info@inkpixelstudios.com",
   /** Short line about the studio (footer). */
   tagline: "A digital studio building software, brands and experiences from Karachi for the world.",
   address: "Office 308, 3rd Floor, Anum Empire, Shahra-e-Faisal, Jinnah Housing Society Karachi, 74200",
+  /** The same office, as structured data (schema.org) needs it. The position is the About page's
+   *  map link (plus code V38J+R9 Karachi). */
+  office: {
+    streetAddress: "Office 308, 3rd Floor, Anum Empire, Shahra-e-Faisal, Jinnah Housing Society",
+    addressLocality: "Karachi",
+    addressRegion: "Sindh",
+    postalCode: "74200",
+    addressCountry: "PK",
+    latitude: 24.86706,
+    longitude: 67.08094,
+  },
+  /** The studio's social profiles (structured data `sameAs`). None yet: add LinkedIn,
+   *  Instagram, Behance, Clutch, … here. */
+  socialProfiles: [] as string[],
 };
 
 // "Insights" is the blog and "Our Work" the case studies; the URLs stay descriptive for SEO.

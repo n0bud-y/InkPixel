@@ -14,7 +14,9 @@ import { ServiceProjects } from "@/components/sections/services/ServiceProjects"
 import { ServiceStats } from "@/components/sections/services/ServiceStats";
 import { ServiceTypes } from "@/components/sections/services/ServiceTypes";
 import { ServiceWorkflow } from "@/components/sections/services/ServiceWorkflow";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { getServicePage, servicePages } from "@/content/service-pages";
+import { breadcrumbSchema, pageMetadataFromCms, serviceSchema } from "@/lib/seo";
 
 // Only the services with content in src/content/service-pages.ts exist; any other slug is a 404.
 export const dynamicParams = false;
@@ -27,11 +29,8 @@ export async function generateMetadata(props: PageProps<"/services/[slug]">): Pr
   const { slug } = await props.params;
   const page = getServicePage(slug);
   if (!page) return {};
-  return {
-    title: page.name,
-    description: page.description,
-    alternates: { canonical: `/services/${page.slug}` },
-  };
+  // From the page's Page SEO entry in Contentful; the content file's name and description otherwise.
+  return pageMetadataFromCms({ title: page.name, description: page.description, path: `/services/${page.slug}` });
 }
 
 // A service page: static content from src/content/service-pages.ts, its projects from
@@ -41,9 +40,19 @@ export default async function ServicePage(props: PageProps<"/services/[slug]">) 
   const { slug } = await props.params;
   const page = getServicePage(slug);
   if (!page) notFound();
+  const path = `/services/${page.slug}`;
 
   return (
     <>
+      <JsonLd
+        items={[
+          breadcrumbSchema([
+            { name: "Services", path: "/services" },
+            { name: page.name, path },
+          ]),
+          serviceSchema({ name: page.name, description: page.description, path }),
+        ]}
+      />
       <ServiceHero page={page} />
       <Stats />
       <ServiceIntro page={page} />

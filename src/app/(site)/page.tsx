@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { ContactCta } from "@/components/sections/home/ContactCta";
 import { Faq } from "@/components/sections/home/Faq";
 import { FeaturedWork } from "@/components/sections/home/FeaturedWork";
@@ -8,6 +9,19 @@ import { Process } from "@/components/sections/home/Process";
 import { ServicesShowcase } from "@/components/sections/home/ServicesShowcase";
 import { Stats } from "@/components/sections/home/Stats";
 import { Testimonials } from "@/components/sections/home/Testimonials";
+import { pageMetadataFromCms } from "@/lib/seo";
+import { siteConfig } from "@/lib/site";
+
+// From the home page's Page SEO entry in Contentful; this is the fallback. The studio and the
+// website (structured data) are described on every page by the root layout.
+export function generateMetadata(): Promise<Metadata> {
+  return pageMetadataFromCms({
+    // Stand-in, issue I9.
+    title: { absolute: "Ink Pixel Studios | Software & Digital Studio in Karachi" },
+    description: siteConfig.description,
+    path: "/",
+  });
+}
 
 export default function HomePage() {
   return (

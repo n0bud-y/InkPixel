@@ -9,19 +9,25 @@ import { ContactCta } from "@/components/sections/home/ContactCta";
 import { Faq } from "@/components/sections/home/Faq";
 import { Industries } from "@/components/sections/home/Industries";
 import { Insights } from "@/components/sections/home/Insights";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { breadcrumbSchema, officeSchema, pageMetadataFromCms } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "About",
-  description:
-    "Ink Pixel Studios is a software and digital solutions company in Karachi, Pakistan: the people, the values, and the way we work.",
-  alternates: { canonical: "/about" },
-};
+// From the page's Page SEO entry in Contentful; this is the fallback.
+export function generateMetadata(): Promise<Metadata> {
+  return pageMetadataFromCms({
+    title: "About",
+    description:
+      "Ink Pixel Studios is a software and digital solutions company in Karachi, Pakistan: the people, the values, and the way we work.",
+    path: "/about",
+  });
+}
 
 // About: static content in src/content/about.ts. Industries, Insights, and the FAQ are the
 // home page's sections (Industries on cream here, between two navy sections).
 export default function AboutPage() {
   return (
     <>
+      <JsonLd items={[breadcrumbSchema([{ name: "About", path: "/about" }]), officeSchema()]} />
       <AboutHero />
       <TrustedBy />
       <WhoWeAre />

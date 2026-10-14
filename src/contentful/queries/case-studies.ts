@@ -135,7 +135,17 @@ export type CaseStudy = {
   /** The logo is only included once the client has approved its use. */
   client: { name: string; logo: ContentfulImage | null } | null;
   sections: CaseStudySectionData[];
-  seo: { title: string | null; description: string | null; image: ContentfulImage | null; noIndex: boolean };
+  /** The linked SEO entry: the title is used as typed; canonical replaces the page's address. */
+  seo: {
+    title: string | null;
+    description: string | null;
+    canonical: string | null;
+    image: ContentfulImage | null;
+    noIndex: boolean;
+  };
+  /** When it was first published, and last published (ISO dates). */
+  publishedAt: string;
+  updatedAt: string;
 };
 
 // A case study as listed on /case-studies (and later on cards).
@@ -145,17 +155,20 @@ export type CaseStudySummary = {
   href: string;
   excerpt: string;
   image: ContentfulImage;
+  /** When it was last published (ISO date), e.g. for the sitemap. */
+  updatedAt: string;
 };
 
 // A case study as a project card on a service page.
-export type CaseStudyCard = CaseStudySummary & {
+export type CaseStudyCard = Omit<CaseStudySummary, "updatedAt"> & {
   /** The logo is only included once the client has approved its use. */
   client: { name: string; logo: ContentfulImage | null } | null;
   highlight: string | null;
   points: string[];
 };
 
-type AssetData = {
+// An asset as queried with ImageFields (also used by the other queries).
+export type AssetData = {
   url: string | null;
   width: number | null;
   height: number | null;
@@ -254,14 +267,27 @@ type CaseStudyData = {
       heroLayersCollection: { items: AssetData[] } | null;
       client: { name: string | null; logoApproved: boolean | null; logo: AssetData } | null;
       sectionsCollection: { items: (SectionData | null)[] } | null;
-      seo: { title: string | null; description: string | null; noIndex: boolean | null; image: AssetData } | null;
+      seo: {
+        title: string | null;
+        description: string | null;
+        canonical: string | null;
+        noIndex: boolean | null;
+        image: AssetData;
+      } | null;
+      sys: { firstPublishedAt: string; publishedAt: string };
     } | null)[];
   };
 };
 
 type CaseStudiesData = {
   caseStudyCollection: {
-    items: ({ title: string | null; slug: string | null; excerpt: string | null; heroImage: AssetData } | null)[];
+    items: ({
+      title: string | null;
+      slug: string | null;
+      excerpt: string | null;
+      heroImage: AssetData;
+      sys: { publishedAt: string };
+    } | null)[];
   };
 };
 
@@ -279,7 +305,7 @@ type ServiceCaseStudiesData = {
   };
 };
 
-const IMAGE_FIELDS = /* GraphQL */ `
+export const IMAGE_FIELDS = /* GraphQL */ `
   fragment ImageFields on Asset {
     url
     width
@@ -438,10 +464,15 @@ const CASE_STUDY = /* GraphQL */ `
         seo {
           title
           description
+          canonical
           noIndex
           image {
             ...ImageFields
           }
+        }
+        sys {
+          firstPublishedAt
+          publishedAt
         }
       }
     }
@@ -458,6 +489,9 @@ const CASE_STUDIES = /* GraphQL */ `
         excerpt
         heroImage {
           ...ImageFields
+        }
+        sys {
+          publishedAt
         }
       }
     }
@@ -506,7 +540,7 @@ const cardsLayouts: Record<string, CaseStudyCardsLayout> = {
 
 const heroLayouts: Record<string, CaseStudyHeroLayout> = { Centered: "centered", Light: "light" };
 
-function toImage(asset: AssetData): ContentfulImage | null {
+export function toImage(asset: AssetData): ContentfulImage | null {
   if (!asset?.url || !asset.width || !asset.height) return null;
   return {
     url: asset.url.startsWith("//") ? `https:${asset.url}` : asset.url,
@@ -680,9 +714,12 @@ export const getCaseStudy = cache(async (slug: string): Promise<CaseStudy | null
     seo: {
       title: item.seo?.title ?? null,
       description: item.seo?.description ?? null,
+      canonical: item.seo?.canonical ?? null,
       image: toImage(item.seo?.image ?? null),
       noIndex: item.seo?.noIndex ?? false,
     },
+    publishedAt: item.sys.firstPublishedAt,
+    updatedAt: item.sys.publishedAt,
   };
 });
 
@@ -693,7 +730,16 @@ export const getCaseStudies = cache(async (): Promise<CaseStudySummary[]> => {
   return (data?.caseStudyCollection.items ?? []).flatMap((item) => {
     const image = toImage(item?.heroImage ?? null);
     if (!item?.title || !item.slug || !item.excerpt || !image) return [];
-    return [{ title: item.title, slug: item.slug, href: `/case-studies/${item.slug}`, excerpt: item.excerpt, image }];
+    return [
+      {
+        title: item.title,
+        slug: item.slug,
+        href: `/case-studies/${item.slug}`,
+        excerpt: item.excerpt,
+        image,
+        updatedAt: item.sys.publishedAt,
+      },
+    ];
   });
 });
 
