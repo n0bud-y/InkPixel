@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, Inter, JetBrains_Mono } from "next/font/google";
-import { JsonLd } from "@/components/seo/JsonLd";
-import { defaultShareImage, indexable, siteSchema } from "@/lib/seo";
+import { defaultShareImage, indexable } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
 import "./globals.css";
 
@@ -26,6 +25,7 @@ const jetbrainsMono = JetBrains_Mono({
 
 // Defaults for every page; each page sets its own title, description, canonical URL, and Open
 // Graph tags with pageMetadata() (src/lib/seo.ts). Twitter's tags are filled from Open Graph.
+// Structured data is each page's own (<PageSchema>), so a page can replace any of it.
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
@@ -50,10 +50,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${bricolage.variable} ${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
-        <JsonLd items={siteSchema()} />
-        {children}
-      </body>
+      <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
 }

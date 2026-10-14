@@ -1,4 +1,4 @@
-# Brand Portfolio Platform — Architecture Plan (v2.14)
+# Brand Portfolio Platform — Architecture Plan (v2.15)
 
 | | |
 |---|---|
@@ -13,6 +13,7 @@
 
 | Version | Date | Change |
 |---|---|---|
+| v2.15 | 15 Oct 2026 | **Custom schema per page** (manager decision): Page SEO and SEO get a "Custom schema (JSON-LD)" field (migration `0008-custom-schema.cjs`) where the SEO team pastes structured data; it replaces the automatic schema of the same `@type` on that page. `Organization` and `WebSite` move from the root layout into each page's schema (`<PageSchema>`) so a page can replace them (§6, §8) |
 | v2.14 | 15 Oct 2026 | **Search settings editable in Contentful for every page** (manager decision): the pages whose content is in code get a `pageSeo` entry each, found by page address (migration `0007-page-seo.cjs`, 11 entries seeded); `seo` gets a canonical URL; meta titles from Contentful are used as typed; the text in code is the fallback (§6, §8). Technical SEO and JSON-LD per §8 built (`src/lib/seo.ts`) |
 | v2.13 | 10 Oct 2026 | **Service page template built** (`/services/[slug]`, static content in `src/content/service-pages.ts`; only listed slugs are built, others 404). Its project cards are the case studies whose `services` field includes the page's service, read with a `services_contains_some` query; migration `0006-case-study-card.cjs` adds an optional card highlight and up to three card points to `caseStudy` (§6). The consultation and contact forms link to `/contact` until the lead pipeline (§11); the cost estimator sends its answers to `/contact` in the URL. Folder structure updated (§7) |
 | v2.12 | 10 Oct 2026 | **About page motion and team**: the "Who Are We" value cards (four) slide sideways while the section is pinned (`HorizontalPin`, GSAP ScrollTrigger pin + scrub, desktop only); the team row is an auto-sliding carousel (`TeamCarousel`: native scroll with snapping, dots, no pause button by project head decision) with all 17 people from the live site's About page. Folder structure updated (§7); the stale `LazyMotion` rule now names GSAP (§9) |
@@ -258,8 +259,8 @@ Contentful holds **only case studies and blog posts**, plus the small types they
 | `post` | title, slug, author → `person`, category → `category`, cover image, body (Rich Text), published/updated dates, seo |
 | `category` | title, slug |
 | `person` | name, role, photo, bio, social links (blog authors; supports E-E-A-T). Leadership on the About page is static |
-| `seo` | meta title (used as typed), description, canonical URL (optional), OG image, `noindex`. Linked from case studies and posts |
-| `pageSeo` | page (name), page address (unique, e.g. `/about`), meta title (used as typed), meta description, canonical URL (optional), share image, `noindex`. One per page whose content is in code; a page without one uses the text in code |
+| `seo` | meta title (used as typed), description, canonical URL (optional), OG image, `noindex`, custom schema (JSON-LD, optional, §8). Linked from case studies and posts |
+| `pageSeo` | page (name), page address (unique, e.g. `/about`), meta title (used as typed), meta description, canonical URL (optional), share image, `noindex`, custom schema (JSON-LD, optional, §8). One per page whose content is in code; a page without one uses the text in code |
 
 **Rules**
 
@@ -382,7 +383,7 @@ If D1 says multilingual, everything under `(site)/` moves to `src/app/[locale]/(
 
 | Page | Types |
 |---|---|
-| Root layout | `Organization` (logo, `sameAs`, `contactPoint`), `WebSite` |
+| Every page (`<PageSchema>`) | `Organization` (logo, `sameAs`, `contactPoint`), `WebSite` |
 | All inner pages | `BreadcrumbList` |
 | Service | `Service` (provider = Organization) |
 | Case study | `Article` / `CreativeWork` with client, dates, `about` |
@@ -390,6 +391,8 @@ If D1 says multilingual, everything under `(site)/` moves to `src/app/[locale]/(
 | About / contact | `ProfessionalService` (a LocalBusiness type) per office, with address and geo |
 
 Google shows FAQ rich results only for well-known government and health sites (since 2023), and review stars about your own organisation are not eligible. Don't design pages around either.
+
+**Custom schema (manager decision, 15 Oct 2026):** the SEO team can paste JSON-LD into a page's Page SEO entry (or a case study's / post's SEO entry), without the `<script>` tags: one object, a list, or an `@graph`. On that page it replaces the automatic schema of the same `@type` (e.g. a pasted `Service` replaces the automatic `Service`; a pasted `Organization` on the home page replaces the automatic one there) and adds the rest. Contentful only saves valid JSON; the site also skips items without an `@type` (logged) and escapes `<`. Pasted schema must match what the page shows; no review stars about the studio and no site-search box (`SearchAction`: the site has no search, and Google retired the sitelinks search box in 2024).
 
 ### Migration from the existing site (if D2 = yes)
 

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { JsonLd } from "@/components/seo/JsonLd";
+import { PageSchema } from "@/components/seo/PageSchema";
 import { getPostSeo, type PostSeo } from "@/contentful/queries/posts";
 import { breadcrumbSchema, pageMetadata, titleFromSlug, toShareImage } from "@/lib/seo";
 
@@ -43,7 +43,9 @@ export default async function ArticlePage(props: PageProps<"/blog/[slug]">) {
   const post = await postFor(slug);
   return (
     <div className="mx-auto max-w-6xl px-4 pt-32 pb-16">
-      <JsonLd
+      <PageSchema
+        path={`/blog/${slug}`}
+        custom={post?.seo.jsonLd}
         items={[
           breadcrumbSchema([
             { name: "Blog", path: "/blog" },

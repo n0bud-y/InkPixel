@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { JsonLd } from "@/components/seo/JsonLd";
+import { PageSchema } from "@/components/seo/PageSchema";
 import { breadcrumbSchema, pageMetadataFromCms, titleFromSlug } from "@/lib/seo";
 
 // Until the category archive reads the category from Contentful (P3-11), its name comes from
@@ -20,7 +20,8 @@ export default async function CategoryPage(props: PageProps<"/blog/category/[slu
   const { slug } = await props.params;
   return (
     <div className="mx-auto max-w-6xl px-4 pt-32 pb-16">
-      <JsonLd
+      <PageSchema
+        path={`/blog/category/${slug}`}
         items={[
           breadcrumbSchema([
             { name: "Blog", path: "/blog" },

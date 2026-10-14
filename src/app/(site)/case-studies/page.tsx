@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getCaseStudies } from "@/contentful/queries/case-studies";
-import { JsonLd } from "@/components/seo/JsonLd";
+import { PageSchema } from "@/components/seo/PageSchema";
 import { breadcrumbSchema, pageMetadataFromCms } from "@/lib/seo";
 
 // From the page's Page SEO entry in Contentful; this is the fallback (stand-in description, issue I9).
@@ -19,7 +19,7 @@ export default async function CaseStudiesPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 pt-32 pb-16">
-      <JsonLd items={[breadcrumbSchema([{ name: "Case studies", path: "/case-studies" }])]} />
+      <PageSchema path="/case-studies" items={[breadcrumbSchema([{ name: "Case studies", path: "/case-studies" }])]} />
       <h1 className="text-4xl font-semibold">Case studies</h1>
       <p className="mt-4 text-foreground/70">
         Placeholder. The filterable listing comes in P3-09.

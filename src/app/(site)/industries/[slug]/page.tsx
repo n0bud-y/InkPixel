@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { JsonLd } from "@/components/seo/JsonLd";
+import { PageSchema } from "@/components/seo/PageSchema";
 import { industries } from "@/content/industries";
 import { breadcrumbSchema, pageMetadataFromCms, titleFromSlug } from "@/lib/seo";
 
@@ -28,7 +28,8 @@ export default async function IndustryPage(props: PageProps<"/industries/[slug]"
   const { name } = industryFor(slug);
   return (
     <div className="mx-auto max-w-6xl px-4 pt-32 pb-16">
-      <JsonLd
+      <PageSchema
+        path={`/industries/${slug}`}
         items={[
           breadcrumbSchema([
             { name: "Industries", path: "/industries" },

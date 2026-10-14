@@ -9,7 +9,7 @@ import { ContactCta } from "@/components/sections/home/ContactCta";
 import { Faq } from "@/components/sections/home/Faq";
 import { Industries } from "@/components/sections/home/Industries";
 import { Insights } from "@/components/sections/home/Insights";
-import { JsonLd } from "@/components/seo/JsonLd";
+import { PageSchema } from "@/components/seo/PageSchema";
 import { breadcrumbSchema, officeSchema, pageMetadataFromCms } from "@/lib/seo";
 
 // From the page's Page SEO entry in Contentful; this is the fallback.
@@ -27,7 +27,7 @@ export function generateMetadata(): Promise<Metadata> {
 export default function AboutPage() {
   return (
     <>
-      <JsonLd items={[breadcrumbSchema([{ name: "About", path: "/about" }]), officeSchema()]} />
+      <PageSchema path="/about" items={[breadcrumbSchema([{ name: "About", path: "/about" }]), officeSchema()]} />
       <AboutHero />
       <TrustedBy />
       <WhoWeAre />

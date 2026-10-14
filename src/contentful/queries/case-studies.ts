@@ -142,6 +142,8 @@ export type CaseStudy = {
     canonical: string | null;
     image: ContentfulImage | null;
     noIndex: boolean;
+    /** Schema pasted by editors (JSON-LD, migration 0008), as stored; read with customSchema(). */
+    jsonLd: unknown;
   };
   /** When it was first published, and last published (ISO dates). */
   publishedAt: string;
@@ -273,6 +275,7 @@ type CaseStudyData = {
         canonical: string | null;
         noIndex: boolean | null;
         image: AssetData;
+        jsonLd: unknown;
       } | null;
       sys: { firstPublishedAt: string; publishedAt: string };
     } | null)[];
@@ -469,6 +472,7 @@ const CASE_STUDY = /* GraphQL */ `
           image {
             ...ImageFields
           }
+          jsonLd
         }
         sys {
           firstPublishedAt
@@ -717,6 +721,7 @@ export const getCaseStudy = cache(async (slug: string): Promise<CaseStudy | null
       canonical: item.seo?.canonical ?? null,
       image: toImage(item.seo?.image ?? null),
       noIndex: item.seo?.noIndex ?? false,
+      jsonLd: item.seo?.jsonLd ?? null,
     },
     publishedAt: item.sys.firstPublishedAt,
     updatedAt: item.sys.publishedAt,

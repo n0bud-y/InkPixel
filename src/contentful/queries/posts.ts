@@ -111,6 +111,8 @@ export type PostSeo = {
     canonical: string | null;
     image: ContentfulImage | null;
     noIndex: boolean;
+    /** Schema pasted by editors (JSON-LD, migration 0008), as stored; read with customSchema(). */
+    jsonLd: unknown;
   };
 };
 
@@ -129,6 +131,7 @@ type PostSeoData = {
         canonical: string | null;
         noIndex: boolean | null;
         image: AssetData;
+        jsonLd: unknown;
       } | null;
     } | null)[];
   };
@@ -154,6 +157,7 @@ const POST_SEO = /* GraphQL */ `
           image {
             ...ImageFields
           }
+          jsonLd
         }
       }
     }
@@ -183,6 +187,7 @@ export const getPostSeo = cache(async (slug: string): Promise<PostSeo | null> =>
       canonical: item.seo?.canonical ?? null,
       image: toImage(item.seo?.image ?? null),
       noIndex: item.seo?.noIndex ?? false,
+      jsonLd: item.seo?.jsonLd ?? null,
     },
   };
 });

@@ -14,7 +14,7 @@ import { ServiceProjects } from "@/components/sections/services/ServiceProjects"
 import { ServiceStats } from "@/components/sections/services/ServiceStats";
 import { ServiceTypes } from "@/components/sections/services/ServiceTypes";
 import { ServiceWorkflow } from "@/components/sections/services/ServiceWorkflow";
-import { JsonLd } from "@/components/seo/JsonLd";
+import { PageSchema } from "@/components/seo/PageSchema";
 import { getServicePage, servicePages } from "@/content/service-pages";
 import { breadcrumbSchema, pageMetadataFromCms, serviceSchema } from "@/lib/seo";
 
@@ -44,7 +44,8 @@ export default async function ServicePage(props: PageProps<"/services/[slug]">) 
 
   return (
     <>
-      <JsonLd
+      <PageSchema
+        path={path}
         items={[
           breadcrumbSchema([
             { name: "Services", path: "/services" },

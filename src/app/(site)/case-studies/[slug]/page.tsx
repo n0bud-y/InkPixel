@@ -10,7 +10,7 @@ import { ShowcaseSection } from "@/components/case-studies/ShowcaseSection";
 import { TechStackSection } from "@/components/case-studies/TechStackSection";
 import { TestimonialsSection } from "@/components/case-studies/TestimonialsSection";
 import { ContactCta } from "@/components/sections/home/ContactCta";
-import { JsonLd } from "@/components/seo/JsonLd";
+import { PageSchema } from "@/components/seo/PageSchema";
 import { getCaseStudies, getCaseStudy, type CaseStudy } from "@/contentful/queries/case-studies";
 import { breadcrumbSchema, caseStudySchema, pageMetadata, toShareImage } from "@/lib/seo";
 
@@ -57,7 +57,9 @@ export default async function CaseStudyPage(props: PageProps<"/case-studies/[slu
 
   return (
     <>
-      <JsonLd
+      <PageSchema
+        path={seo.path}
+        custom={caseStudy.seo.jsonLd}
         items={[
           breadcrumbSchema([
             { name: "Case studies", path: "/case-studies" },

@@ -9,11 +9,11 @@ import { Process } from "@/components/sections/home/Process";
 import { ServicesShowcase } from "@/components/sections/home/ServicesShowcase";
 import { Stats } from "@/components/sections/home/Stats";
 import { Testimonials } from "@/components/sections/home/Testimonials";
+import { PageSchema } from "@/components/seo/PageSchema";
 import { pageMetadataFromCms } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
 
-// From the home page's Page SEO entry in Contentful; this is the fallback. The studio and the
-// website (structured data) are described on every page by the root layout.
+// From the home page's Page SEO entry in Contentful; this is the fallback.
 export function generateMetadata(): Promise<Metadata> {
   return pageMetadataFromCms({
     // Stand-in, issue I9.
@@ -23,9 +23,12 @@ export function generateMetadata(): Promise<Metadata> {
   });
 }
 
+// Structured data: the studio and the website, plus any schema pasted into the home page's Page
+// SEO entry.
 export default function HomePage() {
   return (
     <>
+      <PageSchema path="/" />
       <Hero />
       <Stats />
       <ServicesShowcase />

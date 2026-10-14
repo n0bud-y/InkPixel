@@ -200,3 +200,38 @@ export function caseStudySchema(caseStudy: {
     ...(caseStudy.client && { about: { "@type": "Organization", name: caseStudy.client } }),
   };
 }
+
+// --- Schema pasted by editors -------------------------------------------------------------------
+
+type SchemaObject = Record<string, unknown>;
+const isObject = (value: unknown): value is SchemaObject =>
+  typeof value === "object" && value !== null && !Array.isArray(value);
+const typesOf = (item: Thing) => {
+  const type = (item as { "@type"?: unknown })["@type"];
+  return (Array.isArray(type) ? type : [type]).filter((t): t is string => typeof t === "string");
+};
+
+// The schema an editor pasted into a Page SEO or SEO entry ("Custom schema (JSON-LD)"): one
+// object, a list of objects, or an object with "@graph". Each item must be an object with an
+// "@type"; anything else is skipped and logged, so a bad paste never breaks the page. Each
+// item's "@context" is dropped: the page's graph has one.
+export function customSchema(value: unknown, page: string): Thing[] {
+  if (value === null || value === undefined) return [];
+  const list = Array.isArray(value) ? value : isObject(value) && Array.isArray(value["@graph"]) ? value["@graph"] : [value];
+  return list.flatMap((item: unknown) => {
+    if (!isObject(item) || typesOf(item as Thing).length === 0) {
+      console.warn(`Custom schema on ${page}: skipped an item that isn't an object with an "@type".`);
+      return [];
+    }
+    const rest = { ...item };
+    delete rest["@context"];
+    return [rest as Thing];
+  });
+}
+
+// A page's schema: the automatic schema, except the types the editor pasted (pasted schema of
+// the same @type replaces it), then the pasted schema.
+export function mergeSchema(automatic: Thing[], pasted: Thing[]): Thing[] {
+  const replaced = new Set(pasted.flatMap(typesOf));
+  return [...automatic.filter((item) => !typesOf(item).some((type) => replaced.has(type))), ...pasted];
+}

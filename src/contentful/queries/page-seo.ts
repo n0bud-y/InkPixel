@@ -11,6 +11,8 @@ export type PageSeoEntry = {
   canonical: string | null;
   image: ContentfulImage | null;
   noIndex: boolean;
+  /** Schema pasted by editors (JSON-LD, migration 0008), as stored; read with customSchema(). */
+  jsonLd: unknown;
 };
 
 type PageSeoData = {
@@ -22,6 +24,7 @@ type PageSeoData = {
       canonical: string | null;
       noIndex: boolean | null;
       image: AssetData;
+      jsonLd: unknown;
     } | null)[];
   };
 };
@@ -38,6 +41,7 @@ const PAGE_SEO = /* GraphQL */ `
         image {
           ...ImageFields
         }
+        jsonLd
       }
     }
   }
@@ -72,6 +76,7 @@ const getAllPageSeo = cache(async (): Promise<Map<string, PageSeoEntry>> => {
         canonical: item.canonical,
         image: toImage(item.image),
         noIndex: item.noIndex ?? false,
+        jsonLd: item.jsonLd,
       };
       return [[item.path, entry] as const];
     }),
