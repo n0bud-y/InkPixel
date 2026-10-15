@@ -107,8 +107,22 @@ function scrollToHeading(id: string, animate: boolean) {
   if (!heading) return;
   const smooth = animate && window.matchMedia(MOTION_OK).matches;
   const smoother = ScrollSmoother.get();
-  if (smoother) smoother.scrollTo(heading, smooth, `top ${OFFSET}px`);
-  else window.scrollTo({ top: heading.getBoundingClientRect().top + window.scrollY - OFFSET, behavior: smooth ? "smooth" : "auto" });
+  const y = heading.getBoundingClientRect().top + (smoother ? smoother.scrollTop() : window.scrollY) - OFFSET;
+  if (smoother) smoother.scrollTo(y, smooth);
+  else window.scrollTo({ top: y, behavior: smooth ? "smooth" : "auto" });
+
+  // Focus once the scroll has settled: the smooth scroller jumps to anything that gets focus
+  // while out of view, which would cut the scroll short.
   heading.setAttribute("tabindex", "-1");
-  heading.focus({ preventScroll: true });
+  let last = NaN;
+  let still = 0;
+  const started = performance.now();
+  const focusWhenSettled = () => {
+    const top = Math.round(heading.getBoundingClientRect().top);
+    still = top === last ? still + 1 : 0;
+    last = top;
+    if (still >= 3 || performance.now() - started > 2500) heading.focus({ preventScroll: true });
+    else requestAnimationFrame(focusWhenSettled);
+  };
+  requestAnimationFrame(focusWhenSettled);
 }

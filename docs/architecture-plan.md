@@ -322,12 +322,12 @@ brand-portfolio/
 │   │   │   │   └── [slug]/
 │   │   │   │       ├── page.tsx      # every case study: hero + sections from Contentful (no per-client routes)
 │   │   │   │       └── opengraph-image.tsx
-│   │   │   └── blog/
-│   │   │       ├── page.tsx
+│   │   │   └── blog/                 # "Insights": posts and categories from Contentful; text in src/content/blog.ts
+│   │   │       ├── page.tsx          # listing, page 1 (newest post featured)
+│   │   │       ├── page/[page]/page.tsx   # listing, pages 2+
 │   │   │       ├── category/[slug]/page.tsx
-│   │   │       └── [slug]/
-│   │   │           ├── page.tsx
-│   │   │           └── opengraph-image.tsx
+│   │   │       ├── category/[slug]/page/[page]/page.tsx
+│   │   │       └── [slug]/page.tsx   # article; share image = SEO image, else the cover
 │   │   └── api/
 │   │       ├── revalidate/route.ts       # verified Contentful webhook → revalidateTag
 │   │       ├── draft-mode/enable/route.ts   # called by Contentful's preview URL
@@ -338,6 +338,7 @@ brand-portfolio/
 │   │   ├── ui/                       # shadcn primitives (Button, Dialog, Input…)
 │   │   ├── layout/                   # Header (+ HeaderShell, client), Footer, MobileNav
 │   │   ├── sections/                 # page sections for the static pages: home/ (Hero, Stats, CTA…), about/ (… TeamCarousel, client), services/ (ServiceHero … ServiceProjects, FeaturedIn, ServiceCategories; OfferingsList, EstimatorQuiz, and CapabilitiesMarquee, client)
+│   │   ├── blog/                     # BlogListing (hero, category pills, featured post, grid, page numbers), ArticleHeader, AuthorCard, RelatedPosts; TableOfContents and ShareButtons (client)
 │   │   ├── case-studies/             # CaseStudyHero, CaseStudySection, TechStackSection, FeatureGridSection, ShowcaseSection, CardsSection, GallerySection, TestimonialsSection, CallToActionSection; later CaseStudyCard, FilterBar (client)
 │   │   ├── motion/                   # GSAP helpers (client): Reveal, CountUp, HorizontalPin, Magnetic, PointerParallax, SmoothScroll — reduced-motion aware
 │   │   └── seo/JsonLd.tsx

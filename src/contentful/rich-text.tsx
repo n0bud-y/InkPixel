@@ -211,9 +211,9 @@ function renderArticleInline(nodes: RichTextNode[] = [], links: RichTextLinks): 
 }
 
 const headingClass = {
-  2: "scroll-mt-32 font-display text-[clamp(1.625rem,2.05vw,2.5rem)] leading-[1.2] font-semibold tracking-[-0.02em] text-primary",
-  3: "scroll-mt-32 font-display text-[clamp(1.3125rem,1.45vw,1.75rem)] leading-[1.3] font-semibold tracking-[-0.01em] text-primary",
-  4: "scroll-mt-32 text-[clamp(1.125rem,1.2vw,1.375rem)] leading-[1.4] font-semibold text-primary",
+  2: "scroll-mt-32 font-display outline-none text-[clamp(1.625rem,2.05vw,2.5rem)] leading-[1.2] font-semibold tracking-[-0.02em] text-primary",
+  3: "scroll-mt-32 font-display outline-none text-[clamp(1.3125rem,1.45vw,1.75rem)] leading-[1.3] font-semibold tracking-[-0.01em] text-primary",
+  4: "scroll-mt-32 outline-none text-[clamp(1.125rem,1.2vw,1.375rem)] leading-[1.4] font-semibold text-primary",
 };
 
 // A blog post's body, on white: everything the post's Rich Text field allows (see
