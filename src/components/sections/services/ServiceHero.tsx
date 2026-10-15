@@ -7,11 +7,12 @@ import { Button } from "@/components/ui/Button";
 import type { ServicePage } from "@/content/service-pages";
 import { siteConfig } from "@/lib/site";
 
-// The service hero: the About photo (the design uses the same one) behind a navy veil, the title,
-// intro, and button on the left, and the "Book a Free Consultation" card on the right. The
-// design's form comes with the lead pipeline (P3-14); until then the card links to the contact
-// page and the email address. The entrance is CSS; the photo is the LCP image, so it is preloaded.
-export function ServiceHero({ page }: { page: ServicePage }) {
+// The service hero (service pages and the Services overview): the About photo (the designs use
+// the same one) behind a navy veil, the title, intro, and button on the left, and the "Book a
+// Free Consultation" card on the right. The design's form comes with the lead pipeline (P3-14);
+// until then the card links to the contact page and the email address. The entrance is CSS; the
+// photo is the LCP image, so it is preloaded.
+export function ServiceHero({ page }: { page: Pick<ServicePage, "hero" | "consultation"> }) {
   const { hero: content, consultation } = page;
 
   return (

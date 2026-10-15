@@ -1,7 +1,7 @@
 // Service categories and their services. Static content: edited here, not in Contentful.
 // Used by the home page "Building The Future of Digital Products" section and the header's
-// Services mega menu; reusable for the /services pages later. A category with no services
-// shows a "coming soon" panel on the home page.
+// Services mega menu; each category's description and photo are for the Services page
+// (/services). A category with no services shows a "coming soon" panel on the home page.
 //
 // PLACEHOLDER (issue I7): the descriptions outside Branding are stand-ins, and their icons
 // were drawn in-house (src/assets/images/icons/<category>/); replace both when the real copy
@@ -44,6 +44,12 @@ import posInventory from "@/assets/images/icons/software/pos-inventory-software.
 import qaTesting from "@/assets/images/icons/software/qa-testing.svg";
 import saasDevelopment from "@/assets/images/icons/software/saas-development.svg";
 import softwareIntegration from "@/assets/images/icons/software/software-integration-migration.svg";
+import categoryBranding from "@/assets/images/services/categories/branding.webp";
+import categoryDevelopment from "@/assets/images/services/categories/development.webp";
+import categoryMarketing from "@/assets/images/services/categories/marketing.webp";
+import categorySoftware from "@/assets/images/services/categories/software.webp";
+import categoryApplications from "@/assets/images/services/categories/applications.webp";
+import categoryAiAutomation from "@/assets/images/services/categories/ai-automation.webp";
 
 export type Service = {
   title: string;
@@ -57,6 +63,10 @@ export type ServiceCategory = {
   /** URL-safe id, also used for the tab. */
   slug: string;
   label: string;
+  /** One line about the category (Services page). */
+  description: string;
+  /** The category's photo (Services page). */
+  image: StaticImageData;
   services: Service[];
 };
 
@@ -64,6 +74,9 @@ export const serviceCategories: ServiceCategory[] = [
   {
     slug: "branding",
     label: "Branding",
+    description:
+      "Build a unique brand voice, stunning visual identity, and lasting market presence.",
+    image: categoryBranding,
     services: [
       {
         title: "Brand Identity / Logo Design",
@@ -112,6 +125,9 @@ export const serviceCategories: ServiceCategory[] = [
   {
     slug: "development",
     label: "Development",
+    description:
+      "Build high-performance websites and digital platforms tailored for your business growth.",
+    image: categoryDevelopment,
     services: [
       {
         title: "Website Development",
@@ -160,6 +176,9 @@ export const serviceCategories: ServiceCategory[] = [
   {
     slug: "marketing",
     label: "Marketing",
+    description:
+      "Boost your conversions with targeted campaigns, SEO, and powerful social media marketing.",
+    image: categoryMarketing,
     services: [
       {
         title: "Social Media Marketing",
@@ -208,6 +227,9 @@ export const serviceCategories: ServiceCategory[] = [
   {
     slug: "software",
     label: "Software",
+    description:
+      "Streamline your operations with robust software, CRM systems, and inventory solutions.",
+    image: categorySoftware,
     services: [
       {
         title: "Custom Software Development",
@@ -256,6 +278,9 @@ export const serviceCategories: ServiceCategory[] = [
   {
     slug: "applications",
     label: "Applications",
+    description:
+      "Deliver engaging user experiences with intuitive Android and iOS mobile applications.",
+    image: categoryApplications,
     services: [
       {
         title: "Web Applications & PWAs",
@@ -304,6 +329,9 @@ export const serviceCategories: ServiceCategory[] = [
   {
     slug: "ai-automation",
     label: "AI Automation",
+    description:
+      "Automate business processes and scale faster with cutting-edge AI chatbots and smart systems.",
+    image: categoryAiAutomation,
     services: [
       {
         title: "Business Process Automation",

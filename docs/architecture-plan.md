@@ -312,7 +312,7 @@ brand-portfolio/
 │   │   │   │   ├── page.tsx
 │   │   │   │   └── actions.ts        # submitLead Server Action
 │   │   │   ├── services/
-│   │   │   │   ├── page.tsx
+│   │   │   │   ├── page.tsx          # the Services overview: content from src/content/services-page.ts and services.ts
 │   │   │   │   └── [slug]/page.tsx   # every service page: content from src/content/service-pages.ts; unlisted slugs 404
 │   │   │   ├── industries/
 │   │   │   │   ├── page.tsx
@@ -333,11 +333,11 @@ brand-portfolio/
 │   │       ├── draft-mode/enable/route.ts   # called by Contentful's preview URL
 │   │       └── draft-mode/disable/route.ts
 │   ├── assets/images/                # static-page photos, imported with next/image (compressed, ≤ ~500 KB each)
-│   ├── content/                      # static content as typed data (services.ts, service-pages.ts, technologies.ts, about.ts …); copy lives here, not in components
+│   ├── content/                      # static content as typed data (services.ts, services-page.ts, service-pages.ts, technologies.ts, about.ts …); copy lives here, not in components
 │   ├── components/
 │   │   ├── ui/                       # shadcn primitives (Button, Dialog, Input…)
 │   │   ├── layout/                   # Header (+ HeaderShell, client), Footer, MobileNav
-│   │   ├── sections/                 # page sections for the static pages: home/ (Hero, Stats, CTA…), about/ (… TeamCarousel, client), services/ (ServiceHero … ServiceProjects; OfferingsList and EstimatorQuiz, client)
+│   │   ├── sections/                 # page sections for the static pages: home/ (Hero, Stats, CTA…), about/ (… TeamCarousel, client), services/ (ServiceHero … ServiceProjects, FeaturedIn, ServiceCategories; OfferingsList, EstimatorQuiz, and CapabilitiesMarquee, client)
 │   │   ├── case-studies/             # CaseStudyHero, CaseStudySection, TechStackSection, FeatureGridSection, ShowcaseSection, CardsSection, GallerySection, TestimonialsSection, CallToActionSection; later CaseStudyCard, FilterBar (client)
 │   │   ├── motion/                   # GSAP helpers (client): Reveal, CountUp, HorizontalPin, Magnetic, PointerParallax, SmoothScroll — reduced-motion aware
 │   │   └── seo/JsonLd.tsx
