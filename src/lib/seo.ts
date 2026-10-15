@@ -6,6 +6,7 @@
 import type { Metadata } from "next";
 import type {
   Article,
+  BlogPosting,
   BreadcrumbList,
   Organization,
   ProfessionalService,
@@ -205,6 +206,40 @@ export function caseStudySchema(caseStudy: {
     author: { "@type": "Organization", "@id": organizationId, name: siteConfig.name, url: absoluteUrl("/") },
     publisher: { "@id": organizationId },
     ...(caseStudy.client && { about: { "@type": "Organization", name: caseStudy.client } }),
+  };
+}
+
+// A blog post, by its author (a person; the studio when the post has none), published by the studio.
+export function blogPostingSchema(post: {
+  title: string;
+  description: string;
+  path: string;
+  image: string | null;
+  publishedTime: string;
+  modifiedTime: string;
+  category: string;
+  author: { name: string; role: string | null; links: string[] } | null;
+}): BlogPosting {
+  return {
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.description,
+    url: absoluteUrl(post.path),
+    mainEntityOfPage: absoluteUrl(post.path),
+    ...(post.image && { image: post.image }),
+    datePublished: post.publishedTime,
+    dateModified: post.modifiedTime,
+    articleSection: post.category,
+    inLanguage: "en",
+    author: post.author
+      ? {
+          "@type": "Person",
+          name: post.author.name,
+          ...(post.author.role && { jobTitle: post.author.role }),
+          ...(post.author.links.length > 0 && { sameAs: post.author.links }),
+        }
+      : { "@type": "Organization", "@id": organizationId, name: siteConfig.name, url: absoluteUrl("/") },
+    publisher: { "@id": organizationId },
   };
 }
 
