@@ -1,92 +1,164 @@
 import Image from "next/image";
-import officeMap from "@/assets/images/about/office-map.webp";
-import { Magnetic } from "@/components/motion/Magnetic";
+import type { ReactNode } from "react";
+import contactMap from "@/assets/images/contact-map.webp";
 import { Reveal } from "@/components/motion/Reveal";
-import { Button } from "@/components/ui/Button";
 import { visitUs } from "@/content/about";
 import { siteConfig } from "@/lib/site";
+import { ContactForm } from "./ContactForm";
 
-// The office map (a picture that opens Google Maps: no map scripts on the page), the
-// "Get In Touch" card, and the "Contact Us" card with the address and email. The design's form
-// comes with the lead pipeline (P3-14); until then the card links to the contact page.
-// Phones and tablets: the two cards, then the map.
+// Icons for the social links, by site; any other site gets a globe.
+const socialIcons: Record<string, { name: string; icon: ReactNode }> = {
+  "instagram.com": {
+    name: "Instagram",
+    icon: (
+      <>
+        <rect x="3" y="3" width="18" height="18" rx="5" />
+        <circle cx="12" cy="12" r="4" />
+        <circle cx="17.5" cy="6.5" r="0.6" fill="currentColor" />
+      </>
+    ),
+  },
+  "x.com": { name: "X", icon: <path d="M4 4l16 16M20 4L4 20" /> },
+  "twitter.com": { name: "X", icon: <path d="M4 4l16 16M20 4L4 20" /> },
+  "facebook.com": {
+    name: "Facebook",
+    icon: <path d="M14 21v-7h3l.5-3.5H14V8.5c0-1 .5-1.5 1.5-1.5H18V4h-3c-2.5 0-4 1.5-4 4v2.5H8V14h3v7" />,
+  },
+  "youtube.com": {
+    name: "YouTube",
+    icon: (
+      <>
+        <rect x="2.5" y="5.5" width="19" height="13" rx="4" />
+        <path d="M10 9.5v5l4.5-2.5z" fill="currentColor" />
+      </>
+    ),
+  },
+  "linkedin.com": {
+    name: "LinkedIn",
+    icon: (
+      <>
+        <rect x="3" y="3" width="18" height="18" rx="3" />
+        <path d="M8 10.5V17M8 7.5v.01M12 17v-6.5M12 13.5a2.5 2.5 0 0 1 5 0V17" />
+      </>
+    ),
+  },
+};
+const globe = (
+  <>
+    <circle cx="12" cy="12" r="9" />
+    <path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18" />
+  </>
+);
+const socialOf = (url: string) => {
+  const host = new URL(url).hostname.replace(/^www\./, "");
+  return socialIcons[host] ?? { name: host, icon: globe };
+};
+
+const iconClass = "mt-0.5 size-[1.25em] shrink-0";
+
+// "Get in touch" (About, service pages, Services): one card, the form on white on the left, and on
+// the gradient on the right a short line, the office map (a picture that opens Google Maps: no map
+// scripts on the page), the address, phone, and email, then the social links (once siteConfig
+// has any). Phones and tablets: the form, then the details.
 export function VisitUs() {
   return (
     <section aria-labelledby="visit-title" className="bg-primary">
       <div className="container-site py-[clamp(4rem,6.25vw,7.5rem)]">
         <Reveal
           stagger={0.12}
-          className="grid grid-cols-[minmax(0,1fr)] items-center gap-6 lg:grid-cols-[minmax(0,630fr)_minmax(0,491fr)_minmax(0,525fr)] lg:gap-0"
+          className="mx-auto grid max-w-[81rem] grid-cols-[minmax(0,1fr)] overflow-hidden rounded-[clamp(1rem,1.6vw,1.9rem)] shadow-[0_30px_80px_-40px_rgb(0_0_0_/_0.8)] lg:grid-cols-2"
         >
-          <a
-            href={visitUs.mapUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            data-reveal
-            className="group block max-lg:order-last"
-          >
-            <span className="sr-only">Open our office in Google Maps (opens in a new tab)</span>
-            <Image
-              src={officeMap}
-              alt=""
-              sizes="(min-width: 1024px) 33vw, 100vw"
-              className="h-auto w-full transition-transform duration-500 ease-out motion-safe:group-hover:scale-[1.01]"
-            />
-          </a>
-
-          <div
-            data-reveal
-            className="rounded-[1.2rem] bg-white px-[clamp(1.5rem,2.3vw,2.75rem)] py-[clamp(2rem,3vw,3.5rem)] text-center shadow-[0_24px_60px_-30px_rgb(0_0_0_/_0.6)] ring-1 ring-primary/30 lg:min-h-[clamp(24rem,33.9vw,40.6rem)] lg:content-center"
-          >
+          <div data-reveal className="bg-white px-[clamp(1.5rem,4.1vw,5rem)] py-[clamp(2.5rem,4.6vw,5.5rem)]">
             <h2
               id="visit-title"
-              className="mx-auto w-fit bg-brand-gradient-reverse bg-clip-text font-display text-[clamp(2.25rem,3.3vw,4rem)] leading-tight font-medium tracking-[-0.02em] text-transparent"
+              className="w-fit bg-brand-gradient-reverse bg-clip-text font-display text-[clamp(2.25rem,3.3vw,4rem)] leading-tight font-medium tracking-[-0.02em] text-transparent"
             >
               {visitUs.title}
             </h2>
-            <p className="mx-auto mt-4 max-w-[22em] text-[clamp(0.9375rem,1vw,1.1875rem)] leading-[1.75] text-primary/85">{visitUs.text}</p>
-            <div className="mt-8">
-              <Magnetic>
-                <Button href="/contact" variant="primary-reverse" icon>
-                  Start a project
-                </Button>
-              </Magnetic>
-            </div>
-            <p className="mt-6 text-[clamp(0.875rem,0.9vw,1.0625rem)] text-primary/75">
-              or email us at{" "}
-              <a
-                href={`mailto:${siteConfig.email}`}
-                className="text-crimson underline decoration-crimson/30 underline-offset-4 transition-colors duration-300 hover:decoration-crimson"
-              >
-                {siteConfig.email}
-              </a>
-            </p>
+            <span aria-hidden="true" className="mt-1 block h-[3px] w-[clamp(4rem,5.4vw,6.5rem)] rounded-full bg-brand-gradient-reverse" />
+            <ContactForm />
           </div>
 
           <div
             data-reveal
-            className="rounded-[1.2rem] bg-brand-gradient px-[clamp(1.5rem,1.9vw,2.25rem)] py-[clamp(2rem,2.6vw,3rem)] text-white shadow-[0_24px_60px_-30px_rgb(201_29_76_/_0.8)] lg:-ml-[0.3vw]"
+            className="flex flex-col bg-brand-gradient-reverse px-[clamp(1.5rem,4.1vw,5rem)] py-[clamp(2.5rem,4.6vw,5.5rem)] text-white"
           >
-            <p className="font-display text-[clamp(1.75rem,2.1vw,2.5rem)] leading-tight font-bold">Contact Us</p>
-            <p className="mt-2 text-sm font-semibold">{visitUs.hours}</p>
-            <address className="mt-[clamp(1.25rem,1.6vw,2rem)] space-y-[clamp(1rem,1.4vw,1.6rem)] text-[clamp(0.9375rem,1.05vw,1.25rem)] leading-snug not-italic">
-              <p className="flex gap-3">
-                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" className="mt-0.5 size-[1.4em] shrink-0">
-                  <path d="M12 21s-7-6.2-7-11.5a7 7 0 1 1 14 0C19 14.8 12 21 12 21Z" />
-                  <circle cx="12" cy="9.5" r="2.5" />
-                </svg>
-                <span>{siteConfig.address}</span>
-              </p>
-              <p className="flex gap-3">
-                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" className="mt-0.5 size-[1.4em] shrink-0">
-                  <rect x="3" y="5" width="18" height="14" rx="2" />
-                  <path d="m3.5 6.5 8.5 6.5 8.5-6.5" />
-                </svg>
-                <a href={`mailto:${siteConfig.email}`} className="underline-offset-4 hover:underline">
-                  {siteConfig.email}
-                </a>
-              </p>
-            </address>
+            <div className="my-auto">
+              <p className="max-w-[30em] text-[clamp(0.9375rem,1vw,1.1875rem)] leading-[1.6]">{visitUs.text}</p>
+
+              <a
+                href={visitUs.mapUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative mt-[clamp(1.25rem,1.6vw,2rem)] block aspect-[516/214] overflow-hidden rounded-[clamp(0.5rem,0.6vw,0.75rem)] bg-white"
+              >
+                <span className="sr-only">Open our office in Google Maps (opens in a new tab)</span>
+                <Image
+                  src={contactMap}
+                  alt=""
+                  fill
+                  sizes="(min-width: 1024px) 28vw, 90vw"
+                  className="object-cover object-[50%_49%] transition-transform duration-500 ease-out motion-safe:group-hover:scale-[1.03]"
+                />
+                <span
+                  aria-hidden="true"
+                  className="absolute top-[8%] right-[3%] max-w-[45%] rounded-md bg-white px-2.5 py-1.5 text-[clamp(0.625rem,0.65vw,0.75rem)] leading-snug text-primary shadow-md"
+                >
+                  <strong className="block font-semibold text-crimson">{siteConfig.name}</strong>
+                  {visitUs.mapLabel}
+                </span>
+              </a>
+
+              <address className="mt-[clamp(1.25rem,1.6vw,2rem)] space-y-[clamp(0.75rem,1vw,1.1rem)] text-[clamp(0.9375rem,1vw,1.1875rem)] leading-snug not-italic">
+                <p className="flex gap-3">
+                  <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={iconClass}>
+                    <path d="M12 21s-7-6.2-7-11.5a7 7 0 1 1 14 0C19 14.8 12 21 12 21Z" />
+                    <circle cx="12" cy="9.5" r="2.5" />
+                  </svg>
+                  <span>{siteConfig.address}</span>
+                </p>
+                <p className="flex gap-3">
+                  <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={iconClass}>
+                    <path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2" />
+                  </svg>
+                  <a href={`tel:${siteConfig.phone.tel}`} className="underline-offset-4 hover:underline">
+                    {siteConfig.phone.display}
+                  </a>
+                </p>
+                <p className="flex gap-3">
+                  <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={iconClass}>
+                    <rect x="3" y="5" width="18" height="14" rx="2" />
+                    <path d="m3.5 6.5 8.5 6.5 8.5-6.5" />
+                  </svg>
+                  <a href={`mailto:${siteConfig.email}`} className="underline-offset-4 hover:underline">
+                    {siteConfig.email}
+                  </a>
+                </p>
+              </address>
+            </div>
+
+            {siteConfig.socialProfiles.length > 0 && (
+              <ul aria-label="Social media" className="mt-[clamp(1.5rem,2vw,2.5rem)] flex justify-end gap-3">
+                {siteConfig.socialProfiles.map((url) => {
+                  const { name, icon } = socialOf(url);
+                  return (
+                    <li key={url}>
+                      <a
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="grid size-9 place-items-center rounded-full bg-white/15 transition-colors duration-300 hover:bg-white/30"
+                      >
+                        <span className="sr-only">{name} (opens in a new tab)</span>
+                        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="size-[1.15rem]">
+                          {icon}
+                        </svg>
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
           </div>
         </Reveal>
       </div>

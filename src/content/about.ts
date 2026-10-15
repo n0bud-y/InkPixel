@@ -167,13 +167,15 @@ export const founder = {
   photo: monisBari,
 };
 
-// "Get In Touch" / "Contact Us". The address and email come from siteConfig (src/lib/site.ts).
-// The form in the design waits for the lead pipeline (P3-14); until then the panel links to
-// email and the contact page. The map is a static image (no map scripts on the page) that
-// opens Google Maps at the office (its plus code, from the design).
+// "Get in touch" (About, service pages, Services): the form, and the panel with the map and the
+// studio's details. The address, phone, email, and social links come from siteConfig
+// (src/lib/site.ts). Until the lead pipeline (P3-14), the form opens the visitor's email app. The
+// map is a static image (no map scripts on the page) that opens Google Maps at the office (its
+// plus code, from the design).
 export const visitUs = {
-  title: "Get In Touch",
-  text: "Tell us what you're working on. We'll come back within a working day.",
-  hours: "We are currently open by appointment only.",
+  title: "Get in touch",
+  text: "We are currently open by appointment only. Tell us what you're working on; we'll come back within a working day.",
+  /** The label on the map, under the studio's name. */
+  mapLabel: "Office 308, 3rd Floor, Anum Empire",
   mapUrl: "https://www.google.com/maps/search/?api=1&query=V38J%2BR9%20Karachi",
 };

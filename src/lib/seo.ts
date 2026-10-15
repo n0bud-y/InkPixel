@@ -121,8 +121,14 @@ export function siteSchema(): Thing[] {
     logo: absoluteUrl(logo.src),
     description: siteConfig.description,
     email: siteConfig.email,
+    telephone: siteConfig.phone.display,
     address: postalAddress,
-    contactPoint: { "@type": "ContactPoint", contactType: "sales", email: siteConfig.email },
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "sales",
+      email: siteConfig.email,
+      telephone: siteConfig.phone.display,
+    },
     ...(siteConfig.socialProfiles.length > 0 && { sameAs: siteConfig.socialProfiles }),
   };
   const website: WebSite = {
@@ -158,6 +164,7 @@ export function officeSchema(): ProfessionalService {
     url: absoluteUrl("/"),
     image: absoluteUrl(logo.src),
     email: siteConfig.email,
+    telephone: siteConfig.phone.display,
     address: postalAddress,
     geo: { "@type": "GeoCoordinates", latitude: siteConfig.office.latitude, longitude: siteConfig.office.longitude },
     parentOrganization: { "@id": organizationId },
