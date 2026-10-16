@@ -20,8 +20,9 @@ const logoLink = (src: StaticImageData) => (
   </Link>
 );
 
-// Fixed over the top of every page. HeaderShell picks the style for the page (white with the
-// dark logo on case studies). z-40 keeps the skip link (z-50) above it when focused.
+// Fixed over the top of every page. HeaderShell picks the style (white with the dark logo on case
+// studies, and on every page once it scrolls). z-40 keeps the skip link (z-50) above it when
+// focused.
 export function Header() {
   return (
     <HeaderShell logoOnDark={logoLink(logo)} logoOnLight={logoLink(blackLogo)}>

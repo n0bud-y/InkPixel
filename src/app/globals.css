@@ -172,28 +172,3 @@ body {
 html:has(dialog[open]) {
   overflow: hidden;
 }
-
-/* Header: transparent over the top of the page, solid navy once the page scrolls.
-   Driven by the scroll position, no JavaScript; browsers without scroll-driven
-   animations get the solid bar all the time. */
-@keyframes header-solid {
-  to {
-    background-color: color-mix(in oklab, var(--primary) 85%, transparent);
-    border-color: rgb(255 255 255 / 0.08);
-    backdrop-filter: blur(14px);
-  }
-}
-
-.site-header {
-  animation: header-solid linear both;
-  animation-timeline: scroll();
-  animation-range: 0 96px;
-}
-
-@supports not (animation-timeline: scroll()) {
-  .site-header {
-    background-color: color-mix(in oklab, var(--primary) 92%, transparent);
-    border-color: rgb(255 255 255 / 0.08);
-    backdrop-filter: blur(14px);
-  }
-}

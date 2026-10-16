@@ -3,20 +3,21 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { mainNav } from "@/lib/site";
+import { useHeaderLight } from "./header-tone";
 import { ServicesMenu } from "./ServicesMenu";
 
 export function isActive(pathname: string, href: string) {
   return href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
 }
 
-// Pages whose top is white, so the header is white with dark text (see HeaderShell).
+// Pages whose top is white, so the header is white with dark text from the start (see HeaderShell).
 export const hasLightHeader = (pathname: string) => isActive(pathname, "/case-studies");
 
 // Desktop menu. The current section gets the pill; Services links to its page and opens the mega
 // menu.
 export function NavLinks() {
   const pathname = usePathname();
-  const light = hasLightHeader(pathname);
+  const light = useHeaderLight();
 
   return (
     <ul className="flex items-center gap-0.5 xl:gap-1">
