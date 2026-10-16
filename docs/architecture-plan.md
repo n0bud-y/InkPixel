@@ -1,10 +1,10 @@
-# Brand Portfolio Platform — Architecture Plan (v2.15)
+# Brand Portfolio Platform — Architecture Plan (v2.16)
 
 | | |
 |---|---|
 | **Status** | Draft for review |
 | **Owner** | Project Head |
-| **Last updated** | 15 Oct 2026 |
+| **Last updated** | 16 Oct 2026 |
 | **Supersedes** | `Brand Portfolio Project Architecture & Execution Plan.pdf` (v1) |
 | **Companion docs** | [README.md](README.md) (living brief) · [execution-plan.md](execution-plan.md) (tasks, owners, timeline) |
 | **Reference** | tekrevol.com — for scope and feel, not to copy |
@@ -13,6 +13,7 @@
 
 | Version | Date | Change |
 |---|---|---|
+| v2.16 | 16 Oct 2026 | **Services structure** written down (§5): 6 core services, each with 6 services; core service pages at `/services/<core>` (Branding built), service pages at `/services/<service>`, both flat under `/services`. The list lives in `src/content/services.ts` |
 | v2.15 | 15 Oct 2026 | **Custom schema per page** (manager decision): Page SEO and SEO get a "Custom schema (JSON-LD)" field (migration `0008-custom-schema.cjs`) where the SEO team pastes structured data; it replaces the automatic schema of the same `@type` on that page. `Organization` and `WebSite` move from the root layout into each page's schema (`<PageSchema>`) so a page can replace them (§6, §8) |
 | v2.14 | 15 Oct 2026 | **Search settings editable in Contentful for every page** (manager decision): the pages whose content is in code get a `pageSeo` entry each, found by page address (migration `0007-page-seo.cjs`, 11 entries seeded); `seo` gets a canonical URL; meta titles from Contentful are used as typed; the text in code is the fallback (§6, §8). Technical SEO and JSON-LD per §8 built (`src/lib/seo.ts`) |
 | v2.13 | 10 Oct 2026 | **Service page template built** (`/services/[slug]`, static content in `src/content/service-pages.ts`; only listed slugs are built, others 404). Its project cards are the case studies whose `services` field includes the page's service, read with a `services_contains_some` query; migration `0006-case-study-card.cjs` adds an optional card highlight and up to three card points to `caseStudy` (§6). The consultation and contact forms link to `/contact` until the lead pipeline (§11); the cost estimator sends its answers to `/contact` in the URL. Folder structure updated (§7) |
@@ -203,8 +204,8 @@ This replaces v1's time-based `revalidate = 3600`, where editors could wait up t
 
 ```
 /                          Home
-/services                  Services overview
-/services/[slug]           Service detail
+/services                  Services overview (the 6 core services)
+/services/[slug]           Core service (e.g. /services/branding) or service (e.g. /services/web-development)
 /industries                Industries overview
 /industries/[slug]         Industry detail + related case studies
 /technologies              Technologies we work with (static)
@@ -222,6 +223,26 @@ This replaces v1's time-based `revalidate = 3600`, where editors could wait up t
 ```
 
 Content source: case studies and the blog come from Contentful; every other route is static content in code (§3). New landing pages are built by developers.
+
+**Services structure**
+
+Two levels: **6 core services**, each with **6 services** (36 in all). Every core service and every service gets its own page, all directly under `/services` (not nested: `/services/web-development`, not `/services/development/web-development`):
+
+- **Core service page:** `/services/<core>`, e.g. `/services/branding`.
+- **Service page:** `/services/<service>`, e.g. `/services/web-development`.
+
+The list (names, order, descriptions, icons, and each service's address) lives in `src/content/services.ts`. The header's Services mega menu, the home page's services section, the Services overview, and the footer all read it, so a service is added or renamed there. Built so far: the Branding core page and the Website Development service page. The others return 404 until they are built, and their menu links lead there until then.
+
+| Core service | Services |
+|---|---|
+| **Branding** · `/services/branding` | Brand Identity / Logo Design · `/services/brand-identity-logo-design`<br>Brand Guidelines / Brand Book · `/services/brand-guidelines`<br>Stationery Design · `/services/stationery-design`<br>Social Media Branding · `/services/social-media-branding`<br>Website & Digital Branding · `/services/digital-branding`<br>Brand Launch & Implementation · `/services/brand-launch` |
+| **Development** · `/services/development` | Website Development · `/services/web-development`<br>E-Commerce Development · `/services/ecommerce-development`<br>CMS Development · `/services/cms-development`<br>Frontend Development · `/services/frontend-development`<br>Backend & API Development · `/services/backend-api-development`<br>Maintenance & Support · `/services/website-maintenance` |
+| **Marketing** · `/services/marketing` | Social Media Marketing · `/services/social-media-marketing`<br>Search Engine Optimization (SEO) · `/services/seo`<br>Paid Advertising · `/services/paid-advertising`<br>Content Marketing · `/services/content-marketing`<br>Email & WhatsApp Marketing · `/services/email-whatsapp-marketing`<br>Analytics & Growth Strategy · `/services/analytics-growth-strategy` |
+| **Software** · `/services/software` | Custom Software Development · `/services/custom-software-development`<br>ERP & CRM Systems · `/services/erp-crm-systems`<br>POS & Inventory Software · `/services/pos-inventory-software`<br>SaaS Product Development · `/services/saas-development`<br>Software Integration & Migration · `/services/software-integration-migration`<br>QA, Testing & Support · `/services/qa-testing` |
+| **Applications** · `/services/applications` | Web Applications & PWAs · `/services/web-applications`<br>iOS App Development · `/services/ios-app-development`<br>Cross-Platform Apps · `/services/cross-platform-apps`<br>Android App Development · `/services/android-app-development`<br>UI/UX Design for Apps · `/services/app-ui-ux-design`<br>App Maintenance & Scaling · `/services/app-maintenance` |
+| **AI Automation** · `/services/ai-automation` | Business Process Automation · `/services/business-process-automation`<br>AI Chatbots & Virtual Assistants · `/services/ai-chatbots`<br>AI Content & Marketing Automation · `/services/ai-marketing-automation`<br>Document & Data Processing · `/services/document-data-processing`<br>Custom AI Agents & Integrations · `/services/ai-agents`<br>AI Consulting & Training · `/services/ai-consulting` |
+
+Core service addresses other than `/services/branding` are planned, not yet set in `services.ts`. Core and service slugs share `/services`, so a new slug must not repeat an existing one.
 
 **URL rules**
 
