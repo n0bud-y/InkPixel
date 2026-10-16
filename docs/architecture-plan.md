@@ -1,4 +1,4 @@
-# Brand Portfolio Platform — Architecture Plan (v2.17)
+# Brand Portfolio Platform — Architecture Plan (v2.18)
 
 | | |
 |---|---|
@@ -13,6 +13,7 @@
 
 | Version | Date | Change |
 |---|---|---|
+| v2.18 | 17 Oct 2026 | **Every core service and service page exists** (project head request, §5): one core-page template (`services/[core]`, Branding's layout; content in `src/content/core-pages.ts`, Branding's still in `branding-page.ts`) and the service template for all 36 services. The 40 pages without real content are dummy pages made from `services.ts` (issue I12), indexed and in the sitemap. Folder structure updated (§7) |
 | v2.17 | 17 Oct 2026 | **Service pages nested under their core service** (project head decision, §5): `/services/<core>/<service>`, e.g. `/services/development/web-development` (route `services/[core]/[service]`); a service at another core's address is a 404. Core pages stay at `/services/<core>`. The old `/services/web-development` redirects permanently (308) to the new address (`next.config.ts`); the Web Development Page SEO entry's path updated in Contentful. Folder structure updated (§7) |
 | v2.16 | 16 Oct 2026 | **Services structure** written down (§5): 6 core services, each with 6 services; core service pages at `/services/<core>` (Branding built), service pages at `/services/<service>`, both flat under `/services`. The list lives in `src/content/services.ts` |
 | v2.15 | 15 Oct 2026 | **Custom schema per page** (manager decision): Page SEO and SEO get a "Custom schema (JSON-LD)" field (migration `0008-custom-schema.cjs`) where the SEO team pastes structured data; it replaces the automatic schema of the same `@type` on that page. `Organization` and `WebSite` move from the root layout into each page's schema (`<PageSchema>`) so a page can replace them (§6, §8) |
@@ -233,7 +234,7 @@ Two levels: **6 core services**, each with **6 services** (36 in all). Every cor
 - **Core service page:** `/services/<core>`, e.g. `/services/branding`.
 - **Service page:** `/services/<core>/<service>`, e.g. `/services/development/web-development`.
 
-The list (names, order, descriptions, icons, and each service's address) lives in `src/content/services.ts`. The header's Services mega menu, the home page's services section, the Services overview, and the footer all read it, so a service is added or renamed there. Built so far: the Branding core page and the Website Development service page. The others return 404 until they are built, and their menu links lead there until then.
+The list (names, order, descriptions, icons, and each service's address) lives in `src/content/services.ts`. The header's Services mega menu, the home page's services section, the Services overview, and the footer all read it, so a service is added or renamed there. Every core service and service has a page (since 17 Oct 2026): Branding and Website Development with real content, the other 40 as dummy pages made from their entries in `services.ts` (issue I12) until they get their own content.
 
 | Core service | Services |
 |---|---|
@@ -244,7 +245,7 @@ The list (names, order, descriptions, icons, and each service's address) lives i
 | **Applications** · `/services/applications` | Web Applications & PWAs · `/services/applications/web-applications`<br>iOS App Development · `/services/applications/ios-app-development`<br>Cross-Platform Apps · `/services/applications/cross-platform-apps`<br>Android App Development · `/services/applications/android-app-development`<br>UI/UX Design for Apps · `/services/applications/app-ui-ux-design`<br>App Maintenance & Scaling · `/services/applications/app-maintenance` |
 | **AI Automation** · `/services/ai-automation` | Business Process Automation · `/services/ai-automation/business-process-automation`<br>AI Chatbots & Virtual Assistants · `/services/ai-automation/ai-chatbots`<br>AI Content & Marketing Automation · `/services/ai-automation/ai-marketing-automation`<br>Document & Data Processing · `/services/ai-automation/document-data-processing`<br>Custom AI Agents & Integrations · `/services/ai-automation/ai-agents`<br>AI Consulting & Training · `/services/ai-automation/ai-consulting` |
 
-Core service addresses other than `/services/branding` are planned, not yet set in `services.ts`; the mega menu already links to them. A service's address is its link in `services.ts`; a service page (`src/content/service-pages.ts`) is built only at that address, and the same service slug under another core is a 404. Service slugs must be unique across all cores (a page is found by its slug).
+A core service's address is its `href` in `services.ts`; its page is in `src/content/core-pages.ts`. A service's address is its link in `services.ts`; a service page (`src/content/service-pages.ts`) is built only at that address, and the same service slug under another core is a 404. Service slugs must be unique across all cores (a page is found by its slug).
 
 **URL rules**
 
@@ -336,7 +337,7 @@ brand-portfolio/
 │   │   │   │   └── actions.ts        # submitLead Server Action
 │   │   │   ├── services/
 │   │   │   │   ├── page.tsx          # the Services overview: content from src/content/services-page.ts and services.ts
-│   │   │   │   ├── branding/page.tsx # the Branding page (its own design): content from src/content/branding-page.ts
+│   │   │   │   ├── [core]/page.tsx   # every core service page (Branding's design): content from src/content/core-pages.ts (Branding's from branding-page.ts)
 │   │   │   │   └── [core]/[service]/page.tsx # every service page, e.g. /services/development/web-development: content from src/content/service-pages.ts, address from services.ts; others 404
 │   │   │   ├── industries/
 │   │   │   │   ├── page.tsx
@@ -357,7 +358,7 @@ brand-portfolio/
 │   │       ├── draft-mode/enable/route.ts   # called by Contentful's preview URL
 │   │       └── draft-mode/disable/route.ts
 │   ├── assets/images/                # static-page photos, imported with next/image (compressed, ≤ ~500 KB each)
-│   ├── content/                      # static content as typed data (services.ts, services-page.ts, service-pages.ts, branding-page.ts, blog.ts, technologies.ts, about.ts …); copy lives here, not in components
+│   ├── content/                      # static content as typed data (services.ts, services-page.ts, service-pages.ts, core-pages.ts, branding-page.ts, blog.ts, technologies.ts, about.ts …); copy lives here, not in components
 │   ├── components/
 │   │   ├── ui/                       # shadcn primitives (Button, Dialog, Input…)
 │   │   ├── layout/                   # Header (+ HeaderShell, client), Footer, MobileNav

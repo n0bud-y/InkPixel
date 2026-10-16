@@ -37,7 +37,7 @@ import typeWebApps from "@/assets/images/services/icons/type-web-apps.svg";
 import typeWebsites from "@/assets/images/services/icons/type-websites.svg";
 import devices from "@/assets/images/services/web-development/devices.webp";
 import estimatorPhoto from "@/assets/images/services/web-development/estimator-photo.webp";
-import { serviceCategories } from "@/content/services";
+import { serviceCategories, type Service, type ServiceCategory } from "@/content/services";
 
 const lorem =
   "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing Library in London.";
@@ -210,7 +210,78 @@ const webDevelopment: ServicePage = {
   ],
 };
 
-export const servicePages: ServicePage[] = [webDevelopment];
+// PLACEHOLDER (issue I12): every other service's page is a dummy page made from its entry in
+// src/content/services.ts (name, one-line description) and Web Development's: stand-in titles,
+// lorem ipsum, the category's photo, the other services of its category as "types" (with Web
+// Development's icons), and Web Development's estimator photo, workflow, and stats. Give a
+// service its own entry (like webDevelopment) to replace it.
+function dummyServicePage(category: ServiceCategory, service: Service): ServicePage {
+  const name = service.title;
+  const others = category.services.filter((item) => item !== service).slice(0, 4);
+  return {
+    slug: service.href.slice(service.href.lastIndexOf("/") + 1),
+    name,
+    caseStudyService: category.slug,
+    description: service.description,
+    hero: { ...webDevelopment.hero, title: `${name} Services Built to Grow Your Business` },
+    consultation: webDevelopment.consultation,
+    intro: { title: `${name} That Works as Hard as You Do`, text: [`${lorem} ${loremShort}`], image: category.image },
+    offerings: {
+      title: `${name} Services for Novel, *Best-Functioning Results*`,
+      text: lorem,
+      button: webDevelopment.offerings.button,
+      items: ["Discovery & Strategy", "Planning & Design", "Build & Integration", "Testing & Launch", "Support & Growth"].map(
+        (title) => ({ title, text: lorem }),
+      ),
+    },
+    types: {
+      title: `More ${category.label} Services to Broaden Business Prospects`,
+      text: webDevelopment.types.text,
+      items: others.map((item, index) => ({
+        title: item.title,
+        text: item.description,
+        icon: webDevelopment.types.items[index % webDevelopment.types.items.length].icon,
+      })),
+      button: webDevelopment.types.button,
+    },
+    projects: { ...webDevelopment.projects, title: `Our ${category.label} Projects, Ground-Up Launches to Makeovers` },
+    estimator: {
+      title: `Estimate Your ${name} Cost in Seconds`,
+      image: estimatorPhoto,
+      questions: [
+        { id: "type", question: "Which services do you need?", options: category.services.map((item) => item.title), multiple: true },
+        {
+          id: "size",
+          question: "How big is the project?",
+          options: ["Small: a few weeks", "Medium: one to three months", "Large: three months or more", "Not sure yet"],
+        },
+        {
+          id: "brief",
+          question: "Do you have a brief or designs ready?",
+          options: ["Yes, ready to go", "Some ideas or a brand guide", "No, we need help with that too"],
+        },
+        { id: "timeline", question: "When do you need it?", options: ["Within a month", "1–3 months", "3–6 months", "Just exploring"] },
+      ],
+    },
+    workflow: {
+      ...webDevelopment.workflow,
+      title: `Our Simple, Frictionless ${category.label} Workflow`,
+      text: "We use lean, agile methodology for collaborative work and faster turnarounds, with you involved at every step.",
+    },
+    stats: webDevelopment.stats.map((stat, index) => (index === 0 ? { ...stat, label: `${category.label} Experts` } : stat)),
+  };
+}
+
+const written: ServicePage[] = [webDevelopment];
+
+export const servicePages: ServicePage[] = [
+  ...written,
+  ...serviceCategories.flatMap((category) =>
+    category.services
+      .filter((service) => !written.some((page) => service.href === `/services/${category.slug}/${page.slug}`))
+      .map((service) => dummyServicePage(category, service)),
+  ),
+];
 
 // Where a service page sits: its core service (category) and its address,
 // /services/<core>/<slug>, from src/content/services.ts. None if that file doesn't list it.

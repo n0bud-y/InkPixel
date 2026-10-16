@@ -33,7 +33,7 @@ export function BrandingServices({ services }: { services: BrandingPage["service
         <Reveal y={50} stagger={0.08} className="mx-auto mt-[clamp(1.5rem,min(2.6vw,4svh),3.2rem)] w-full max-w-[94.2rem]">
           <ul
             onMouseLeave={() => setActive(0)}
-            className="grid grid-cols-[minmax(0,1fr)] gap-x-[clamp(1rem,2.56vw,3.1rem)] gap-y-[clamp(1rem,min(1.67vw,2.5svh),2rem)] sm:grid-cols-2 lg:grid-cols-3"
+            className="grid grid-cols-[minmax(0,1fr)] gap-8 sm:grid-cols-2 lg:grid-cols-3"
           >
             {services.items.map((service, index) => {
               const lit = index === active;

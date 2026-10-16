@@ -5,8 +5,10 @@
 //
 // PLACEHOLDER (issue I7): the descriptions outside Branding are stand-ins, and their icons
 // were drawn in-house (src/assets/images/icons/<category>/); replace both when the real copy
-// and the designer's icons arrive. Each service links to its own page under its category,
-// /services/<category>/<service>; only Website Development is built so far (P3-07).
+// and the designer's icons arrive. Each category has its own page, /services/<category>
+// (src/content/core-pages.ts), and each service its own page under it,
+// /services/<category>/<service> (src/content/service-pages.ts); only Branding and Website
+// Development have real content so far, the rest are dummy pages (issue I12).
 import type { StaticImageData } from "next/image";
 import aiAgents from "@/assets/images/icons/ai-automation/ai-agents.svg";
 import aiChatbots from "@/assets/images/icons/ai-automation/ai-chatbots.svg";
@@ -67,8 +69,8 @@ export type ServiceCategory = {
   description: string;
   /** The category's photo (Services page). */
   image: StaticImageData;
-  /** The category's own page, once it has one (the Services page links its photo there; until
-   *  then, to its first service). */
+  /** The category's own page, /services/<slug> (the Services page links its photo there; without
+   *  one, to its first service). */
   href?: string;
   services: Service[];
 };
@@ -129,6 +131,7 @@ export const serviceCategories: ServiceCategory[] = [
   {
     slug: "development",
     label: "Development",
+    href: "/services/development",
     description:
       "Build high-performance websites and digital platforms tailored for your business growth.",
     image: categoryDevelopment,
@@ -180,6 +183,7 @@ export const serviceCategories: ServiceCategory[] = [
   {
     slug: "marketing",
     label: "Marketing",
+    href: "/services/marketing",
     description:
       "Boost your conversions with targeted campaigns, SEO, and powerful social media marketing.",
     image: categoryMarketing,
@@ -231,6 +235,7 @@ export const serviceCategories: ServiceCategory[] = [
   {
     slug: "software",
     label: "Software",
+    href: "/services/software",
     description:
       "Streamline your operations with robust software, CRM systems, and inventory solutions.",
     image: categorySoftware,
@@ -282,6 +287,7 @@ export const serviceCategories: ServiceCategory[] = [
   {
     slug: "applications",
     label: "Applications",
+    href: "/services/applications",
     description:
       "Deliver engaging user experiences with intuitive Android and iOS mobile applications.",
     image: categoryApplications,
@@ -333,6 +339,7 @@ export const serviceCategories: ServiceCategory[] = [
   {
     slug: "ai-automation",
     label: "AI Automation",
+    href: "/services/ai-automation",
     description:
       "Automate business processes and scale faster with cutting-edge AI chatbots and smart systems.",
     image: categoryAiAutomation,

@@ -43,8 +43,8 @@ export const mainNav = [
 
 export const contactCta = { href: "/contact", label: "Get in touch" } as const;
 
-// Footer link columns. Each service has its own page (/services/<core>/<service>, or a core
-// service's /services/<core>; built in P3-07).
+// Footer link columns. Services: the six core service pages (/services/<core>, as in
+// src/content/services.ts).
 export const footerNav = {
   sitemap: [
     { href: "/", label: "Home" },
@@ -54,13 +54,12 @@ export const footerNav = {
     { href: "/contact", label: "Contact" },
   ],
   services: [
-    { href: "/services/development/web-development", label: "Web Development" },
-    { href: "/services/mobile-apps", label: "Mobile Apps" },
-    { href: "/services/ai-automation", label: "AI & Automation" },
-    { href: "/services/ui-ux-design", label: "UI/UX Design" },
-    { href: "/services/cloud-devops", label: "Cloud / DevOps" },
     { href: "/services/branding", label: "Branding" },
-    { href: "/services/public-sector", label: "Public Sector" },
+    { href: "/services/development", label: "Development" },
+    { href: "/services/marketing", label: "Marketing" },
+    { href: "/services/software", label: "Software" },
+    { href: "/services/applications", label: "Applications" },
+    { href: "/services/ai-automation", label: "AI Automation" },
   ],
   legal: [
     { href: "/privacy-policy", label: "Privacy" },
