@@ -1,5 +1,6 @@
-// Service detail pages (/services/<slug>). Static content: edited here, not in Contentful.
-// One entry per service page; a slug without an entry is a 404. The first page, Web
+// Service detail pages (/services/<core>/<service>). Static content: edited here, not in
+// Contentful. One entry per service page; a slug without an entry is a 404. The address is the
+// service's link in src/content/services.ts. The first page, Web
 // Development, follows src/assets/design/Service Detail.svg. Titles can mark words with
 // *asterisks* (shown in the brand gradient).
 // PLACEHOLDER (issue I6): text marked "lorem" is the design's lorem ipsum, and the hero title,
@@ -36,6 +37,7 @@ import typeWebApps from "@/assets/images/services/icons/type-web-apps.svg";
 import typeWebsites from "@/assets/images/services/icons/type-websites.svg";
 import devices from "@/assets/images/services/web-development/devices.webp";
 import estimatorPhoto from "@/assets/images/services/web-development/estimator-photo.webp";
+import { serviceCategories } from "@/content/services";
 
 const lorem =
   "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing Library in London.";
@@ -210,8 +212,20 @@ const webDevelopment: ServicePage = {
 
 export const servicePages: ServicePage[] = [webDevelopment];
 
-export function getServicePage(slug: string) {
-  return servicePages.find((page) => page.slug === slug);
+// Where a service page sits: its core service (category) and its address,
+// /services/<core>/<slug>, from src/content/services.ts. None if that file doesn't list it.
+export function servicePlace(slug: string) {
+  for (const core of serviceCategories) {
+    const service = core.services.find((item) => item.href === `/services/${core.slug}/${slug}`);
+    if (service) return { core, path: service.href };
+  }
+}
+
+// The service page at /services/<core>/<slug>, with its place; none at any other address.
+export function getServicePage(core: string, slug: string) {
+  const page = servicePages.find((item) => item.slug === slug);
+  const place = page && servicePlace(slug);
+  return page && place?.core.slug === core ? { page, ...place } : undefined;
 }
 
 export type Domain = { label: string; icon: StaticImageData };

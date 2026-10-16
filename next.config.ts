@@ -14,6 +14,13 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // Old addresses. Service pages moved under their core service in October 2026
+  // (/services/web-development → /services/development/web-development).
+  async redirects() {
+    return [
+      { source: "/services/web-development", destination: "/services/development/web-development", permanent: true },
+    ];
+  },
 };
 
 export default nextConfig;

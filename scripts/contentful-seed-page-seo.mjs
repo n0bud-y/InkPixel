@@ -87,7 +87,7 @@ const pages = [
   [
     "web-development",
     "Web Development (service)",
-    "/services/web-development",
+    "/services/development/web-development",
     "Web Development | Ink Pixel Studios",
     "Websites, online stores, web apps, and content-managed sites, designed, built, tested, and looked after by Ink Pixel Studios.",
   ],

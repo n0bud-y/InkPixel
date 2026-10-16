@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { servicePages } from "@/content/service-pages";
+import { servicePages, servicePlace } from "@/content/service-pages";
 import { getCaseStudies, type CaseStudySummary } from "@/contentful/queries/case-studies";
 import { getCategories, getPosts, type Category, type PostSummary } from "@/contentful/queries/posts";
 import { absoluteUrl } from "@/lib/seo";
@@ -26,7 +26,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [
     ...[...mainNav, contactCta, ...footerNav.legal].map(({ href }) => ({ url: absoluteUrl(href) })),
-    ...servicePages.map(({ slug }) => ({ url: absoluteUrl(`/services/${slug}`) })),
+    ...servicePages.flatMap(({ slug }) => {
+      const place = servicePlace(slug);
+      return place ? [{ url: absoluteUrl(place.path) }] : [];
+    }),
     { url: absoluteUrl("/services/branding") },
     ...caseStudies.map(({ href, updatedAt }) => ({ url: absoluteUrl(href), lastModified: updatedAt })),
     ...posts.map(({ href, publishedDate, updatedDate }) => ({ url: absoluteUrl(href), lastModified: updatedDate ?? publishedDate })),

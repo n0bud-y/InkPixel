@@ -5,8 +5,8 @@
 //
 // PLACEHOLDER (issue I7): the descriptions outside Branding are stand-ins, and their icons
 // were drawn in-house (src/assets/images/icons/<category>/); replace both when the real copy
-// and the designer's icons arrive. Each service links to its own page, /services/<slug>; only
-// Website Development is built so far (P3-07).
+// and the designer's icons arrive. Each service links to its own page under its category,
+// /services/<category>/<service>; only Website Development is built so far (P3-07).
 import type { StaticImageData } from "next/image";
 import aiAgents from "@/assets/images/icons/ai-automation/ai-agents.svg";
 import aiChatbots from "@/assets/images/icons/ai-automation/ai-chatbots.svg";
@@ -87,42 +87,42 @@ export const serviceCategories: ServiceCategory[] = [
         description:
           "Primary logo, secondary logo, icon/mark, logo variations, black & white versions.",
         icon: brandIdentity,
-        href: "/services/brand-identity-logo-design",
+        href: "/services/branding/brand-identity-logo-design",
       },
       {
         title: "Brand Guidelines / Brand Book",
         description:
           "Logo usage, spacing, colors, typography, visual rules, do's & don'ts, brand consistency guide.",
         icon: brandGuidelines,
-        href: "/services/brand-guidelines",
+        href: "/services/branding/brand-guidelines",
       },
       {
         title: "Stationery Design",
         description:
           "Business card, letterhead, envelope, email signature, invoice/quotation template.",
         icon: stationeryDesign,
-        href: "/services/stationery-design",
+        href: "/services/branding/stationery-design",
       },
       {
         title: "Social Media Branding",
         description:
           "Profile/cover designs, social post templates, story templates, highlight covers, ad templates.",
         icon: socialMediaBranding,
-        href: "/services/social-media-branding",
+        href: "/services/branding/social-media-branding",
       },
       {
         title: "Website & Digital Branding",
         description:
           "Website visual direction, UI style, buttons/icons, web banners, landing-page branding.",
         icon: websiteBranding,
-        href: "/services/digital-branding",
+        href: "/services/branding/digital-branding",
       },
       {
         title: "Brand Launch & Implementation",
         description:
           "Final asset organization, launch creatives, brand rollout across website/social/print and consistency check.",
         icon: brandLaunch,
-        href: "/services/brand-launch",
+        href: "/services/branding/brand-launch",
       },
     ],
   },
@@ -138,42 +138,42 @@ export const serviceCategories: ServiceCategory[] = [
         description:
           "Business websites, landing pages, responsive layouts, contact forms, analytics setup.",
         icon: webDevelopment,
-        href: "/services/web-development",
+        href: "/services/development/web-development",
       },
       {
         title: "E-Commerce Development",
         description:
           "Online stores, product catalogs, cart & checkout, payment gateways, order management.",
         icon: ecommerceDevelopment,
-        href: "/services/ecommerce-development",
+        href: "/services/development/ecommerce-development",
       },
       {
         title: "CMS Development",
         description:
           "Custom and headless CMS builds, editable pages, content models, user roles, editor training.",
         icon: cmsDevelopment,
-        href: "/services/cms-development",
+        href: "/services/development/cms-development",
       },
       {
         title: "Frontend Development",
         description:
           "Interfaces built from your designs, responsive layouts, animations, accessibility, speed.",
         icon: frontendDevelopment,
-        href: "/services/frontend-development",
+        href: "/services/development/frontend-development",
       },
       {
         title: "Backend & API Development",
         description:
           "Server logic, databases, REST/GraphQL APIs, authentication, third-party integrations.",
         icon: backendApi,
-        href: "/services/backend-api-development",
+        href: "/services/development/backend-api-development",
       },
       {
         title: "Maintenance & Support",
         description:
           "Updates, security patches, backups, uptime monitoring, bug fixes, content changes.",
         icon: websiteMaintenance,
-        href: "/services/website-maintenance",
+        href: "/services/development/website-maintenance",
       },
     ],
   },
@@ -189,42 +189,42 @@ export const serviceCategories: ServiceCategory[] = [
         description:
           "Content calendars, post & story creatives, community management, campaigns, monthly reports.",
         icon: socialMediaMarketing,
-        href: "/services/social-media-marketing",
+        href: "/services/marketing/social-media-marketing",
       },
       {
         title: "Search Engine Optimization (SEO)",
         description:
           "Keyword research, on-page optimization, technical audits, local SEO, ranking reports.",
         icon: seo,
-        href: "/services/seo",
+        href: "/services/marketing/seo",
       },
       {
         title: "Paid Advertising",
         description:
           "Search and social ad campaigns, audience targeting, ad creatives, A/B tests, budget tracking.",
         icon: paidAdvertising,
-        href: "/services/paid-advertising",
+        href: "/services/marketing/paid-advertising",
       },
       {
         title: "Content Marketing",
         description:
           "Blog articles, website copy, case studies, newsletters, video scripts, content strategy.",
         icon: contentMarketing,
-        href: "/services/content-marketing",
+        href: "/services/marketing/content-marketing",
       },
       {
         title: "Email & WhatsApp Marketing",
         description:
           "Campaign design, automated sequences, list segmentation, broadcast messages, reporting.",
         icon: emailWhatsappMarketing,
-        href: "/services/email-whatsapp-marketing",
+        href: "/services/marketing/email-whatsapp-marketing",
       },
       {
         title: "Analytics & Growth Strategy",
         description:
           "Tracking setup, dashboards, funnel & conversion analysis, growth experiments, roadmap.",
         icon: analyticsGrowth,
-        href: "/services/analytics-growth-strategy",
+        href: "/services/marketing/analytics-growth-strategy",
       },
     ],
   },
@@ -240,42 +240,42 @@ export const serviceCategories: ServiceCategory[] = [
         description:
           "Software built around your workflow: requirements, architecture, development, testing, deployment.",
         icon: customSoftware,
-        href: "/services/custom-software-development",
+        href: "/services/software/custom-software-development",
       },
       {
         title: "ERP & CRM Systems",
         description:
           "Sales pipelines, customer records, finance, HR & operations modules, reports, user roles.",
         icon: erpCrm,
-        href: "/services/erp-crm-systems",
+        href: "/services/software/erp-crm-systems",
       },
       {
         title: "POS & Inventory Software",
         description:
           "Point-of-sale apps, barcode scanning, stock tracking, multi-branch inventory, sales reports.",
         icon: posInventory,
-        href: "/services/pos-inventory-software",
+        href: "/services/software/pos-inventory-software",
       },
       {
         title: "SaaS Product Development",
         description:
           "MVP to launch: multi-tenant setup, subscriptions & billing, admin panels, user onboarding.",
         icon: saasDevelopment,
-        href: "/services/saas-development",
+        href: "/services/software/saas-development",
       },
       {
         title: "Software Integration & Migration",
         description:
           "API integrations, data migration, legacy system upgrades, cloud moves, data checks.",
         icon: softwareIntegration,
-        href: "/services/software-integration-migration",
+        href: "/services/software/software-integration-migration",
       },
       {
         title: "QA, Testing & Support",
         description:
           "Manual & automated testing, bug tracking, performance and security checks, release support.",
         icon: qaTesting,
-        href: "/services/qa-testing",
+        href: "/services/software/qa-testing",
       },
     ],
   },
@@ -291,42 +291,42 @@ export const serviceCategories: ServiceCategory[] = [
         description:
           "Dashboards, customer portals, booking systems, installable web apps, offline support.",
         icon: webApplications,
-        href: "/services/web-applications",
+        href: "/services/applications/web-applications",
       },
       {
         title: "iOS App Development",
         description:
           "Native iPhone & iPad apps, App Store submission, updates for new iOS versions.",
         icon: iosApp,
-        href: "/services/ios-app-development",
+        href: "/services/applications/ios-app-development",
       },
       {
         title: "Cross-Platform Apps",
         description:
           "One codebase for iOS & Android, native device features, shared logic, store releases.",
         icon: crossPlatformApps,
-        href: "/services/cross-platform-apps",
+        href: "/services/applications/cross-platform-apps",
       },
       {
         title: "Android App Development",
         description:
           "Native Android apps, Google Play publishing, testing across devices and OS versions.",
         icon: androidApp,
-        href: "/services/android-app-development",
+        href: "/services/applications/android-app-development",
       },
       {
         title: "UI/UX Design for Apps",
         description:
           "User research, wireframes, app flows, interactive prototypes, final screens, design systems.",
         icon: appUiUxDesign,
-        href: "/services/app-ui-ux-design",
+        href: "/services/applications/app-ui-ux-design",
       },
       {
         title: "App Maintenance & Scaling",
         description:
           "OS updates, crash monitoring, performance tuning, new features, server scaling.",
         icon: appMaintenance,
-        href: "/services/app-maintenance",
+        href: "/services/applications/app-maintenance",
       },
     ],
   },
@@ -342,42 +342,42 @@ export const serviceCategories: ServiceCategory[] = [
         description:
           "Workflow mapping, automated approvals, data entry & reporting, connections between your tools.",
         icon: businessProcessAutomation,
-        href: "/services/business-process-automation",
+        href: "/services/ai-automation/business-process-automation",
       },
       {
         title: "AI Chatbots & Virtual Assistants",
         description:
           "Website & WhatsApp chatbots, support assistants, lead capture, answers from your own content.",
         icon: aiChatbots,
-        href: "/services/ai-chatbots",
+        href: "/services/ai-automation/ai-chatbots",
       },
       {
         title: "AI Content & Marketing Automation",
         description:
           "AI-assisted copy & visuals, scheduled posting, personalized emails, campaign automation.",
         icon: aiMarketingAutomation,
-        href: "/services/ai-marketing-automation",
+        href: "/services/ai-automation/ai-marketing-automation",
       },
       {
         title: "Document & Data Processing",
         description:
           "Invoice & form data extraction, OCR, data cleaning, classification, automatic reports.",
         icon: documentDataProcessing,
-        href: "/services/document-data-processing",
+        href: "/services/ai-automation/document-data-processing",
       },
       {
         title: "Custom AI Agents & Integrations",
         description:
           "Task-specific AI agents, LLM integrations, internal knowledge assistants, API connections.",
         icon: aiAgents,
-        href: "/services/ai-agents",
+        href: "/services/ai-automation/ai-agents",
       },
       {
         title: "AI Consulting & Training",
         description:
           "AI readiness review, use-case planning, tool selection, team workshops & training.",
         icon: aiConsulting,
-        href: "/services/ai-consulting",
+        href: "/services/ai-automation/ai-consulting",
       },
     ],
   },
