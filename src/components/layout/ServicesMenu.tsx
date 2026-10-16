@@ -11,21 +11,24 @@ import { serviceCategories } from "@/content/services";
 const OPEN_DELAY = 100;
 const CLOSE_DELAY = 200;
 
-// "Services" in the desktop menu: a button that opens a mega menu under the header with every
-// service category (src/content/services.ts, shared with the home page's services section).
-// A mouse opens it on hover; a click or Enter toggles it. Esc, a click
-// outside, focus leaving it, or opening a page closes it. The panel is positioned against the
-// <header>, the nearest positioned ancestor.
+// "Services" in the desktop menu: the word links to the Services page, and a mega menu under the
+// header shows every service category (src/content/services.ts, shared with the home page's
+// services section). A mouse opens the menu by hovering the item; the arrow beside the word is a
+// button that toggles it (click, Enter, touch). Esc, a click outside, focus leaving it, or opening
+// a page closes it. The panel is positioned against the <header>, the nearest positioned ancestor.
 export function ServicesMenu({
   label,
   className,
   light,
+  active,
 }: {
   label: string;
   /** The menu item's pill classes, from NavLinks. */
   className: string;
   /** White header (case studies): a white panel with dark text. */
   light: boolean;
+  /** On the Services page or a service page. */
+  active: boolean;
 }) {
   const pathname = usePathname();
   // The page the menu was opened on, so it is closed again on any other page.
@@ -91,24 +94,29 @@ export function ServicesMenu({
         if (event.relatedTarget && !event.currentTarget.contains(event.relatedTarget)) close();
       }}
     >
-      <button
-        ref={button}
-        type="button"
-        onClick={toggle}
-        aria-expanded={open}
-        aria-controls={panelId}
-        className={`${className} items-center gap-1.5`}
-      >
-        {label}
-        <svg
-          viewBox="0 0 12 12"
-          fill="none"
-          aria-hidden="true"
-          className={`size-2.5 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+      <div className={`${className} items-center gap-1`}>
+        <Link href="/services" aria-current={pathname === "/services" ? "page" : active ? "true" : undefined} onClick={close}>
+          {label}
+        </Link>
+        <button
+          ref={button}
+          type="button"
+          onClick={toggle}
+          aria-expanded={open}
+          aria-controls={panelId}
+          aria-label={`${label} menu`}
+          className="-my-1 -mr-1.5 grid size-5 place-items-center rounded-full"
         >
-          <path d="M2.5 4.5 6 8l3.5-3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      </button>
+          <svg
+            viewBox="0 0 12 12"
+            fill="none"
+            aria-hidden="true"
+            className={`size-2.5 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          >
+            <path d="M2.5 4.5 6 8l3.5-3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </button>
+      </div>
 
       {/* The full-width layer lets clicks through beside the card. */}
       <div

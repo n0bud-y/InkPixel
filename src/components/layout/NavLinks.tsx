@@ -12,7 +12,8 @@ export function isActive(pathname: string, href: string) {
 // Pages whose top is white, so the header is white with dark text (see HeaderShell).
 export const hasLightHeader = (pathname: string) => isActive(pathname, "/case-studies");
 
-// Desktop menu. The current section gets the pill; Services opens the mega menu.
+// Desktop menu. The current section gets the pill; Services links to its page and opens the mega
+// menu.
 export function NavLinks() {
   const pathname = usePathname();
   const light = hasLightHeader(pathname);
@@ -34,7 +35,7 @@ export function NavLinks() {
         return (
           <li key={item.href}>
             {item.href === "/services" ? (
-              <ServicesMenu label={item.label} className={className} light={light} />
+              <ServicesMenu label={item.label} className={className} light={light} active={active} />
             ) : (
               <Link href={item.href} aria-current={active ? "page" : undefined} className={className}>
                 {item.label}
