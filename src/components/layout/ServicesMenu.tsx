@@ -13,7 +13,7 @@ import {
   type PointerEvent,
 } from "react";
 import { Button, DropIcon } from "@/components/ui/Button";
-import { serviceCategories } from "@/content/services";
+import { serviceCategories, type ServiceCategory } from "@/content/services";
 
 // Waits before opening (so the mouse can cross the menu without opening it) and before
 // closing (so it can travel from the button down to the panel).
@@ -31,6 +31,10 @@ const categoryOf = (pathname: string) =>
       (category) => category.href === pathname || category.services.some((service) => service.href === pathname),
     ),
   );
+
+// A core service's page; until it has one (href in services.ts), its planned address
+// (docs/architecture-plan.md), which shows "not found" until the page is built.
+const pageOf = (category: ServiceCategory) => category.href ?? `/services/${category.slug}`;
 
 // A white line icon as a shape filled with the brand gradient (CSS mask).
 const maskOf = (src: string): CSSProperties => ({
@@ -50,9 +54,11 @@ const maskOf = (src: string): CSSProperties => ({
 // that toggles it (click, Enter, touch). Esc, a click outside, focus leaving it, or opening a page
 // closes it. The panel is positioned against the <header>, the nearest positioned ancestor.
 //
-// Inside: the six core services as tabs on the left (hover, click, or the arrow keys), the chosen
-// one's services as cards on the right (icon, name, one line), and a bar with "View all services"
-// and a free-call button. It opens on the category of the page you're on.
+// Inside: the six core services on the left, the chosen one's services as cards on the right
+// (icon, name, one line), and a bar with "View all services" and a free-call button. Hovering a
+// core service (or the arrow keys) shows its services; a click (or Enter) opens its page. On a
+// touch screen the first tap shows its services and the second opens the page. It opens on the
+// category of the page you're on.
 export function ServicesMenu({
   label,
   className,
@@ -77,6 +83,8 @@ export function ServicesMenu({
   const root = useRef<HTMLDivElement>(null);
   const button = useRef<HTMLButtonElement>(null);
   const hovering = useRef(false);
+  // The pointer that pressed a core service ("" for a key), read by its click.
+  const pointer = useRef("");
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const tabTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const panelId = useId();
@@ -132,9 +140,20 @@ export function ServicesMenu({
   // A mouse already opened it by hovering, so its click keeps it open rather than closing it.
   const toggle = () => (open && !hovering.current ? close() : show());
 
-  // Also close when a link to the current page is clicked (the pathname does not change).
+  // Also close when a link to the current page is clicked (the pathname does not change); not
+  // for a first tap on a core service, which only shows its services.
   const closeOnLinkClick = (event: MouseEvent) => {
-    if ((event.target as HTMLElement).closest("a")) close();
+    if (!event.defaultPrevented && (event.target as HTMLElement).closest("a")) close();
+  };
+
+  const clickTab = (event: MouseEvent, index: number) => {
+    clearTimeout(tabTimer.current);
+    const touch = pointer.current !== "" && pointer.current !== "mouse";
+    pointer.current = "";
+    if (touch && index !== tab) {
+      event.preventDefault();
+      setTab(index);
+    }
   };
 
   const hoverTab = (event: PointerEvent, index: number) => {
@@ -234,55 +253,51 @@ export function ServicesMenu({
             className={`pointer-events-auto max-h-[calc(100dvh-7.5rem)] overflow-y-auto overscroll-contain rounded-3xl border 2xl:max-h-[calc(100dvh-9.5rem)] ${tone.card}`}
           >
             <div className="grid grid-cols-[minmax(0,16rem)_minmax(0,1fr)] xl:grid-cols-[minmax(0,18rem)_minmax(0,1fr)] 2xl:grid-cols-[minmax(0,21rem)_minmax(0,1fr)]">
-              {/* Core services. */}
-              <div
-                role="tablist"
-                aria-orientation="vertical"
-                aria-label="Service categories"
-                className={`flex flex-col gap-1 border-r p-3 2xl:p-4 ${tone.line}`}
-              >
+              {/* Core services: one stop in the Tab order (the chosen one), the arrow keys move between them. */}
+              <ul aria-label="Core services" className={`flex flex-col gap-1 border-r p-3 2xl:p-4 ${tone.line}`}>
                 {serviceCategories.map((item, index) => {
                   const selected = index === tab;
+                  const href = pageOf(item);
                   return (
-                    <button
-                      key={item.slug}
-                      id={tabId(index)}
-                      type="button"
-                      role="tab"
-                      aria-selected={selected}
-                      aria-controls={tabPanelId}
-                      tabIndex={selected ? 0 : -1}
-                      onPointerEnter={(event) => hoverTab(event, index)}
-                      onPointerLeave={() => clearTimeout(tabTimer.current)}
-                      onClick={() => setTab(index)}
-                      onKeyDown={onTabKeyDown}
-                      className={`relative flex items-center gap-3 rounded-xl px-4 py-3 text-left transition-colors duration-200 2xl:py-3.5 ${selected ? tone.tabOn : tone.tab}`}
-                    >
-                      <span
-                        aria-hidden="true"
-                        className={`absolute inset-y-2.5 left-0 w-[3px] rounded-full bg-brand-gradient transition-opacity duration-200 ${selected ? "opacity-100" : "opacity-0"}`}
-                      />
-                      <span aria-hidden="true" className="font-mono text-[12px] tracking-[0.2em] text-crimson">
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
-                      <span className="font-display text-[16px] leading-tight font-medium tracking-[-0.01em] 2xl:text-[18px]">
-                        {item.label}
-                      </span>
-                      <svg
-                        viewBox="0 0 12 12"
-                        fill="none"
-                        aria-hidden="true"
-                        className={`ml-auto size-3 transition duration-200 ${selected ? "translate-x-0 opacity-100" : "-translate-x-1 opacity-0"}`}
+                    <li key={item.slug}>
+                      <Link
+                        id={tabId(index)}
+                        href={href}
+                        aria-current={pathname === href ? "page" : undefined}
+                        tabIndex={selected ? 0 : -1}
+                        onPointerEnter={(event) => hoverTab(event, index)}
+                        onPointerLeave={() => clearTimeout(tabTimer.current)}
+                        onPointerDown={(event) => (pointer.current = event.pointerType)}
+                        onClick={(event) => clickTab(event, index)}
+                        onKeyDown={onTabKeyDown}
+                        className={`relative flex items-center gap-3 rounded-xl px-4 py-3 transition-colors duration-200 2xl:py-3.5 ${selected ? tone.tabOn : tone.tab}`}
                       >
-                        <path d="M4.5 2.5 8 6l-3.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    </button>
+                        <span
+                          aria-hidden="true"
+                          className={`absolute inset-y-2.5 left-0 w-[3px] rounded-full bg-brand-gradient transition-opacity duration-200 ${selected ? "opacity-100" : "opacity-0"}`}
+                        />
+                        <span aria-hidden="true" className="font-mono text-[12px] tracking-[0.2em] text-crimson">
+                          {String(index + 1).padStart(2, "0")}
+                        </span>
+                        <span className="font-display text-[16px] leading-tight font-medium tracking-[-0.01em] 2xl:text-[18px]">
+                          {item.label}
+                        </span>
+                        <svg
+                          viewBox="0 0 12 12"
+                          fill="none"
+                          aria-hidden="true"
+                          className={`ml-auto size-3 transition duration-200 ${selected ? "translate-x-0 opacity-100" : "-translate-x-1 opacity-0"}`}
+                        >
+                          <path d="M4.5 2.5 8 6l-3.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </Link>
+                    </li>
                   );
                 })}
-              </div>
+              </ul>
 
               {/* The chosen category's services. */}
-              <div id={tabPanelId} role="tabpanel" aria-labelledby={tabId(tab)} className="p-5 2xl:p-7">
+              <div id={tabPanelId} role="group" aria-labelledby={tabId(tab)} className="p-5 2xl:p-7">
                 <div className="flex items-start justify-between gap-6 px-2">
                   <p className={`max-w-[36em] text-[14px] leading-relaxed 2xl:text-[15px] ${tone.muted}`}>{category.description}</p>
                   {category.href && (
