@@ -262,10 +262,10 @@ export function ServicesMenu({
                         aria-hidden="true"
                         className={`absolute inset-y-2.5 left-0 w-[3px] rounded-full bg-brand-gradient transition-opacity duration-200 ${selected ? "opacity-100" : "opacity-0"}`}
                       />
-                      <span aria-hidden="true" className="font-mono text-[11px] tracking-[0.2em] text-crimson">
+                      <span aria-hidden="true" className="font-mono text-[12px] tracking-[0.2em] text-crimson">
                         {String(index + 1).padStart(2, "0")}
                       </span>
-                      <span className="font-display text-[15px] leading-tight font-medium tracking-[-0.01em] 2xl:text-[17px]">
+                      <span className="font-display text-[16px] leading-tight font-medium tracking-[-0.01em] 2xl:text-[18px]">
                         {item.label}
                       </span>
                       <svg
@@ -284,11 +284,11 @@ export function ServicesMenu({
               {/* The chosen category's services. */}
               <div id={tabPanelId} role="tabpanel" aria-labelledby={tabId(tab)} className="p-5 2xl:p-7">
                 <div className="flex items-start justify-between gap-6 px-2">
-                  <p className={`max-w-[36em] text-[13px] leading-relaxed 2xl:text-sm ${tone.muted}`}>{category.description}</p>
+                  <p className={`max-w-[36em] text-[14px] leading-relaxed 2xl:text-[15px] ${tone.muted}`}>{category.description}</p>
                   {category.href && (
                     <Link
                       href={category.href}
-                      className={`group inline-flex shrink-0 items-center gap-1.5 text-[13px] font-medium transition-colors 2xl:text-sm ${tone.link}`}
+                      className={`group inline-flex shrink-0 items-center gap-1.5 text-[14px] font-medium transition-colors 2xl:text-[15px] ${tone.link}`}
                     >
                       Explore {category.label}
                       <span aria-hidden="true" className="transition-transform duration-200 group-hover:translate-x-0.5">
@@ -317,11 +317,11 @@ export function ServicesMenu({
                           </span>
                           <span className="min-w-0">
                             <span
-                              className={`block text-[14px] leading-snug font-semibold 2xl:text-[15px] ${current ? "text-crimson" : tone.title}`}
+                              className={`block text-[15px] leading-snug font-semibold 2xl:text-[16px] ${current ? "text-crimson" : tone.title}`}
                             >
                               {service.title}
                             </span>
-                            <span className={`mt-1 line-clamp-2 block text-[12.5px] leading-snug 2xl:text-[13px] ${tone.muted}`}>
+                            <span className={`mt-1 block text-[13.5px] leading-snug 2xl:text-[14px] ${tone.muted}`}>
                               {service.description}
                             </span>
                           </span>
@@ -335,12 +335,12 @@ export function ServicesMenu({
 
             {/* All services, and a call. */}
             <div className={`flex items-center justify-between gap-6 border-t px-6 py-4 2xl:px-8 2xl:py-5 ${tone.line} ${tone.bar}`}>
-              <Link href="/services" className={`group inline-flex items-center gap-2 text-sm font-medium transition-colors ${tone.link}`}>
+              <Link href="/services" className={`group inline-flex items-center gap-2 text-[15px] font-medium transition-colors ${tone.link}`}>
                 View all services
                 <DropIcon gradient className="h-[1.1em] w-auto transition-transform duration-200 group-hover:translate-x-0.5" />
               </Link>
               <div className="flex items-center gap-4">
-                <span className={`text-sm ${tone.muted}`}>Not sure where to start?</span>
+                <span className={`text-[15px] ${tone.muted}`}>Not sure where to start?</span>
                 <Button href="/contact" size="sm" icon>
                   Book a free call
                 </Button>
