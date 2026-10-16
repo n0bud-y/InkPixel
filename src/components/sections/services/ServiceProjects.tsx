@@ -12,7 +12,15 @@ import { getServiceCaseStudies, type CaseStudyCard } from "@/contentful/queries/
 // in a row that runs off the screen's right edge. Desktop (motion allowed): the section locks
 // while the cards slide in (HorizontalPin); phones, tablets, and reduced motion: a
 // sideways-scrolling row. Hidden when there are no such case studies (or Contentful is down).
-export async function ServiceProjects({ page }: { page: ServicePage }) {
+// Light grey with a grid on the service pages; navy (`tone="dark"`) on the Branding page.
+export async function ServiceProjects({
+  page,
+  tone = "light",
+}: {
+  page: Pick<ServicePage, "slug" | "caseStudyService" | "projects">;
+  tone?: "light" | "dark";
+}) {
+  const dark = tone === "dark";
   let projects: CaseStudyCard[] = [];
   try {
     projects = await getServiceCaseStudies(page.caseStudyService);
@@ -22,12 +30,15 @@ export async function ServiceProjects({ page }: { page: ServicePage }) {
   if (projects.length === 0) return null;
 
   return (
-    <HorizontalPin aria-labelledby="projects-title" className="relative isolate overflow-hidden bg-[#e7e7ea] bg-grid-light">
+    <HorizontalPin
+      aria-labelledby="projects-title"
+      className={`relative isolate overflow-hidden ${dark ? "bg-primary" : "bg-[#e7e7ea] bg-grid-light"}`}
+    >
       <div className="container-site py-[clamp(4rem,4.2vw,5rem)] group-data-[pinned=true]/hpin:py-[clamp(3rem,3.5vw,4.5rem)]">
         <Reveal className="text-center">
           <SectionHeading
             id="projects-title"
-            tone="onLight"
+            tone={dark ? "onDark" : "onLight"}
             align="center"
             title={withAccent(page.projects.title)}
             className="max-w-[82rem]"
@@ -35,7 +46,7 @@ export async function ServiceProjects({ page }: { page: ServicePage }) {
           <div data-reveal className="mt-5">
             <Link
               href={page.projects.button.href}
-              className="inline-flex h-[clamp(2.5rem,2.6vw,3.1rem)] items-center rounded-full border-2 border-crimson/80 px-[clamp(1.25rem,1.6vw,1.9rem)] text-[clamp(0.875rem,0.95vw,1.125rem)] font-semibold text-crimson transition-colors duration-200 hover:border-crimson hover:bg-crimson hover:text-white"
+              className={`inline-flex h-[clamp(2.5rem,2.6vw,3.1rem)] items-center rounded-full border-2 border-crimson/80 px-[clamp(1.25rem,1.6vw,1.9rem)] text-[clamp(0.875rem,0.95vw,1.125rem)] font-semibold text-crimson transition-colors duration-200 hover:border-crimson hover:bg-crimson hover:text-white ${dark ? "bg-white" : ""}`}
             >
               {page.projects.button.label}
             </Link>

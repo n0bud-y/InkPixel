@@ -10,8 +10,9 @@ const pill =
 // "Empowering Your Business with Next-Gen Digital Solutions": the title and intro, then one row
 // per service category (src/content/services.ts): the photo, alternating sides, then the title,
 // description, and services as pills linking to their pages. The first service is highlighted,
-// as in the design, and the round arrow on the photo leads to its page too; the arrow is hidden
-// from screen readers and the keyboard, which already have that pill. Phones and tablets: the
+// as in the design. The round arrow on the photo leads to the category's own page (Branding so
+// far), labelled for screen readers; otherwise to the first service's page, hidden from screen
+// readers and the keyboard, which already have that pill. Phones and tablets: the
 // photo above the text.
 export function ServiceCategories() {
   const { categories } = servicesPage;
@@ -37,7 +38,7 @@ export function ServiceCategories() {
 
         <div className="mt-[clamp(2.5rem,3.4vw,4rem)] flex flex-col gap-[clamp(4.5rem,7.3vw,8.75rem)]">
           {serviceCategories.map((category, index) => {
-            const [main] = category.services;
+            const href = category.href ?? category.services[0]?.href;
             const photoRight = index % 2 === 1;
             return (
               <Reveal
@@ -49,14 +50,15 @@ export function ServiceCategories() {
                   <div className="relative aspect-[805/735] overflow-hidden rounded-[clamp(0.75rem,1vw,1.25rem)]">
                     <Image src={category.image} alt="" fill sizes="(min-width: 1024px) 42vw, 100vw" className="object-cover" />
                   </div>
-                  {main && (
+                  {href && (
                     <Link
-                      href={main.href}
-                      aria-hidden="true"
-                      tabIndex={-1}
+                      href={href}
+                      aria-hidden={category.href ? undefined : true}
+                      tabIndex={category.href ? undefined : -1}
                       className="absolute bottom-0 left-1/2 grid size-[clamp(3.5rem,5.4vw,6.5rem)] -translate-x-1/2 translate-y-1/2 place-items-center rounded-full border-[clamp(4px,0.4vw,7px)] border-primary bg-brand-gradient text-white shadow-[0_12px_32px_-10px_rgb(201_29_76_/_0.75)] transition-transform duration-300 hover:scale-105"
                     >
-                      <svg viewBox="0 0 24 24" fill="none" className="size-[38%]">
+                      {category.href && <span className="sr-only">{category.label} services</span>}
+                      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" className="size-[38%]">
                         <path d="M4.5 12h15M13.5 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
                     </Link>

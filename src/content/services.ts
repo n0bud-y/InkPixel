@@ -67,6 +67,9 @@ export type ServiceCategory = {
   description: string;
   /** The category's photo (Services page). */
   image: StaticImageData;
+  /** The category's own page, once it has one (the Services page links its photo there; until
+   *  then, to its first service). */
+  href?: string;
   services: Service[];
 };
 
@@ -74,6 +77,7 @@ export const serviceCategories: ServiceCategory[] = [
   {
     slug: "branding",
     label: "Branding",
+    href: "/services/branding",
     description:
       "Build a unique brand voice, stunning visual identity, and lasting market presence.",
     image: categoryBranding,
