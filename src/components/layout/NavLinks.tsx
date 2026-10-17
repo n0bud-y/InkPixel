@@ -10,8 +10,9 @@ export function isActive(pathname: string, href: string) {
   return href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
 }
 
-// Pages whose top is white, so the header is white with dark text from the start (see HeaderShell).
-export const hasLightHeader = (pathname: string) => isActive(pathname, "/case-studies");
+// Pages whose top is white, so the header is white with dark text from the start (see HeaderShell):
+// each case study (the listing's hero is navy).
+export const hasLightHeader = (pathname: string) => pathname.startsWith("/case-studies/");
 
 // Desktop menu. The current section gets the pill; Services links to its page and opens the mega
 // menu.

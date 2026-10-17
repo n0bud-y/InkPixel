@@ -157,12 +157,16 @@ export type CaseStudySummary = {
   href: string;
   excerpt: string;
   image: ContentfulImage;
+  /** The services ticked in Contentful (slugs from src/content/services.ts). */
+  services: string[];
+  /** Ticked "Featured" in Contentful: listed first on /case-studies. */
+  featured: boolean;
   /** When it was last published (ISO date), e.g. for the sitemap. */
   updatedAt: string;
 };
 
 // A case study as a project card on a service page.
-export type CaseStudyCard = Omit<CaseStudySummary, "updatedAt"> & {
+export type CaseStudyCard = Omit<CaseStudySummary, "updatedAt" | "services" | "featured"> & {
   /** The logo is only included once the client has approved its use. */
   client: { name: string; logo: ContentfulImage | null } | null;
   highlight: string | null;
@@ -288,6 +292,8 @@ type CaseStudiesData = {
       title: string | null;
       slug: string | null;
       excerpt: string | null;
+      services: (string | null)[] | null;
+      featured: boolean | null;
       heroImage: AssetData;
       sys: { publishedAt: string };
     } | null)[];
@@ -492,6 +498,8 @@ const CASE_STUDIES = /* GraphQL */ `
         title
         slug
         excerpt
+        services
+        featured
         heroImage {
           ...ImageFields
         }
@@ -504,7 +512,8 @@ const CASE_STUDIES = /* GraphQL */ `
   ${IMAGE_FIELDS}
 `;
 
-// Case studies tagged with one service (the slugs in contentful/migrations/0002), newest first.
+// Every case study as a project card, with its services (the slugs in contentful/migrations/0002),
+// newest first.
 const PROJECT_CARDS = /* GraphQL */ `
   query ProjectCards {
     caseStudyCollection(limit: 24, order: [sys_firstPublishedAt_DESC]) {
@@ -744,6 +753,8 @@ export const getCaseStudies = cache(async (): Promise<CaseStudySummary[]> => {
         href: `/case-studies/${item.slug}`,
         excerpt: item.excerpt,
         image,
+        services: (item.services ?? []).filter((service): service is string => Boolean(service)),
+        featured: item.featured === true,
         updatedAt: item.sys.publishedAt,
       },
     ];
