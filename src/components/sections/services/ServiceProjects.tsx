@@ -1,18 +1,17 @@
 import Image from "next/image";
 import Link from "next/link";
-import { HorizontalPin } from "@/components/motion/HorizontalPin";
 import { Reveal } from "@/components/motion/Reveal";
 import { withAccent } from "@/components/ui/accent";
 import { Button } from "@/components/ui/Button";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import type { ServicePage } from "@/content/service-pages";
-import { getServiceCaseStudies, type CaseStudyCard } from "@/contentful/queries/case-studies";
+import { getProjectCards, type CaseStudyCard } from "@/contentful/queries/case-studies";
+import { ProjectSlider } from "./ProjectSlider";
 
-// "Our … Projects": the case studies with this service ticked in Contentful, as numbered cards
-// in a row that runs off the screen's right edge. Desktop (motion allowed): the section locks
-// while the cards slide in (HorizontalPin); phones, tablets, and reduced motion: a
-// sideways-scrolling row. Hidden when there are no such case studies (or Contentful is down).
-// Light grey with a grid on the service pages; navy (`tone="dark"`) on the Branding page.
+// "Our … Projects": every case study, as numbered cards in a slider (ProjectSlider: arrows,
+// dots, swipe); the ones with this page's service ticked in Contentful come first. Hidden when
+// there are none (or Contentful is down). Light grey with a grid on the service pages; navy
+// (`tone="dark"`) on the core service pages.
 export async function ServiceProjects({
   page,
   tone = "light",
@@ -23,18 +22,18 @@ export async function ServiceProjects({
   const dark = tone === "dark";
   let projects: CaseStudyCard[] = [];
   try {
-    projects = await getServiceCaseStudies(page.caseStudyService);
+    projects = await getProjectCards(page.caseStudyService);
   } catch (error) {
     console.error(`Service page "${page.slug}": could not load its case studies.`, error);
   }
   if (projects.length === 0) return null;
 
   return (
-    <HorizontalPin
+    <section
       aria-labelledby="projects-title"
       className={`relative isolate overflow-hidden ${dark ? "bg-primary" : "bg-[#e7e7ea] bg-grid-light"}`}
     >
-      <div className="container-site py-[clamp(4rem,4.2vw,5rem)] group-data-[pinned=true]/hpin:py-[clamp(3rem,3.5vw,4.5rem)]">
+      <div className="container-site py-[clamp(4rem,4.2vw,5rem)]">
         <Reveal className="text-center">
           <SectionHeading
             id="projects-title"
@@ -54,17 +53,14 @@ export async function ServiceProjects({
         </Reveal>
 
         <Reveal y={40} stagger={0.12} className="mt-[clamp(1.5rem,1.3vw,1.75rem)]">
-          <ul
-            data-horizontal-track
-            className="relative -mx-5 flex snap-x snap-mandatory scroll-px-5 gap-[clamp(0.75rem,1.05vw,1.25rem)] overflow-x-auto px-5 pb-2 [scrollbar-width:none] sm:-mx-8 sm:scroll-px-8 sm:px-8 lg:mx-0 lg:scroll-px-0 lg:px-0 lg:pb-0 group-data-[pinned=true]/hpin:overflow-visible"
-          >
+          <ProjectSlider dark={dark} names={projects.map((project) => project.client?.name ?? project.title)}>
             {projects.map((project, index) => (
               <ProjectCard key={project.slug} project={project} number={index + 1} />
             ))}
-          </ul>
+          </ProjectSlider>
         </Reveal>
       </div>
-    </HorizontalPin>
+    </section>
   );
 }
 

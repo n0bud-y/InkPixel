@@ -294,12 +294,13 @@ type CaseStudiesData = {
   };
 };
 
-type ServiceCaseStudiesData = {
+type ProjectCardsData = {
   caseStudyCollection: {
     items: ({
       title: string | null;
       slug: string | null;
       excerpt: string | null;
+      services: (string | null)[] | null;
       cardHighlight: string | null;
       cardPoints: (string | null)[] | null;
       heroImage: AssetData;
@@ -504,13 +505,14 @@ const CASE_STUDIES = /* GraphQL */ `
 `;
 
 // Case studies tagged with one service (the slugs in contentful/migrations/0002), newest first.
-const SERVICE_CASE_STUDIES = /* GraphQL */ `
-  query ServiceCaseStudies($service: String!) {
-    caseStudyCollection(where: { services_contains_some: [$service] }, limit: 12, order: [sys_firstPublishedAt_DESC]) {
+const PROJECT_CARDS = /* GraphQL */ `
+  query ProjectCards {
+    caseStudyCollection(limit: 24, order: [sys_firstPublishedAt_DESC]) {
       items {
         title
         slug
         excerpt
+        services
         cardHighlight
         cardPoints
         heroImage {
@@ -748,29 +750,27 @@ export const getCaseStudies = cache(async (): Promise<CaseStudySummary[]> => {
   });
 });
 
-// The published case studies tagged with a service, as project cards, newest first.
-export const getServiceCaseStudies = cache(async (service: string): Promise<CaseStudyCard[]> => {
-  const data = await caseStudyQuery<ServiceCaseStudiesData>(SERVICE_CASE_STUDIES, {
-    variables: { service },
-    tags: ["caseStudy"],
-  });
+// Every published case study as a project card, newest first, those tagged with `service` moved
+// to the front (a service page shows its own projects first).
+export const getProjectCards = cache(async (service: string): Promise<CaseStudyCard[]> => {
+  const data = await caseStudyQuery<ProjectCardsData>(PROJECT_CARDS, { tags: ["caseStudy"] });
 
-  return (data?.caseStudyCollection.items ?? []).flatMap((item) => {
+  const cards = (data?.caseStudyCollection.items ?? []).flatMap((item) => {
     const image = toImage(item?.heroImage ?? null);
     if (!item?.title || !item.slug || !item.excerpt || !image) return [];
-    return [
-      {
-        title: item.title,
-        slug: item.slug,
-        href: `/case-studies/${item.slug}`,
-        excerpt: item.excerpt,
-        image,
-        client: item.client?.name
-          ? { name: item.client.name, logo: item.client.logoApproved ? toImage(item.client.logo) : null }
-          : null,
-        highlight: item.cardHighlight,
-        points: (item.cardPoints ?? []).filter((point): point is string => Boolean(point)),
-      },
-    ];
+    const card: CaseStudyCard = {
+      title: item.title,
+      slug: item.slug,
+      href: `/case-studies/${item.slug}`,
+      excerpt: item.excerpt,
+      image,
+      client: item.client?.name
+        ? { name: item.client.name, logo: item.client.logoApproved ? toImage(item.client.logo) : null }
+        : null,
+      highlight: item.cardHighlight,
+      points: (item.cardPoints ?? []).filter((point): point is string => Boolean(point)),
+    };
+    return [{ card, ours: Boolean(item.services?.includes(service)) }];
   });
+  return [...cards.filter(({ ours }) => ours), ...cards.filter(({ ours }) => !ours)].map(({ card }) => card);
 });
