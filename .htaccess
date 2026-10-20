@@ -1,0 +1,31 @@
+# ----------------------------------------------------------------------
+# 1. Force HTTPS
+# ----------------------------------------------------------------------
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} off
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# ----------------------------------------------------------------------
+# 2. Security Headers
+# ----------------------------------------------------------------------
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set X-XSS-Protection "1; mode=block"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# ----------------------------------------------------------------------
+# 3. CloudLinux Passenger / cPanel Node.js Application Directives
+# (When creating/managing the app in cPanel "Setup Node.js App",
+# cPanel will automatically maintain the Passenger block below).
+# ----------------------------------------------------------------------
+# DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION BEGIN
+# PassengerAppRoot "/home/username/inkpixel"
+# PassengerBaseURI "/"
+# PassengerNodejs "/home/username/nodevenv/inkpixel/22/bin/node"
+# PassengerAppType node
+# PassengerStartupFile server.js
+# DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION END
