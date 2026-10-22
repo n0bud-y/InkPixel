@@ -5,6 +5,7 @@ import fintech from "@/assets/images/icons/industries/fintech.png";
 import healthcare from "@/assets/images/icons/industries/healthcare.png";
 import logistics from "@/assets/images/icons/industries/logistics.png";
 import realEstate from "@/assets/images/icons/industries/real-estate.png";
+import ecommerce from "@/assets/images/icons/industries/ecommerce.svg";
 import { serviceCategories, type Service } from "./services";
 
 export type Industry = {
@@ -58,8 +59,7 @@ export const industries: Industry[] = [
     label: "Ecommerce",
     description:
       "We specialize in crafting unique eCommerce solutions that drive conversions and elevate customer experiences.",
-    // PLACEHOLDER icon: the design reuses the Logistics icon until an Ecommerce icon exists.
-    icon: logistics,
+    icon: ecommerce,
     solutions: placeholderSolutions,
   },
 ];

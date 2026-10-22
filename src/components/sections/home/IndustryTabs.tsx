@@ -140,7 +140,7 @@ export function IndustryTabs({
                 key={industry.slug}
                 value={industry.slug}
                 className={[
-                  `group relative flex shrink-0 items-center gap-3 rounded-full border py-2 pr-4 pl-2 text-left text-[15px] transition-colors duration-300 ${colors.pill}`,
+                  `group relative flex shrink-0 cursor-pointer items-center gap-3 rounded-full border py-2 pr-4 pl-2 text-left text-[15px] transition-colors duration-300 ${colors.pill}`,
                   "data-[state=active]:border-crimson data-[state=active]:bg-crimson data-[state=active]:text-white",
                   `lg:gap-[clamp(1.25rem,2vw,2.4rem)] lg:rounded-none lg:border-0 lg:border-b lg:border-crimson/50 lg:bg-transparent lg:py-[clamp(1.25rem,1.6vw,1.95rem)] lg:pr-0 lg:pl-0 lg:last:border-b-0 ${colors.row}`,
                   "lg:data-[state=active]:bg-transparent",

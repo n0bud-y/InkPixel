@@ -354,7 +354,15 @@ for (const [id, path, contentType, description] of terminalGatewayAssets) {
   await upsertAsset(id, path, contentType, description);
 }
 
-await upsert("client-terminal-gateway", "client", { name: "Terminal Gateway" });
+await upsertAsset("tg-logo", "crm-terminal-gateway/logo.png", "image/png", "Terminal Gateway");
+const terminalGatewayLogo = {
+  logo: link("tg-logo", "Asset"),
+  logoApproved: true,
+  logoApproval: "Confirmed by the project head on 22 Oct 2026",
+};
+await upsert("client-terminal-gateway", "client", { name: "Terminal Gateway", ...terminalGatewayLogo });
+// Spaces seeded before the logo was added (22 Oct 2026) get it added here.
+await addMissingFields("client-terminal-gateway", terminalGatewayLogo);
 
 for (const { id, title, image, layout, body } of terminalGatewaySections) {
   await upsert(id, "caseStudySection", { title, body, image: link(image, "Asset"), layout });
@@ -464,7 +472,15 @@ const cathyItems = [
 for (const [id, title, text] of cathyItems) await upsert(id, "caseStudyItem", { title, text });
 const items = (prefix) => cathyItems.filter(([id]) => id.startsWith(prefix)).map(([id]) => link(id));
 
-await upsert("client-cathy-obryan", "client", { name: "Cathy O’Bryan" });
+await upsertAsset("cathy-logo", "cathy-obryans-books/logo.png", "image/png", "Cathy O’Bryan");
+const cathyLogo = {
+  logo: asset("cathy-logo"),
+  logoApproved: true,
+  logoApproval: "Confirmed by the project head on 22 Oct 2026",
+};
+await upsert("client-cathy-obryan", "client", { name: "Cathy O’Bryan", ...cathyLogo });
+// Spaces seeded before the logo was added (22 Oct 2026) get it added here.
+await addMissingFields("client-cathy-obryan", cathyLogo);
 
 await upsert("cathy-about", "caseStudySection", {
   title: "About The *Cathy O’Bryan* App",
