@@ -90,7 +90,18 @@ export default async function CaseStudyPage(props: PageProps<"/case-studies/[slu
         const tone = index % 2 === 0 ? "dark" : "light";
         switch (section.type) {
           case "textImage":
-            return <CaseStudySection key={section.id} tone={tone} {...section} />;
+            return (
+              <CaseStudySection
+                key={section.id}
+                tone={tone}
+                largerImage={
+                  (slug === "crm-terminal-gateway" && section.title === "The Challenge") ||
+                  (slug === "gulbaan" && section.title === "Insights from Client")
+                }
+                removePadding={slug === "gulbaan" && section.title === "Insights from Client"}
+                {...section}
+              />
+            );
           case "techStack":
             return <TechStackSection key={section.id} tone={tone} {...section} />;
           case "featureGrid":

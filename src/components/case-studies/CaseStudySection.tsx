@@ -94,11 +94,13 @@ export function CaseStudySectionFrame({
   headingId,
   tone,
   className,
+  removePadding = false,
   children,
 }: {
   headingId: string;
   tone: SectionTone;
   className?: string;
+  removePadding?: boolean;
   children: ReactNode;
 }) {
   return (
@@ -106,7 +108,15 @@ export function CaseStudySectionFrame({
       aria-labelledby={headingId}
       className={`relative isolate overflow-hidden ${tone === "dark" ? "bg-primary" : "bg-white bg-grid-light"}`}
     >
-      <div className={["container-site py-[clamp(4rem,5.85vw,7rem)]", className].filter(Boolean).join(" ")}>
+      <div
+        className={[
+          "container-site",
+          removePadding ? "py-0" : "py-[clamp(4rem,5.85vw,7rem)]",
+          className,
+        ]
+          .filter(Boolean)
+          .join(" ")}
+      >
         {children}
       </div>
     </section>
@@ -158,7 +168,13 @@ export function CaseStudySection({
   layout,
   facts,
   highlight,
-}: Omit<CaseStudyTextImageSection, "type"> & { tone: SectionTone }) {
+  largerImage = false,
+  removePadding = false,
+}: Omit<CaseStudyTextImageSection, "type"> & {
+  tone: SectionTone;
+  largerImage?: boolean;
+  removePadding?: boolean;
+}) {
   const headingId = `section-${id}-title`;
   const below = layout === "image-below";
 
@@ -166,10 +182,16 @@ export function CaseStudySection({
     <CaseStudySectionFrame
       headingId={headingId}
       tone={tone}
+      removePadding={removePadding}
       className={
         below
           ? undefined
-          : "grid grid-cols-[minmax(0,1fr)] items-center gap-10 lg:grid-cols-2 lg:gap-[clamp(2rem,4vw,6rem)]"
+          : [
+              "grid grid-cols-[minmax(0,1fr)] items-center gap-10 lg:gap-[clamp(2rem,4vw,6rem)]",
+              largerImage
+                ? "lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]"
+                : "lg:grid-cols-2",
+            ].join(" ")
       }
     >
       <Reveal>
@@ -194,8 +216,18 @@ export function CaseStudySection({
           height={image.height}
           alt={image.alt}
           unoptimized={image.isSvg}
-          sizes={below ? "(min-width: 1024px) 85vw, 100vw" : "(min-width: 1024px) 42vw, 100vw"}
-          className="h-auto max-h-[clamp(24rem,37vw,45rem)] w-auto max-w-full"
+          sizes={
+            below
+              ? "(min-width: 1024px) 85vw, 100vw"
+              : largerImage
+                ? "(min-width: 1024px) 55vw, 100vw"
+                : "(min-width: 1024px) 42vw, 100vw"
+          }
+          className={
+            largerImage
+              ? "h-auto w-full max-w-none"
+              : "h-auto max-h-[clamp(24rem,37vw,45rem)] w-auto max-w-full"
+          }
         />
       </Reveal>
     </CaseStudySectionFrame>

@@ -21,9 +21,8 @@ export type TestimonialSlide = Omit<Testimonial, "videoAssetId"> & {
 //   "Testimonial 2 of 6" on change. No auto-rotation.
 // - Changing slide crossfades the photo and cascades the quote and stats in (skipped for
 //   reduced motion).
-// - The play button only appears when a testimonial has a video; it opens a full-screen
-//   native <dialog> (Esc closes it, focus stays inside) and starts the video, which only
-//   downloads from then on. Portrait (phone) and landscape videos both fit the screen.
+// - The play button only appears when a testimonial has a video; playback stays in the
+//   cropped card and starts on demand.
 // Children marked data-reveal cascade in when the carousel is wrapped in <Reveal>.
 export function TestimonialCarousel({
   testimonials,
@@ -35,16 +34,26 @@ export function TestimonialCarousel({
   action: ReactNode;
 }) {
   const root = useRef<HTMLDivElement>(null);
-  const video = useRef<HTMLDialogElement>(null);
+  const video = useRef<HTMLVideoElement>(null);
   const firstRun = useRef(true);
   const [index, setIndex] = useState(0);
+  const [videoPlaying, setVideoPlaying] = useState(false);
   const current = testimonials[index];
   const count = testimonials.length;
 
-  // The click that opens the player also starts the video, so browsers allow its sound.
-  const openVideo = () => {
-    video.current?.showModal();
-    video.current?.querySelector("video")?.play().catch(() => {});
+  const playVideo = () => {
+    const player = video.current;
+    if (!player) return;
+    player.play().then(
+      () => setVideoPlaying(true),
+      (error: unknown) => console.error(`Home page: could not play the testimonial video for "${current.client}".`, error),
+    );
+  };
+
+  const goToSlide = (next: number) => {
+    video.current?.pause();
+    setVideoPlaying(false);
+    setIndex(next);
   };
 
   useGSAP(
@@ -78,7 +87,7 @@ export function TestimonialCarousel({
     if (!step) return;
     event.preventDefault();
     const next = (index + step + count) % count;
-    setIndex(next);
+    goToSlide(next);
     event.currentTarget.querySelectorAll<HTMLButtonElement>("button")[next]?.focus({ preventScroll: true });
   };
 
@@ -141,9 +150,26 @@ export function TestimonialCarousel({
             <div aria-hidden="true" className="absolute inset-0 bg-black/25" />
 
             {current.video && (
+              <video
+                key={index}
+                ref={video}
+                src={current.video}
+                poster={current.image.src}
+                preload="none"
+                controls={videoPlaying}
+                playsInline
+                aria-hidden={!videoPlaying}
+                className={[
+                  "absolute inset-0 size-full object-cover transition-opacity duration-300",
+                  videoPlaying ? "opacity-100" : "pointer-events-none opacity-0",
+                ].join(" ")}
+              />
+            )}
+
+            {current.video && !videoPlaying && (
               <button
                 type="button"
-                onClick={openVideo}
+                onClick={playVideo}
                 className="group absolute top-1/2 left-1/2 grid size-[clamp(3.5rem,4.4vw,5.25rem)] -translate-1/2 place-items-center rounded-full border-[clamp(3px,0.26vw,5px)] border-crimson bg-black/10 backdrop-blur-[2px] transition-transform duration-300 hover:scale-105"
               >
                 <span
@@ -158,13 +184,13 @@ export function TestimonialCarousel({
             )}
           </div>
 
-          <div
+          {/* <div
             aria-hidden="true"
             data-speed="0.9"
             className="pointer-events-none absolute bottom-[2.5%] -left-[3%] w-[30%] sm:-left-[12%]"
           >
             <Image src={brandDrop} alt="" sizes="(min-width: 1280px) 9vw, 30vw" className="h-auto w-full" />
-          </div>
+          </div> */}
         </div>
 
         {count > 1 && (
@@ -181,7 +207,7 @@ export function TestimonialCarousel({
                 aria-label={`Show testimonial ${dot + 1}`}
                 aria-current={dot === index ? "true" : undefined}
                 tabIndex={dot === index ? 0 : -1}
-                onClick={() => setIndex(dot)}
+                onClick={() => goToSlide(dot)}
                 className="group grid h-6 place-items-center px-1.5"
               >
                 <span
@@ -220,33 +246,6 @@ export function TestimonialCarousel({
           </div>
         ))}
       </dl>
-
-      {current.video && (
-        <dialog
-          ref={video}
-          aria-label={`${current.client} video`}
-          onClose={(event) => event.currentTarget.querySelector("video")?.pause()}
-          className="m-auto w-fit max-w-[90vw] overflow-visible bg-transparent p-0 backdrop:bg-black/80 backdrop:backdrop-blur-sm"
-        >
-          <form method="dialog" className="mb-3 flex justify-end">
-            <button
-              type="submit"
-              className="rounded-full border border-white/25 px-4 py-2 text-sm text-white transition-colors hover:bg-white/10"
-            >
-              Close
-            </button>
-          </form>
-          {/* Sized by its height, so portrait videos fit too; the photo shows until it plays. */}
-          <video
-            src={current.video}
-            poster={current.image.src}
-            preload="none"
-            controls
-            playsInline
-            className="mx-auto block max-h-[80dvh] w-auto max-w-full rounded-2xl bg-black"
-          />
-        </dialog>
-      )}
     </div>
   );
 }

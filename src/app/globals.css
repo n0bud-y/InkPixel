@@ -44,7 +44,7 @@
   --animate-gradient-flow: gradient-flow 6s ease-in-out infinite alternate;
   /* Float up and down (case-study hero layers): 4s each way. Give each element a slightly
      different negative delay so they move in a gentle wave rather than together. */
-  --animate-float: float 4s ease-in-out infinite alternate;
+  --animate-float: float 2npm s ease-in-out infinite alternate;
 
   @keyframes rise {
     from {

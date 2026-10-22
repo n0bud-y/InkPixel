@@ -1,5 +1,3 @@
-import Image from "next/image";
-import banner from "@/assets/images/banner.webp";
 import { Magnetic } from "@/components/motion/Magnetic";
 import { Button } from "@/components/ui/Button";
 import { Eyebrow } from "@/components/ui/Eyebrow";
@@ -12,25 +10,23 @@ const headlineLines = [
 ];
 
 // Entrance animations are CSS (`motion-safe:animate-*` in globals.css) so they start on the
-// first frame, before JavaScript loads. Parallax on the photo comes from SmoothScroll.
+// first frame, before JavaScript loads. Parallax on the video comes from SmoothScroll.
 export function Hero() {
   return (
     <section
       aria-labelledby="hero-title"
-      className="relative isolate flex min-h-svh items-center overflow-hidden"
+      className="relative isolate flex min-h-svh items-center overflow-hidden before:pointer-events-none before:absolute before:inset-0 before:-z-10 before:bg-linear-to-r before:from-primary before:via-primary/55 before:to-transparent before:content-['']"
     >
       {/* Taller than the section so the parallax (data-speed="auto") never shows an edge. */}
       <div aria-hidden="true" data-speed="auto" className="absolute inset-x-0 top-0 -z-20 h-[118%]">
-        {/* The banner already fades to navy on its left, behind the text. It is the LCP
-            image, so it is preloaded and never hidden; decorative, so empty alt text. */}
-        <Image
-          src={banner}
-          alt=""
-          fill
-          preload
-          placeholder="blur"
-          sizes="100vw"
-          className="object-cover object-[72%_center] motion-safe:animate-hero-zoom lg:object-right"
+        <video
+          src="/videos/Awards-2025-Highlights-Snippet.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          className="size-full object-cover object-[72%_center] motion-safe:animate-hero-zoom lg:object-right"
         />
       </div>
       {/* Phones and tablets: the text sits over the photo, so darken it. */}

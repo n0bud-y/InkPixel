@@ -62,14 +62,11 @@ const maskOf = (src: string): CSSProperties => ({
 export function ServicesMenu({
   label,
   className,
-  light,
   active,
 }: {
   label: string;
   /** The menu item's pill classes, from NavLinks. */
   className: string;
-  /** White header (case studies, or once the page scrolls): a white panel with dark text. */
-  light: boolean;
   /** On the Services page or a service page. */
   active: boolean;
 }) {
@@ -180,31 +177,18 @@ export function ServicesMenu({
     document.getElementById(tabId(next))?.focus();
   };
 
-  const tone = light
-    ? {
-        card: "border-primary/10 bg-white text-primary shadow-[0_40px_80px_-32px_rgb(21_25_54_/_0.35)]",
-        line: "border-primary/10",
-        bar: "bg-primary/[0.025]",
-        muted: "text-primary/60",
-        tab: "text-primary/65 hover:text-primary",
-        tabOn: "bg-primary/[0.05] text-primary",
-        item: "hover:bg-primary/[0.04]",
-        icon: "bg-primary/[0.04] ring-primary/[0.07]",
-        title: "text-primary",
-        link: "text-primary hover:text-crimson",
-      }
-    : {
-        card: "border-white/[0.08] bg-primary bg-[radial-gradient(90%_70%_at_100%_0%,rgb(201_29_76_/_0.16),transparent_60%)] text-light shadow-[0_40px_80px_-32px_rgb(0_0_0_/_0.7)]",
-        line: "border-white/[0.08]",
-        bar: "bg-white/[0.02]",
-        muted: "text-light/55",
-        tab: "text-light/65 hover:text-white",
-        tabOn: "bg-white/[0.06] text-white",
-        item: "hover:bg-white/[0.05]",
-        icon: "bg-white/[0.05] ring-white/[0.08]",
-        title: "text-white",
-        link: "text-white hover:text-coral",
-      };
+  const tone = {
+    card: "border-primary/10 bg-white text-primary shadow-[0_40px_80px_-32px_rgb(21_25_54_/_0.35)]",
+    line: "border-primary/10",
+    bar: "bg-primary/[0.025]",
+    muted: "text-primary/60",
+    tab: "text-primary/65 hover:text-primary",
+    tabOn: "bg-primary/[0.05] text-primary",
+    item: "hover:bg-primary/[0.04]",
+    icon: "bg-primary/[0.04] ring-primary/[0.07]",
+    title: "text-primary",
+    link: "text-primary hover:text-crimson",
+  };
 
   return (
     <div

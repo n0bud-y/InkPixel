@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRef, useState } from "react";
 import { Button, DropIcon } from "@/components/ui/Button";
 import { FeatureItem } from "@/components/ui/FeatureItem";
@@ -53,7 +54,7 @@ function cellBorders(index: number) {
 // itself crimson, with concave corners from before/after.
 function tabClass(indicatorReady: boolean) {
   return [
-    "group relative flex shrink-0 items-center justify-between gap-4 font-display transition-colors duration-300",
+    "group relative flex shrink-0 cursor-pointer items-center justify-between gap-4 font-display transition-colors duration-300",
     "rounded-full border border-white/15 px-4 py-2.5 text-[15px] text-light/85 hover:text-white",
     "data-[state=active]:border-crimson data-[state=active]:bg-crimson data-[state=active]:text-white",
     "lg:-mr-[calc(1.25rem+1px)] lg:-ml-5 lg:h-[clamp(4rem,5.5vw,6.625rem)] lg:rounded-l-[0.875rem] lg:rounded-r-none lg:border-0",
@@ -236,11 +237,16 @@ export function ServiceTabs({ categories }: { categories: ServiceCategory[] }) {
                       data-item
                       className={`flex items-center justify-center border-white/30 px-4 py-8 xl:px-2 xl:py-6 ${cellBorders(index)}`}
                     >
-                      <FeatureItem
-                        icon={service.icon}
-                        title={service.title}
-                        description={service.description}
-                      />
+                      <Link
+                        href={service.href}
+                        className="flex h-full w-full items-center justify-center rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+                      >
+                        <FeatureItem
+                          icon={service.icon}
+                          title={service.title}
+                          description={service.description}
+                        />
+                      </Link>
                     </li>
                   ))}
                 </ul>

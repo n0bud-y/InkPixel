@@ -37,7 +37,7 @@ export function NavLinks() {
         return (
           <li key={item.href}>
             {item.href === "/services" ? (
-              <ServicesMenu label={item.label} className={className} light={light} active={active} />
+              <ServicesMenu label={item.label} className={className} active={active} />
             ) : (
               <Link href={item.href} aria-current={active ? "page" : undefined} className={className}>
                 {item.label}
