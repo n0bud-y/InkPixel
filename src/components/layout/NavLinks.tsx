@@ -4,7 +4,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { mainNav } from "@/lib/site";
 import { useHeaderLight } from "./header-tone";
+import { IndustriesMenu } from "./IndustriesMenu";
 import { ServicesMenu } from "./ServicesMenu";
+import { TechnologiesMenu } from "./TechnologiesMenu";
 
 export function isActive(pathname: string, href: string) {
   return href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
@@ -15,7 +17,7 @@ export function isActive(pathname: string, href: string) {
 export const hasLightHeader = (pathname: string) => pathname.startsWith("/case-studies/");
 
 // Desktop menu. The current section gets the pill; Services links to its page and opens the mega
-// menu.
+// menu; Industries and Technologies are not links, only buttons that open their own mega menus.
 export function NavLinks() {
   const pathname = usePathname();
   const light = useHeaderLight();
@@ -38,6 +40,10 @@ export function NavLinks() {
           <li key={item.href}>
             {item.href === "/services" ? (
               <ServicesMenu label={item.label} className={className} active={active} />
+            ) : item.href === "/industries" ? (
+              <IndustriesMenu label={item.label} className={className} active={active} />
+            ) : item.href === "/technologies" ? (
+              <TechnologiesMenu label={item.label} className={className} active={active} />
             ) : (
               <Link href={item.href} aria-current={active ? "page" : undefined} className={className}>
                 {item.label}

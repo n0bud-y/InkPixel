@@ -33,8 +33,8 @@ export function CaseStudyHero(props: HeroProps) {
 
 // The hero image, or, when it has layers, the layers stacked back to front in a box of the
 // image's size, each floating up and down (still for reduced motion). The layers are all the
-// size of the image, so stacked at rest they are exactly the image. They share one pace and
-// start up to 1.3s apart, a gentle wave in which overlapping layers stay within a few pixels
+// size of the image, so stacked at rest they are exactly the image. They share one pace (2s
+// each way) and start up to 0.65s apart, a gentle wave in which overlapping layers stay within a few pixels
 // of each other (further apart, the cut edges between them would show).
 function HeroVisual({ image, layers, sizes }: Pick<HeroProps, "image" | "layers"> & { sizes: string }) {
   if (!layers.length) {
@@ -69,8 +69,8 @@ function HeroVisual({ image, layers, sizes }: Pick<HeroProps, "image" | "layers"
           unoptimized={layer.isSvg}
           preload
           sizes={sizes}
-          className="absolute inset-0 size-full motion-safe:animate-float"
-          style={{ animationDelay: `${((-1.3 * index) / Math.max(1, layers.length - 1)).toFixed(2)}s` }}
+          className="absolute inset-0 size-full motion-safe:animate-float-fast"
+          style={{ animationDelay: `${((-0.65 * index) / Math.max(1, layers.length - 1)).toFixed(2)}s` }}
         />
       ))}
     </div>

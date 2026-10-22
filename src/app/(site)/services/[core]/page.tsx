@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { BrandingHero } from "@/components/sections/branding/BrandingHero";
 import { BrandingIntro } from "@/components/sections/branding/BrandingIntro";
 import { BrandingServices } from "@/components/sections/branding/BrandingServices";
+import { CoreHero } from "@/components/sections/core/CoreHero";
 import { ContactCta } from "@/components/sections/home/ContactCta";
 import { Industries } from "@/components/sections/home/Industries";
 import { ServiceProjects } from "@/components/sections/services/ServiceProjects";
@@ -48,7 +49,11 @@ export default async function CoreServicePage(props: PageProps<"/services/[core]
           serviceSchema({ name: content.name, description: content.description, path }),
         ]}
       />
-      <BrandingHero hero={content.hero} />
+      {core === "branding" ? (
+        <BrandingHero hero={content.hero} />
+      ) : (
+        <CoreHero slug={core} label={found.category.label} hero={content.hero} />
+      )}
       <BrandingIntro intro={content.intro} />
       <BrandingServices services={content.services} />
       <Industries tone="onLight" />

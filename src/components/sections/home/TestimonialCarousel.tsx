@@ -1,11 +1,18 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState, type KeyboardEvent, type ReactNode } from "react";
+import { useRef, useState, type KeyboardEvent, type MouseEvent, type PointerEvent, type ReactNode } from "react";
 import brandDrop from "@/assets/images/brand-drop.webp";
 import { CountUp } from "@/components/motion/CountUp";
 import type { Testimonial } from "@/content/home";
 import { MOTION_OK, gsap, useGSAP } from "@/lib/gsap";
+
+// Dragging: how far (px) before a drag picks a direction, how far to change slide, and how fast
+// (px per ms, over the last FLICK_WINDOW ms) a shorter flick must be.
+const DRAG_START = 8;
+const DRAG_DISTANCE = 60;
+const FLICK_SPEED = 0.5;
+const FLICK_WINDOW = 100;
 
 export type TestimonialSlide = Omit<Testimonial, "videoAssetId"> & {
   /** The video's address (from Contentful); the play button only appears when it is set. */
@@ -23,6 +30,11 @@ export type TestimonialSlide = Omit<Testimonial, "videoAssetId"> & {
 //   reduced motion).
 // - The play button only appears when a testimonial has a video; playback stays in the
 //   cropped card and starts on demand.
+// - Drag the photo card sideways (mouse, touch, or pen), or swipe the quote on a touch screen,
+//   to change slide: past DRAG_DISTANCE, or a quick flick, moves one slide (wrapping round);
+//   less springs back. The card follows the pointer (not for reduced motion). Only clearly
+//   sideways movement counts, so vertical scrolling still works; a drag never counts as a click;
+//   no dragging while a video plays.
 // Children marked data-reveal cascade in when the carousel is wrapped in <Reveal>.
 export function TestimonialCarousel({
   testimonials,
@@ -82,6 +94,74 @@ export function TestimonialCarousel({
     { dependencies: [index], scope: root },
   );
 
+  // Dragging: where it started, which way it is going once clear ("x" sideways, "y" a scroll),
+  // and whether the card follows it.
+  const card = useRef<HTMLDivElement>(null);
+  // `recent` keeps the last FLICK_WINDOW ms of positions, for the speed at release.
+  const drag = useRef<{
+    id: number;
+    x: number;
+    y: number;
+    recent: { x: number; time: number }[];
+    axis: "x" | "y" | null;
+    follow: boolean;
+  } | null>(null);
+  const dragged = useRef(false);
+  const canDrag = count > 1 && !videoPlaying;
+
+  const onDragStart = (event: PointerEvent<HTMLDivElement>, { follow, touchOnly = false }: { follow: boolean; touchOnly?: boolean }) => {
+    if (!canDrag || (touchOnly && event.pointerType === "mouse") || (event.pointerType === "mouse" && event.button !== 0)) return;
+    dragged.current = false;
+    drag.current = {
+      id: event.pointerId,
+      x: event.clientX,
+      y: event.clientY,
+      recent: [{ x: event.clientX, time: event.timeStamp }],
+      axis: null,
+      follow: follow && window.matchMedia(MOTION_OK).matches,
+    };
+  };
+
+  const onDragMove = (event: PointerEvent<HTMLDivElement>) => {
+    const current = drag.current;
+    if (!current || event.pointerId !== current.id) return;
+    const dx = event.clientX - current.x;
+    const dy = event.clientY - current.y;
+    if (!current.axis) {
+      if (Math.hypot(dx, dy) < DRAG_START) return;
+      current.axis = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
+      // Keep the pointer once it is clearly a drag (also when it leaves the card).
+      if (current.axis === "x") event.currentTarget.setPointerCapture(event.pointerId);
+    }
+    if (current.axis !== "x") return;
+    dragged.current = true;
+    current.recent = [...current.recent, { x: event.clientX, time: event.timeStamp }].filter(
+      (point) => event.timeStamp - point.time <= FLICK_WINDOW,
+    );
+    if (current.follow && card.current) gsap.set(card.current, { x: dx * 0.6, rotation: dx * 0.02, overwrite: true });
+  };
+
+  const onDragEnd = (event: PointerEvent<HTMLDivElement>) => {
+    const current = drag.current;
+    if (!current || event.pointerId !== current.id) return;
+    drag.current = null;
+    if (current.follow && card.current) gsap.to(card.current, { x: 0, rotation: 0, duration: 0.5, ease: "power3.out", overwrite: true });
+    if (current.axis !== "x" || event.type === "pointercancel") return;
+    const dx = event.clientX - current.x;
+    // Speed over the last moments only, so a flick counts even after a slow start.
+    const [first] = current.recent;
+    const speed = first ? Math.abs(event.clientX - first.x) / Math.max(1, event.timeStamp - first.time) : 0;
+    if (Math.abs(dx) > DRAG_DISTANCE || speed > FLICK_SPEED) goToSlide((index + (dx < 0 ? 1 : -1) + count) % count);
+  };
+
+  // A drag ends with a click on whatever is under the pointer; ignore it.
+  const onClickAfterDrag = (event: MouseEvent) => {
+    if (!dragged.current) return;
+    dragged.current = false;
+    event.preventDefault();
+    event.stopPropagation();
+  };
+
   const onDotsKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     const step = { ArrowRight: 1, ArrowLeft: -1 }[event.key];
     if (!step) return;
@@ -107,7 +187,16 @@ export function TestimonialCarousel({
       <div className="@container md:col-span-2 xl:col-span-1 xl:-mt-[3vw]">
         {heading}
 
-        <div data-reveal className="mt-5 grid">
+        {/* Swipeable on touch screens (a mouse selects the text as usual). */}
+        <div
+          data-reveal
+          onPointerDown={(event) => onDragStart(event, { follow: false, touchOnly: true })}
+          onPointerMove={onDragMove}
+          onPointerUp={onDragEnd}
+          onPointerCancel={onDragEnd}
+          onClickCapture={onClickAfterDrag}
+          className="mt-5 grid touch-pan-y"
+        >
           {testimonials.map((testimonial, slide) => (
             <blockquote
               key={slide}
@@ -136,12 +225,25 @@ export function TestimonialCarousel({
       <div data-reveal>
         {/* The drop overlaps the card's bottom-left corner, so this wrapper does not clip. */}
         <div className="relative mx-auto w-full max-w-[26rem] md:max-w-none">
-          <div className="relative aspect-[535/684] overflow-hidden rounded-[clamp(1.5rem,2.1vw,2.5rem)] bg-[#2b2e44]">
+          {/* Draggable: the card follows the pointer, and a long enough drag changes slide. */}
+          <div
+            ref={card}
+            onPointerDown={(event) => onDragStart(event, { follow: true })}
+            onPointerMove={onDragMove}
+            onPointerUp={onDragEnd}
+            onPointerCancel={onDragEnd}
+            onClickCapture={onClickAfterDrag}
+            className={[
+              "relative aspect-[535/684] touch-pan-y overflow-hidden rounded-[clamp(1.5rem,2.1vw,2.5rem)] bg-[#2b2e44] select-none",
+              canDrag ? "cursor-grab active:cursor-grabbing" : "",
+            ].join(" ")}
+          >
             <Image
               key={index}
               data-slide-image
               src={current.image}
               alt={current.client}
+              draggable={false}
               fill
               sizes="(min-width: 1280px) 28vw, (min-width: 768px) 45vw, 26rem"
               placeholder="blur"

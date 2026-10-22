@@ -14,11 +14,8 @@ import {
 } from "react";
 import { Button, DropIcon } from "@/components/ui/Button";
 import { serviceCategories, type ServiceCategory } from "@/content/services";
+import { useHoverMenu } from "./useHoverMenu";
 
-// Waits before opening (so the mouse can cross the menu without opening it) and before
-// closing (so it can travel from the button down to the panel).
-const OPEN_DELAY = 100;
-const CLOSE_DELAY = 200;
 // Waits before a hovered category takes over, so a mouse heading diagonally for the cards
 // doesn't flick through the categories it crosses.
 const TAB_DELAY = 120;
@@ -52,7 +49,8 @@ const maskOf = (src: string): CSSProperties => ({
 // header shows the services (src/content/services.ts, shared with the home page's services
 // section). A mouse opens the menu by hovering the item; the arrow beside the word is a button
 // that toggles it (click, Enter, touch). Esc, a click outside, focus leaving it, or opening a page
-// closes it. The panel is positioned against the <header>, the nearest positioned ancestor.
+// closes it (useHoverMenu). The panel is positioned against the <header>, the nearest positioned
+// ancestor.
 //
 // Inside: the six core services on the left, the chosen one's services as cards on the right
 // (icon, name, one line), and a bar with "View all services" and a free-call button. Hovering a
@@ -71,77 +69,20 @@ export function ServicesMenu({
   active: boolean;
 }) {
   const pathname = usePathname();
-  // The page the menu was opened on, so it is closed again on any other page.
-  const [openOn, setOpenOn] = useState<string | null>(null);
-  const open = openOn === pathname;
   const [tab, setTab] = useState(0);
   const category = serviceCategories[tab];
+  // Opens on the category of the page you're on. A first tap on a core service only shows its
+  // services, so it cancels the click and the menu stays open.
+  const { open, close, toggle, button, closeOnLinkClick, rootProps } = useHoverMenu(() => setTab(categoryOf(pathname)));
 
-  const root = useRef<HTMLDivElement>(null);
-  const button = useRef<HTMLButtonElement>(null);
-  const hovering = useRef(false);
   // The pointer that pressed a core service ("" for a key), read by its click.
   const pointer = useRef("");
-  const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const tabTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const panelId = useId();
   const tabId = (index: number) => `${panelId}-tab-${index}`;
   const tabPanelId = `${panelId}-panel`;
 
-  const close = () => setOpenOn(null);
-  const show = () => {
-    if (!open) setTab(categoryOf(pathname));
-    setOpenOn(pathname);
-  };
-
-  useEffect(
-    () => () => {
-      clearTimeout(timer.current);
-      clearTimeout(tabTimer.current);
-    },
-    [],
-  );
-
-  useEffect(() => {
-    if (!open) return;
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== "Escape") return;
-      setOpenOn(null);
-      if (root.current?.contains(document.activeElement)) button.current?.focus();
-    };
-    const onPointerDown = (event: globalThis.PointerEvent) => {
-      if (!root.current?.contains(event.target as Node)) setOpenOn(null);
-    };
-    document.addEventListener("keydown", onKeyDown);
-    document.addEventListener("pointerdown", onPointerDown);
-    return () => {
-      document.removeEventListener("keydown", onKeyDown);
-      document.removeEventListener("pointerdown", onPointerDown);
-    };
-  }, [open]);
-
-  const onPointerEnter = (event: PointerEvent) => {
-    if (event.pointerType !== "mouse") return;
-    hovering.current = true;
-    clearTimeout(timer.current);
-    timer.current = setTimeout(show, OPEN_DELAY);
-  };
-
-  const onPointerLeave = (event: PointerEvent) => {
-    if (event.pointerType !== "mouse") return;
-    hovering.current = false;
-    clearTimeout(timer.current);
-    timer.current = setTimeout(close, CLOSE_DELAY);
-  };
-
-  // A mouse already opened it by hovering, so its click keeps it open rather than closing it.
-  const toggle = () => (open && !hovering.current ? close() : show());
-
-  // Also close when a link to the current page is clicked (the pathname does not change); not
-  // for a first tap on a core service, which only shows its services.
-  const closeOnLinkClick = (event: MouseEvent) => {
-    if (!event.defaultPrevented && (event.target as HTMLElement).closest("a")) close();
-  };
+  useEffect(() => () => clearTimeout(tabTimer.current), []);
 
   const clickTab = (event: MouseEvent, index: number) => {
     clearTimeout(tabTimer.current);
@@ -191,14 +132,7 @@ export function ServicesMenu({
   };
 
   return (
-    <div
-      ref={root}
-      onPointerEnter={onPointerEnter}
-      onPointerLeave={onPointerLeave}
-      onBlur={(event) => {
-        if (event.relatedTarget && !event.currentTarget.contains(event.relatedTarget)) close();
-      }}
-    >
+    <div {...rootProps}>
       <div className={`${className} items-center gap-1`}>
         <Link href="/services" aria-current={pathname === "/services" ? "page" : active ? "true" : undefined} onClick={close}>
           {label}

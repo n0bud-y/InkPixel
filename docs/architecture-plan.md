@@ -4,7 +4,7 @@
 |---|---|
 | **Status** | Draft for review |
 | **Owner** | Project Head |
-| **Last updated** | 17 Oct 2026 |
+| **Last updated** | 22 Oct 2026 |
 | **Supersedes** | `Brand Portfolio Project Architecture & Execution Plan.pdf` (v1) |
 | **Companion docs** | [README.md](README.md) (living brief) · [execution-plan.md](execution-plan.md) (tasks, owners, timeline) |
 | **Reference** | tekrevol.com — for scope and feel, not to copy |
@@ -358,11 +358,12 @@ brand-portfolio/
 │   │       ├── draft-mode/enable/route.ts   # called by Contentful's preview URL
 │   │       └── draft-mode/disable/route.ts
 │   ├── assets/images/                # static-page photos, imported with next/image (compressed, ≤ ~500 KB each)
-│   ├── content/                      # static content as typed data (services.ts, services-page.ts, service-pages.ts, core-pages.ts, branding-page.ts, blog.ts, technologies.ts, about.ts …); copy lives here, not in components
+│   ├── assets/videos/                # static-page videos, imported for their URL ("*.mp4" asset rule in next.config.ts); Mux later
+│   ├── content/                      # static content as typed data (services.ts, services-page.ts, service-pages.ts, core-pages.ts, branding-page.ts, blog.ts, technologies.ts, technology-menu.ts, contact-page.ts, about.ts …); copy lives here, not in components
 │   ├── components/
 │   │   ├── ui/                       # shadcn primitives (Button, Dialog, Input…)
-│   │   ├── layout/                   # Header (+ HeaderShell, client), Footer, MobileNav
-│   │   ├── sections/                 # page sections for the static pages: home/ (Hero, Stats, CTA…), about/ (… TeamCarousel, client), services/ (ServiceHero … ServiceProjects, FeaturedIn, ServiceCategories; OfferingsList, EstimatorQuiz, and CapabilitiesMarquee, client), branding/ (BrandingHero, BrandingIntro; BrandingServices, client)
+│   │   ├── layout/                   # Header (+ HeaderShell, client), Footer, MobileNav; mega menus ServicesMenu, IndustriesMenu, and TechnologiesMenu (client, sharing useHoverMenu; the last two on the MegaMenu frame)
+│   │   ├── sections/                 # page sections for the static pages: home/ (Hero, Stats, CTA…), about/ (… TeamCarousel, client), services/ (ServiceHero … ServiceProjects, FeaturedIn, ServiceCategories; OfferingsList, EstimatorQuiz, and CapabilitiesMarquee, client), branding/ (BrandingHero, BrandingIntro; BrandingServices, client), core/ (CoreHero and its illustrations in scenes/, for the core pages other than Branding), contact/ (ContactHero, ContactSection, NextSteps; ProjectForm, client)
 │   │   ├── blog/                     # BlogListing (hero, category pills, featured post, grid, page numbers), ArticleHeader, AuthorCard, RelatedPosts; TableOfContents and ShareButtons (client)
 │   │   ├── case-studies/             # CaseStudyHero, CaseStudySection, TechStackSection, FeatureGridSection, ShowcaseSection, CardsSection, GallerySection, TestimonialsSection, CallToActionSection; later CaseStudyCard, FilterBar (client)
 │   │   ├── motion/                   # GSAP helpers (client): Reveal, CountUp, HorizontalPin, Magnetic, PointerParallax, SmoothScroll — reduced-motion aware

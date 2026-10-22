@@ -19,14 +19,21 @@ const lorem =
   "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing Library in London.";
 
 // Stand-in hero lines and descriptions of the categories' photos (the Services page shows them
-// without one). A hero line should break onto two lines like Branding's (about 26–30
-// characters), or it runs into the floating logos.
+// without one). These pages' heroes are CoreHero (its own illustration per core service), not
+// Branding's; accented words are in *stars*.
 const dummy: Record<string, { title: string; photoAlt: string }> = {
-  development: { title: "Where Ideas Become Products", photoAlt: "A developer typing code on a desktop computer" },
-  marketing: { title: "Where Brands Find Their People", photoAlt: "Two people going over charts on a laptop and printed reports" },
-  software: { title: "Where Software Meets Business", photoAlt: "Code on a monitor and a tablet, with a hand-drawn flowchart beside the keyboard" },
-  applications: { title: "Where Apps Meet Everyday Life", photoAlt: "Hands holding a phone with app screens floating around it" },
-  "ai-automation": { title: "Where Busywork Runs Itself", photoAlt: "A woman with a headset working at a computer showing an AI dashboard" },
+  development: { title: "Where Ideas Become *Products*", photoAlt: "A developer typing code on a desktop computer" },
+  marketing: { title: "Where Brands Find Their *People*", photoAlt: "Two people going over charts on a laptop and printed reports" },
+  software: { title: "Where Software Meets *Business*", photoAlt: "Code on a monitor and a tablet, with a hand-drawn flowchart beside the keyboard" },
+  applications: { title: "Where Apps Meet *Everyday Life*", photoAlt: "Hands holding a phone with app screens floating around it" },
+  "ai-automation": { title: "Where Busywork *Runs Itself*", photoAlt: "A woman with a headset working at a computer showing an AI dashboard" },
+};
+
+/** CoreHero's own text: the pill above the title, and the second button (to Our Work, showing
+ *  the core service's case studies). */
+export const coreHero = {
+  eyebrow: (label: string) => `${label} Services`,
+  workButton: "See Our Work",
 };
 
 const office: { image: StaticImageData; alt: string } = {

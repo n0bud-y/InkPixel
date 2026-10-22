@@ -63,3 +63,9 @@ export const industries: Industry[] = [
     solutions: placeholderSolutions,
   },
 ];
+
+/** The header's Industries menu (the industries above, display only): the bar under them. */
+export const industryMenu = {
+  callout: "Don't see your industry?",
+  button: { label: "Book a free call", href: "/contact" },
+};
