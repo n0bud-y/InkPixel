@@ -68,18 +68,29 @@ export function TestimonialCarousel({
     setIndex(next);
   };
 
+  // The slide shown before the current one, whose photo stays under the new one while it fades in.
+  const previous = useRef(0);
+
   useGSAP(
     () => {
+      const before = previous.current;
+      previous.current = index;
       if (firstRun.current) {
         firstRun.current = false;
         return;
       }
       if (!window.matchMedia(MOTION_OK).matches) return;
+      const photo = (slide: number) => `[data-slide-photo="${slide}"]`;
+      // The new photo fades in on top; the old one stays fully shown underneath until it has.
       gsap.fromTo(
-        "[data-slide-image]",
+        photo(index),
         { autoAlpha: 0, scale: 1.06 },
         { autoAlpha: 1, scale: 1, duration: 0.8, ease: "power3.out", overwrite: true },
       );
+      if (before !== index) {
+        gsap.set(photo(before), { autoAlpha: 1 });
+        gsap.to(photo(before), { autoAlpha: 0, duration: 0.3, delay: 0.6, ease: "none" });
+      }
       gsap.fromTo(
         "[data-slide-quote] p",
         { y: 16, autoAlpha: 0 },
@@ -238,22 +249,30 @@ export function TestimonialCarousel({
               canDrag ? "cursor-grab active:cursor-grabbing" : "",
             ].join(" ")}
           >
-            <Image
-              key={index}
-              data-slide-image
-              src={current.image}
-              alt={current.client}
-              draggable={false}
-              fill
-              sizes="(min-width: 1280px) 28vw, (min-width: 768px) 45vw, 26rem"
-              placeholder="blur"
-              className="object-cover"
-            />
+            {/* Every slide's photo, stacked; only the current one shows (and it sits on top), so
+                changing slide crossfades from one card to the next. `isolate` keeps them under
+                the veil and the video. */}
+            <div className="absolute inset-0 isolate">
+              {testimonials.map((testimonial, slide) => (
+                <Image
+                  key={slide}
+                  data-slide-photo={slide}
+                  src={testimonial.image}
+                  alt={slide === index ? testimonial.client : ""}
+                  aria-hidden={slide === index ? undefined : true}
+                  draggable={false}
+                  fill
+                  sizes="(min-width: 1280px) 28vw, (min-width: 768px) 45vw, 26rem"
+                  placeholder="blur"
+                  className={`object-cover ${slide === index ? "z-[1]" : "opacity-0"}`}
+                />
+              ))}
+            </div>
             <div aria-hidden="true" className="absolute inset-0 bg-black/25" />
 
             {current.video && (
               <video
-                key={index}
+                key={`video-${index}`}
                 ref={video}
                 src={current.video}
                 poster={current.image.src}

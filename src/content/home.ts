@@ -1,6 +1,9 @@
 // Home page content that is not in Contentful.
 import type { StaticImageData } from "next/image";
-import client1 from "@/assets/images/testimonials/client-1.webp";
+import clientDrumond from "@/assets/images/testimonials/client-drumond.webp";
+import clientGulbaan from "@/assets/images/testimonials/client-gulbaan.webp";
+import clientIhr from "@/assets/images/testimonials/client-ihr.webp";
+import clientPakArmoring from "@/assets/images/testimonials/client-pak-armoring.webp";
 import clientReview from "@/assets/images/testimonials/client-review.webp";
 
 export type TestimonialStat = {
@@ -24,9 +27,9 @@ export type Testimonial = {
   stats: TestimonialStat[];
 };
 
-const placeholderTestimonial: Testimonial = {
-  client: "Client testimonial",
-  image: client1,
+// PLACEHOLDER: the same text and results on every slide; none of it is from these clients.
+// Replace each with the client's own words and real figures, with their permission.
+const placeholderReview: Pick<Testimonial, "quote" | "stats"> = {
   quote: [
     "We believe great design should do more than grab attention – it should drive growth. That's why every project we take on blends creativity with strategy, helping our clients increase conversions, lower acquisition costs, and scale faster.",
     "Our clients' success stories speak louder than we ever could.",
@@ -40,20 +43,22 @@ const placeholderTestimonial: Testimonial = {
 };
 
 // PLACEHOLDER (issue I8): stock footage standing in for a client's video (Contentful asset
-// "home-testimonial-video"), with a still from it (11 s in) as the photo; same text and results
-// as the others.
+// "home-testimonial-video"), with a still from it (11 s in) as the photo.
 const videoTestimonial: Testimonial = {
-  ...placeholderTestimonial,
+  ...placeholderReview,
+  client: "Client testimonial",
   image: clientReview,
   videoAssetId: "home-testimonial-video",
 };
 
-// PLACEHOLDER: the design shows 6 testimonials; none is a real client's yet (stock photo from
-// the design, stock video). Replace each entry with a real client's photo, video, and results,
-// with their permission.
+// The video first, then the clients' logo cards (from the project head, 23 Oct 2026). The
+// review text and results on each are still the placeholder above (issue I8).
 export const testimonials: Testimonial[] = [
   videoTestimonial,
-  ...Array.from({ length: 5 }, () => placeholderTestimonial),
+  { ...placeholderReview, client: "IHR", image: clientIhr },
+  { ...placeholderReview, client: "Gulbaan", image: clientGulbaan },
+  { ...placeholderReview, client: "Drumond Auto Body", image: clientDrumond },
+  { ...placeholderReview, client: "Pak Armoring", image: clientPakArmoring },
 ];
 
 export type ProcessStep = {

@@ -140,6 +140,13 @@ const pages = [
     "Terms and Conditions | Ink Pixel Studios",
     "The terms and conditions for using the Ink Pixel Studios website.",
   ],
+  [
+    "refund-policy",
+    "Refund Policy",
+    "/refund-policy",
+    "Refund Policy | Ink Pixel Studios",
+    "How deposits, cancellations, and refunds work for projects with Ink Pixel Studios.",
+  ],
 ];
 
 console.log(`Seeding space ${spaceId}, environment "${environmentId}" (locale ${locale})`);

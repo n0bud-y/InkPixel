@@ -1,4 +1,4 @@
-// The Privacy Policy and Terms and Conditions pages (LegalPage). Static content: edit the text
+// The Privacy Policy, Terms and Conditions, and Refund Policy pages (LegalPage). Static content: edit the text
 // here. PLACEHOLDER (issue I15): developer-written starting text for a studio like ours, not
 // legal advice; have it reviewed (and the "Last updated" dates set) before launch.
 
@@ -173,6 +173,7 @@ export const termsAndConditions: LegalDocument = {
       title: "Our services and proposals",
       body: [
         "The descriptions of our services, estimates from our cost calculators, prices, and timelines on this website are for general information only and are not an offer. Every project is agreed in a separate written proposal or contract, and that agreement’s terms apply to the work. If it differs from these terms, the project agreement wins.",
+        "Payments, cancellations, and refunds are covered by our Refund Policy, linked at the bottom of every page.",
       ],
     },
     {
@@ -223,6 +224,95 @@ export const termsAndConditions: LegalDocument = {
       title: "Changes and contact",
       body: [
         "We may update these terms from time to time. The date at the top of this page shows when they last changed, and continuing to use the site means you accept the updated terms. For any question about them, contact us:",
+        { contact: true },
+      ],
+    },
+  ],
+};
+
+export const refundPolicy: LegalDocument = {
+  name: "Refund Policy",
+  description: "How deposits, cancellations, and refunds work for projects with Ink Pixel Studios.",
+  path: "/refund-policy",
+  title: "Refund *Policy*",
+  intro:
+    "We want every project to start and end on clear terms. This policy explains when payments can be refunded, what happens if a project is cancelled, and how to ask for a refund.",
+  updated: "23 October 2026",
+  sections: [
+    {
+      id: "overview",
+      title: "Overview",
+      body: [
+        "This policy applies to design, development, marketing, software, app, and AI automation work from Ink Pixel Studios (“we”, “us”, “our”). Each project also has its own proposal or contract; if it says something different about payments or refunds, the project agreement wins.",
+      ],
+    },
+    {
+      id: "deposits",
+      title: "Deposits",
+      body: [
+        "Most projects start with a deposit, which reserves our team’s time and covers discovery and planning.",
+        {
+          list: [
+            "If you cancel before any work has started, we refund the deposit in full.",
+            "Once discovery, design, or development has started, the deposit covers that work and is not refundable.",
+          ],
+        },
+      ],
+    },
+    {
+      id: "work-in-progress",
+      title: "Work in progress",
+      body: [
+        "Larger projects are split into milestones, each with its own payment. If a milestone is paid but its work has not started, you can ask for that payment back. Work that has started is charged for the time already spent, and any balance is refunded.",
+      ],
+    },
+    {
+      id: "approved-work",
+      title: "Completed and approved work",
+      body: [
+        "Work that has been delivered and approved (for example, signed-off designs, a launched website, or published content) is not refundable. If something we delivered does not match what was agreed, tell us and we will fix it first, at no extra cost.",
+      ],
+    },
+    {
+      id: "cancelling",
+      title: "Cancelling a project",
+      body: [
+        "You can cancel a project at any time by telling us in writing. We will stop work, send you an invoice for the work done up to that point, and refund anything you have paid beyond it. You keep the work you have paid for.",
+        "If we ever need to cancel a project ourselves, we refund every payment for work we have not delivered.",
+      ],
+    },
+    {
+      id: "retainers",
+      title: "Retainers and monthly plans",
+      body: [
+        {
+          list: [
+            "Monthly plans (such as maintenance, marketing, or support) can be cancelled with 30 days’ written notice.",
+            "The current month is not refundable, but nothing further is charged after the notice period.",
+            "Unused hours or tasks do not carry over or turn into refunds, unless your plan says so.",
+          ],
+        },
+      ],
+    },
+    {
+      id: "third-party-costs",
+      title: "Third-party costs",
+      body: [
+        "Costs we pay to other companies on your behalf cannot be refunded by us once paid, including domain names, hosting, software licences, stock images and fonts, app store fees, and advertising spend. Where a provider offers its own refund, we will help you claim it.",
+      ],
+    },
+    {
+      id: "requesting-a-refund",
+      title: "How to request a refund",
+      body: [
+        "Email us with your name, the project, and the invoice number, ideally within 14 days of the payment. We will confirm what can be refunded within 5 working days, and approved refunds are paid back to the original payment method within 10 working days. Your bank may take a few more days to show it.",
+      ],
+    },
+    {
+      id: "changes-and-contact",
+      title: "Changes and contact",
+      body: [
+        "We may update this policy from time to time. The date at the top of this page shows when it last changed, and the version in place when you paid applies to that payment. For any question about payments or refunds, contact us:",
         { contact: true },
       ],
     },
