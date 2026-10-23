@@ -46,6 +46,8 @@ import wordpress from "@/assets/images/technologies/menu/wordpress.svg";
 
 export type TechnologyGroup = {
   label: string;
+  /** One line above the group's technologies in the menu. */
+  description: string;
   items: { name: string; logo: StaticImageData }[];
 };
 
@@ -56,6 +58,7 @@ export const technologyMenu = {
   groups: [
     {
       label: "Frontend",
+      description: "Fast, accessible interfaces for websites and web apps.",
       items: [
         { name: "HTML5", logo: html5 },
         { name: "CSS3", logo: css3 },
@@ -70,6 +73,7 @@ export const technologyMenu = {
     },
     {
       label: "Backend",
+      description: "Secure APIs, business logic, and integrations that scale.",
       items: [
         { name: "Node.js", logo: nodejs },
         { name: "Express", logo: express },
@@ -83,6 +87,7 @@ export const technologyMenu = {
     },
     {
       label: "Mobile",
+      description: "Native and cross-platform apps for iOS and Android.",
       items: [
         { name: "React Native", logo: react },
         { name: "Flutter", logo: flutter },
@@ -92,6 +97,7 @@ export const technologyMenu = {
     },
     {
       label: "Databases",
+      description: "Reliable storage for everything from records to real-time data.",
       items: [
         { name: "MySQL", logo: mysql },
         { name: "PostgreSQL", logo: postgresql },
@@ -102,6 +108,7 @@ export const technologyMenu = {
     },
     {
       label: "CMS & E-commerce",
+      description: "Content and online stores your team can manage themselves.",
       items: [
         { name: "WordPress", logo: wordpress },
         { name: "Shopify", logo: shopify },
@@ -111,6 +118,7 @@ export const technologyMenu = {
     },
     {
       label: "Cloud & Tools",
+      description: "Hosting, deployment, and the tools behind how we build.",
       items: [
         { name: "AWS", logo: aws },
         { name: "Google Cloud", logo: googlecloud },

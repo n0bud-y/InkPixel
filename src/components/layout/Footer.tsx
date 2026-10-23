@@ -71,7 +71,7 @@ export function Footer() {
           </div>
         </Reveal>
 
-        <div className="mt-[clamp(3.5rem,4.75vw,5.7rem)] flex flex-col gap-4 border-t border-white/6 pt-[clamp(1.5rem,1.75vw,2.125rem)] text-[clamp(0.8125rem,0.83vw,1rem)] text-[#7d716c] sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-[clamp(3.5rem,4.75vw,5.7rem)] flex flex-col gap-4 border-t border-white/10 pt-[clamp(1.5rem,1.75vw,2.125rem)] text-[clamp(0.8125rem,0.83vw,1rem)] text-[#b9aea9] sm:flex-row sm:items-center sm:justify-between">
           <p>
             © {new Date().getFullYear()} <span className="uppercase">{siteConfig.name}</span>. All
             rights reserved.

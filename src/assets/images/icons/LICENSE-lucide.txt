@@ -1,6 +1,6 @@
 The service icons in this folder's category subfolders (branding, development, marketing,
-software, applications, ai-automation) are from Lucide (https://lucide.dev), lucide-static v0.460.0,
-drawn white at a 1.5 stroke for the site's masks.
+software, applications, ai-automation) and the industry solution icons in solutions/ are from
+Lucide (https://lucide.dev), lucide-static v0.460.0, drawn white at a 1.5 stroke for the site's masks.
 
 ISC License
 
