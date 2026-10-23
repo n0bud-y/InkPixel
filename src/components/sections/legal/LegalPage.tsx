@@ -9,9 +9,10 @@ import { siteConfig } from "@/lib/site";
 const linkClass =
   "text-crimson underline decoration-crimson/35 underline-offset-[0.2em] transition-colors hover:decoration-crimson";
 
-// The Privacy Policy and Terms and Conditions pages (content in src/content/legal.ts). Hero as on
-// Contact, Our Work, and Insights: navy with the faint grid and a crimson glow, the eyebrow,
-// title, intro, and the date it last changed. Then the numbered sections on white, with the
+// The Privacy Policy, Terms and Conditions, and Refund Policy pages (content in
+// src/content/legal.ts). Hero as on Contact, Our Work, and Insights: navy with the faint grid and
+// a crimson glow, the eyebrow, title, intro, and the date it last changed. Then the numbered
+// sections on white (with subheadings where a section has parts), with the
 // blog's "On this page" list beside them (desktop: stays in view and marks the section being
 // read; phones and tablets: a box above the text that opens to the list).
 export function LegalPage({ document }: { document: LegalDocument }) {
@@ -75,6 +76,13 @@ export function LegalPage({ document }: { document: LegalDocument }) {
 
 function Block({ block }: { block: LegalBlock }) {
   if (typeof block === "string") return <p>{block}</p>;
+  if ("heading" in block) {
+    return (
+      <h3 className="pt-[0.5em] font-display text-[clamp(1.125rem,1.25vw,1.4375rem)] leading-snug font-semibold text-primary">
+        {block.heading}
+      </h3>
+    );
+  }
   if ("list" in block) {
     return (
       <ul className="space-y-[0.5em]">

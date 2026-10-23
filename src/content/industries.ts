@@ -1,4 +1,5 @@
-// Industries and their solutions. Static content: edited here, not in Contentful.
+// Industries and their solutions. Static content: edited here, not in Contentful. The six
+// industries and their descriptions are from the content document (23 Oct 2026).
 // Used by the "Industry-Specific Solutions" section (home and core service pages) and the
 // header's Industries menu; reusable for /industries.
 import type { StaticImageData } from "next/image";
@@ -7,6 +8,8 @@ import healthcare from "@/assets/images/icons/industries/healthcare.png";
 import logistics from "@/assets/images/icons/industries/logistics.png";
 import realEstate from "@/assets/images/icons/industries/real-estate.png";
 import ecommerce from "@/assets/images/icons/industries/ecommerce.svg";
+import onDemand from "@/assets/images/icons/industries/on-demand.svg";
+import bike from "@/assets/images/icons/solutions/bike.svg";
 import building from "@/assets/images/icons/solutions/building-2.svg";
 import calculator from "@/assets/images/icons/solutions/calculator.svg";
 import calendarCheck from "@/assets/images/icons/solutions/calendar-check.svg";
@@ -62,7 +65,7 @@ export const industries: Industry[] = [
     slug: "fintech",
     label: "Fintech",
     description:
-      "Our fintech solutions simplify complex financial processes and strengthen security to help businesses drive operational efficiency.",
+      "We create secure fintech solutions, making financial services, payments, banking, lending and digital transactions easier and more secure, with scalability at the forefront.",
     icon: fintech,
     solutions: [
       { title: "Digital Banking Apps", description: "Secure mobile and web banking with accounts, transfers, and statements.", icon: landmark },
@@ -77,7 +80,7 @@ export const industries: Industry[] = [
     slug: "healthcare",
     label: "Healthcare",
     description:
-      "We build healthcare solutions that streamline operations, elevate patient care, and ensure industry compliance.",
+      "The healthcare technology solutions we offer bridge the gap between patients, providers and operations via secure digital platforms, fostering greater access, efficiency and experience.",
     icon: healthcare,
     solutions: [
       { title: "Patient Portals", description: "Records, results, and messages patients can reach anytime.", icon: contact },
@@ -92,7 +95,7 @@ export const industries: Industry[] = [
     slug: "real-estate",
     label: "Real estate",
     description:
-      "We empower real estate businesses with strategies that increase property value and streamline transactions.",
+      "We build real estate tech solutions, from the process of discovering home, management, transactions, communication, to customer engagement.",
     icon: realEstate,
     solutions: [
       { title: "Property Listing Websites", description: "Searchable listings with filters, maps, and enquiry forms.", icon: house },
@@ -104,10 +107,25 @@ export const industries: Industry[] = [
     ],
   },
   {
+    slug: "on-demand",
+    label: "On demand",
+    description:
+      "We develop on-demand solutions that are scalable and bring customers to services fast via intuitive platforms with smart workflows and seamless digital experiences.",
+    icon: onDemand,
+    solutions: [
+      { title: "Customer Apps", description: "Browse, book, and pay for a service in a few taps.", icon: smartphone },
+      { title: "Booking & Scheduling", description: "Live availability, instant booking, and reminders.", icon: calendarCheck },
+      { title: "Provider & Rider Apps", description: "Jobs, routes, and earnings for the people doing the work.", icon: bike },
+      { title: "Real-Time Tracking", description: "Customers see their order or provider on the map.", icon: mapPin },
+      { title: "In-App Payments", description: "Cards, wallets, tips, and payouts handled securely.", icon: wallet },
+      { title: "Admin Dashboard", description: "Orders, providers, pricing, and reports in one place.", icon: chartPie },
+    ],
+  },
+  {
     slug: "logistics",
     label: "Logistics",
     description:
-      "We transform logistics with technology, optimizing supply chains and ensuring efficient, cost-effective deliveries.",
+      "Our logistics software solution optimizes transportation, tracking, fleet operation, inventory and delivery process to enable businesses to move smarter.",
     icon: logistics,
     solutions: [
       { title: "Fleet & Shipment Tracking", description: "Live locations, status updates, and delivery history.", icon: truck },
@@ -122,7 +140,7 @@ export const industries: Industry[] = [
     slug: "ecommerce",
     label: "Ecommerce",
     description:
-      "We specialize in crafting unique eCommerce solutions that drive conversions and elevate customer experiences.",
+      "We develop eCommerce solutions that drive performance and deliver a compelling shopping journey, alongside smooth payment handling, engaging customer journeys and business expansion.",
     icon: ecommerce,
     solutions: [
       { title: "Online Stores", description: "Fast, branded storefronts on Shopify, WooCommerce, or custom builds.", icon: store },

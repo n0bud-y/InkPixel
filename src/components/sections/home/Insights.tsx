@@ -6,7 +6,8 @@ import { PostCard } from "@/components/ui/PostCard";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { getLatestPosts, type PostSummary } from "@/contentful/queries/posts";
 
-// "From the studio.": the three newest blog posts from Contentful.
+// "Stay Ahead. Stay Informed. Be Prepared for the Next Step." (content document, 23 Oct 2026;
+// was "From the studio."): the three newest blog posts from Contentful.
 // The section hides itself when there are no posts yet, or when Contentful can't be reached,
 // so the home page never breaks because of it. The eyebrow numbers the section on its page.
 export async function Insights({ eyebrow = "09 · Insights" }: { eyebrow?: string }) {
@@ -26,7 +27,17 @@ export async function Insights({ eyebrow = "09 · Insights" }: { eyebrow?: strin
             <div data-reveal className="mb-8">
               <Eyebrow>{eyebrow}</Eyebrow>
             </div>
-            <SectionHeading id="insights-title" size="lg" title="From the studio." />
+            <SectionHeading
+              id="insights-title"
+              size="lg"
+              title={
+                <>
+                  Stay Ahead. Stay Informed.
+                  <br className="max-md:hidden" /> Be Prepared for the Next Step.
+                </>
+              }
+              description="Technology doesn't stand still, nor should your business. Discover new concepts, strategies, trends, and innovations in AI, software development, digital transformation, mobile apps, blockchain, cloud, and digital marketing."
+            />
           </div>
           <div data-reveal>
             <Button href="/blog" variant="secondary">

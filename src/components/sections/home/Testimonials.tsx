@@ -4,7 +4,7 @@ import { Magnetic } from "@/components/motion/Magnetic";
 import { Reveal } from "@/components/motion/Reveal";
 import { Button } from "@/components/ui/Button";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { testimonials } from "@/content/home";
+import { testimonials, testimonialsIntro } from "@/content/home";
 import { getAssetUrl } from "@/contentful/queries/assets";
 import { TestimonialCarousel } from "./TestimonialCarousel";
 
@@ -49,6 +49,7 @@ export async function Testimonials() {
                     <br /> Say About Us
                   </>
                 }
+                description={testimonialsIntro}
               />
             }
             action={

@@ -27,38 +27,48 @@ export type Testimonial = {
   stats: TestimonialStat[];
 };
 
-// PLACEHOLDER: the same text and results on every slide; none of it is from these clients.
-// Replace each with the client's own words and real figures, with their permission.
-const placeholderReview: Pick<Testimonial, "quote" | "stats"> = {
-  quote: [
-    "We believe great design should do more than grab attention – it should drive growth. That's why every project we take on blends creativity with strategy, helping our clients increase conversions, lower acquisition costs, and scale faster.",
-    "Our clients' success stories speak louder than we ever could.",
-  ],
-  stats: [
-    { prefix: "+", value: 150, suffix: "%", label: "Project satisfaction rate" },
-    { value: 65, suffix: "%", label: "Lower Acquisition Costs" },
-    { value: 3, suffix: "x", label: "Improved CRO" },
-    { value: 94, suffix: "%", label: "Clients Exceed Targets" },
-  ],
-};
+// "What Our Clients Say About Us": the line under the heading (content document, 23 Oct 2026).
+export const testimonialsIntro =
+  "We believe it's important to understand our clients' goals and make their ideas a reality, and this is where great digital solutions start. Understand how our Web Development, Software Solutions, AI Automation and Digital Services enable businesses to advance.";
+
+// The clients' words, one per slide in order (content document, 23 Oct 2026; the project head
+// confirmed they are from these clients). The document has a sixth, unused while there are five
+// slides: "Ink Pixel Studios was able to leave a positive impression as they worked with us from
+// our initial needs through to the final solution, seeing how our technology could then work for us."
+const quotes = [
+  "What Ink Pixel Studios did was exactly what we wanted and they were able to execute that exactly as our brand. They knew what we wanted, and they made it easy for us.",
+  "We required a software solution that fit our business operations and Ink Pixel Studios was able to accommodate our needs and make it a viable solution because they took a personal approach to us.",
+  "The team has made the process of developing the app smoother by keeping our end users and objectives in mind. We were impressed by their attention to detail and understanding of our goals.",
+  "Ink Pixel Studios guided us through strategies we could use to streamline repetitive tasks by making them automated; their suggestions helped us to see how technology could play a role in our workflow.",
+  "The collaborative nature of the team, their willingness to listen to our ideas, consider our feedback and strive to create a digital solution that fitted our business needs was what we valued the most.",
+];
+
+// PLACEHOLDER (issue I8): the same results on every slide; none of these figures is a client's.
+// Replace each with the client's real figures, with their permission.
+const placeholderStats: Testimonial["stats"] = [
+  { prefix: "+", value: 150, suffix: "%", label: "Project satisfaction rate" },
+  { value: 65, suffix: "%", label: "Lower Acquisition Costs" },
+  { value: 3, suffix: "x", label: "Improved CRO" },
+  { value: 94, suffix: "%", label: "Clients Exceed Targets" },
+];
 
 // PLACEHOLDER (issue I8): stock footage standing in for a client's video (Contentful asset
 // "home-testimonial-video"), with a still from it (11 s in) as the photo.
 const videoTestimonial: Testimonial = {
-  ...placeholderReview,
+  quote: [quotes[0]],
+  stats: placeholderStats,
   client: "Client testimonial",
   image: clientReview,
   videoAssetId: "home-testimonial-video",
 };
 
-// The video first, then the clients' logo cards (from the project head, 23 Oct 2026). The
-// review text and results on each are still the placeholder above (issue I8).
+// The video first, then the clients' logo cards (from the project head, 23 Oct 2026).
 export const testimonials: Testimonial[] = [
   videoTestimonial,
-  { ...placeholderReview, client: "IHR", image: clientIhr },
-  { ...placeholderReview, client: "Gulbaan", image: clientGulbaan },
-  { ...placeholderReview, client: "Drumond Auto Body", image: clientDrumond },
-  { ...placeholderReview, client: "Pak Armoring", image: clientPakArmoring },
+  { quote: [quotes[1]], stats: placeholderStats, client: "IHR", image: clientIhr },
+  { quote: [quotes[2]], stats: placeholderStats, client: "Gulbaan", image: clientGulbaan },
+  { quote: [quotes[3]], stats: placeholderStats, client: "Drumond Auto Body", image: clientDrumond },
+  { quote: [quotes[4]], stats: placeholderStats, client: "Pak Armoring", image: clientPakArmoring },
 ];
 
 export type ProcessStep = {
@@ -66,34 +76,39 @@ export type ProcessStep = {
   description: string;
 };
 
-// "Our Process": the six phases, then the outcome ("Live").
+// The process section: its heading and line, then the five phases, then the outcome ("Live").
+// Heading, line, and phases from the content document (23 Oct 2026).
+export const processIntro = {
+  title: "Built With Precision. Designed for Compliance.",
+  description:
+    "Great technology requires great ideas. From strategic planning to secure engineering, thorough testing, continuous improvement, and more, we ensure that each solution is designed around your business goals, technical needs, security needs, and applicable industry standard.",
+};
+
 export const processSteps: ProcessStep[] = [
   {
-    title: "Discovery",
+    title: "Discover & Define",
     description:
-      "Workshops, audits and stakeholder interviews to map the problem and the opportunity.",
+      "Before defining the right solution, we grasp your business, user, problems, targets, and technical needs.",
   },
   {
-    title: "Define",
+    title: "Strategize & Architect",
     description:
-      "Strategy, scope, success metrics. We commit to a thesis before we commit to pixels.",
+      "Our experts prepare the product roadmap, technology architecture, workflows and security aspects essential for large-scale product development.",
   },
   {
-    title: "Design",
-    description: "Prototypes, design systems and copy. Validated with users at every milestone.",
-  },
-  {
-    title: "Build",
-    description: "Two-week sprints, demos every Friday. Production-quality code from week one.",
-  },
-  {
-    title: "Launch",
+    title: "Design & Develop",
     description:
-      "Migration, training, comms. We treat go-live as the start of the relationship, not the end.",
+      "Using an agile development process, we turn the approved strategy into easy-to-use designs and strong digital products.",
   },
   {
-    title: "Iterate",
-    description: "Analytics, experiments, ongoing roadmap. We grow with you, quarter over quarter.",
+    title: "Test & Validate",
+    description:
+      "Each solution is thoroughly quality checked, performance tested, security tested, and validated for quality and reliability.",
+  },
+  {
+    title: "Launch & Evolve",
+    description:
+      "We deploy, monitor, troubleshoot and continually enhance your product throughout your business and technology evolution.",
   },
 ];
 

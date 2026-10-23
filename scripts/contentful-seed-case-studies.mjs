@@ -1,10 +1,9 @@
 // One-time: adds the case studies built from the designs to Contentful, with their images,
 // clients, and sections, all published:
-// - Gulbaan (from the first, hard-coded build of the page). PLACEHOLDER copy: most section text
-//   is lorem ipsum, and "The Idea Behind Gulbaan" describes another project.
-// - Terminal Gateway CRM (from CRM-terminalgateway-case-study.svg). PLACEHOLDER copy: the
-//   design's text came from another agency's case study, so titles and features are neutral
-//   stand-ins based on the product screens, and paragraphs are lorem ipsum.
+// - Gulbaan (from the first, hard-coded build of the page). Its text is the content document's
+//   (Website Content – Ink Pixel Studio.docx, 23 Oct 2026).
+// - Terminal Gateway CRM (from CRM-terminalgateway-case-study.svg). Its text is the content
+//   document's too (the design's had come from another agency's case study).
 // - Cathy O’Bryan’s Books (from application-Cathy-O’Bryan’s-Books.svg). The design's copy,
 //   except the parts copied from other projects (see that section below).
 // Replace the placeholder text in Contentful before launch.
@@ -143,25 +142,23 @@ async function addMissingFields(id, fields) {
   console.log(`  updated and published: ${id} (added ${missing.join(", ")})`);
 }
 
-// Rich Text: paragraphs (plain or bold), and a bullet list.
+// Rich Text: paragraphs, and a bullet list whose items are "Title: text" (the title in bold).
 const text = (value, marks = []) => ({ nodeType: "text", value, marks, data: {} });
 const paragraph = (value) => ({ nodeType: "paragraph", data: {}, content: [text(value)] });
-const boldParagraph = (value) => ({ nodeType: "paragraph", data: {}, content: [text(value, [{ type: "bold" }])] });
-const bullets = (items) => ({
+const titledBullets = (items) => ({
   nodeType: "unordered-list",
   data: {},
-  content: items.map((item) => ({ nodeType: "list-item", data: {}, content: [paragraph(item)] })),
+  content: items.map(([title, value]) => ({
+    nodeType: "list-item",
+    data: {},
+    content: [{ nodeType: "paragraph", data: {}, content: [text(title, [{ type: "bold" }]), text(`: ${value}`)] }],
+  })),
 });
 const richText = (...blocks) => ({
   nodeType: "document",
   data: {},
   content: blocks.map((block) => (typeof block === "string" ? paragraph(block) : block)),
 });
-
-const lorem =
-  "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing Library in London, took a 1914 Cicero translation and scrambled it to make dummy text for Letraset's Body Type sheets.";
-const loremShort =
-  "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing Library in London.";
 
 const assets = [
   ["gulbaan-logo", "gulbaan/logo.svg", "image/svg+xml", "Gulbaan"],
@@ -187,8 +184,8 @@ const sections = [
     image: "gulbaan-idea",
     layout: "Image left",
     body: richText(
-      "We were responsible for refining the eCommerce presence of Al Hussaini Trading Company by evaluating their digital presence and presenting a full-fledged alternative from scratch that comprised of building a more connected omnichannel interface.",
-      "The idea of an omnichannel eCommerce solution is to provide customers with a unified experience across different channels – whether it be phone, desktop, or a visit to one of the 40+ Al Hussaini Trading Company outlets across the Kingdom.",
+      "Gulbaan was conceived to revolutionize the online flower retailing landscape by making it more connected and accessible to enable customers to easily discover and order high-quality flowers online.",
+      "The aim was to introduce the elegance of the traditional gift of flowers to a digital world with an easier way for customers to browse collections and select flowers for various occasions. Gulbaan's goal is to make the shopping process for their flowers easier by creating an engaging website to go with. It's a part of the platform's efforts to build on the idea of a seamless digital shopping experience with a touch of personalization that makes gifting flowers so special.",
     ),
   },
   {
@@ -197,9 +194,8 @@ const sections = [
     image: "gulbaan-challenges",
     layout: "Image right",
     body: richText(
-      lorem,
-      "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.",
-      "Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+      "Showcasing products is not enough to create an engaging online flower retail experience. Customers must have a seamless experience when navigating floral choices, comprehending their options and finalizing their purchase in a convenient manner. Gulbaan's digital experience had to look great when it came to showcasing flowers online and ensuring it was accessible for customers in Lahore and Islamabad to purchase flowers online.",
+      "The focus was to develop a dedicated eCommerce solution, highlighting the floral line in a welcoming e-commerce environment. The platform focuses on product discovery, easy navigation, and a hassle-free ordering process, ensuring a seamless shopping experience and aiding customers in finding the flowers they desire to send.",
     ),
   },
   {
@@ -208,14 +204,17 @@ const sections = [
     image: "gulbaan-platform-features",
     layout: "Image left",
     body: richText(
-      loremShort,
-      bullets([
-        "Product Catalog",
-        "Payment Gateways",
-        "Store locator",
-        "Purchase online or pick up from an outlet",
-        "Newsletters",
-        "In-app wallet with points",
+      "Gulbaan's online shopping experience brings essential features together to make flower discovery and ordering more convenient.",
+      titledBullets([
+        ["Floral Product Collection", "Explore a selection of fresh, premium flowers for different gifting needs."],
+        ["Online Shopping Experience", "Browse products through a dedicated digital storefront."],
+        ["Product Discovery", "Navigate floral options and find arrangements suited to different occasions."],
+        ["Convenient Ordering", "Place flower orders through an accessible online shopping journey."],
+        ["Location-Focused Service", "Shop for flower delivery services available across Lahore and Islamabad."],
+        [
+          "Digital Brand Experience",
+          "Enjoy an online storefront designed to showcase Gulbaan's floral offerings and brand identity.",
+        ],
       ]),
     ),
   },
@@ -224,28 +223,40 @@ const sections = [
     title: "Insights from Client",
     image: "gulbaan-insights",
     layout: "Image right",
-    body: richText(lorem, lorem),
+    body: richText(
+      "The project is a testament to the significance of creating a traditional shopping experience accessible online. A flower delivery service like Gulbaan requires customers to have an online experience that is as pleasing to the eye, but as simple as buying real flowers. The success of the brand's fresh, high-quality flowers in Lahore and Islamabad sets a solid base for their digital presence.",
+      "These priorities emphasize the importance of having an inviting storefront, good product presentation and a convenient customer journey. Gulbaan can enhance the online journey to mirror the emotional essence of gifting flowers, making it more personal and accessible.",
+    ),
   },
   {
     id: "gulbaan-section-what-we-did",
     title: "What Did We Do?",
     image: "gulbaan-what-we-did",
     layout: "Image left",
-    body: richText(loremShort, `${lorem} ${loremShort}`),
+    body: richText(
+      "We concentrated on building Gulbaan's online presence in the realm of its floral products and delivery services. The strategy was to create a welcoming online environment for presenting products and facilitate a transparent and convenient shopping experience. The way the front page is set up to discover products and make it easy for customers to navigate the store encourages customers to learn about the flowers and progress to ordering.",
+      "Gulbaan's digital experience was built to embody its brand identity and render online flower shopping accessible. With this work, people in Lahore and Islamabad have a dedicated channel to find out about the products and the flower retail and delivery service of the brand.",
+    ),
   },
   {
     id: "gulbaan-section-outcomes",
     title: "The Outcomes",
     image: "gulbaan-outcomes",
     layout: "Image below",
-    body: richText(lorem, loremShort),
+    body: richText(
+      "The online platform by Gulbaan provides an online hub for customers to buy fresh flowers. The floral service has taken its floral collection to an easily accessible online store, allowing customers to find their floral products without just using the traditional shopping method.",
+      "The platform also provides Gulbaan with a digital platform to communicate its brand name, highlight its products and services and reach out to its customers in Lahore and Islamabad. As a product discovery and convenience-based shopping platform, Gulbaan can help facilitate its flower delivery service with an easier online experience that enhances the personal meaning of flowers.",
+    ),
   },
   {
     id: "gulbaan-section-results",
     title: "The Results",
     image: "gulbaan-results",
     layout: "Image right",
-    body: richText(`${lorem} ${loremShort}`),
+    body: richText(
+      "Overall, the Gulbaan project will lay the groundwork for a more user-friendly online flower shopping experience in the target markets. The brand's digital storefront is making the flowers more accessible to people, allowing them to browse what they have to offer and order digitally. It also helps to reinforce Gulbaan's digital identity by offering its service via a dedicated eCommerce channel.",
+      "Although specific performance metrics like sales growth, conversion rates or customer acquisition outcomes were not disclosed, the project showcases the potential of a targeted digital shopping experience for a flower retail and delivery enterprise. Gulbaan is set to bring its high-quality floral collection to the customers who want a hassle-free option for sending flowers in Lahore and Islamabad.",
+    ),
   },
 ];
 
@@ -286,7 +297,7 @@ await upsert("case-study-gulbaan", "caseStudy", {
   excerpt: "A flower retail and delivery service offering fresh, premium flowers across Lahore and Islamabad.",
   heroHeading: "A flower retail and delivery service offering fresh, premium flowers across Lahore and Islamabad.",
   heroText:
-    "A flower retail and delivery service offering fresh, premium flowers across Lahore and Islamabad. So simply stop, smell the roses and shop your picks from our blooming collection of flowers!",
+    "Gulbaan is a flower retail and delivery company that delivers fresh and quality flower arrangements to people all around Lahore and Islamabad. Gulbaan is made for those who want to celebrate special occasions, express emotions, and make someone's day brighter, providing a convenient solution to explore and order flowers online.",
   heroImage: link("gulbaan-hero", "Asset"),
   sections: sectionOrder.map((id) => link(id)),
   industries: ["ecommerce"],
@@ -294,15 +305,8 @@ await upsert("case-study-gulbaan", "caseStudy", {
   region: "Pakistan",
 });
 
-// Terminal Gateway CRM. The paragraphs follow the design's lorem ipsum; titles, the feature list,
-// and the closing section are neutral stand-ins (the design's own text described another
-// agency's project and claims). Industries and services are left empty until confirmed.
-const loremLong = `${lorem} It has survived not only many decades, but also the leap into electronic typesetting, remaining essentially unchanged.`;
-const loremThree = [
-  "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy.",
-  "Text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing Library in London, took a 1914 Cicero translation and scrambled it to make dummy text for Letraset's Body Type sheets. It has survived not only many decades.",
-  "But also the leap into electronic typesetting, remaining essentially unchanged. It was popularised thanks to these sheets and more recently with desktop publishing software like Aldus PageMaker and Microsoft Word including versions of Lorem Ipsum.",
-];
+// Terminal Gateway CRM, with the content document's text. Industries and services are left empty
+// until confirmed.
 
 const terminalGatewayAssets = [
   ["tg-hero", "crm-terminal-gateway/hero.webp", "image/webp", "Terminal Gateway CRM screens: dashboard, inbox, projects, and analytics"],
@@ -326,7 +330,9 @@ const terminalGatewaySections = [
     title: "Introduction",
     image: "tg-intro",
     layout: "Image right",
-    body: richText(loremLong),
+    body: richText(
+      "Terminal Gateway CRM is a complete business management solution for consolidating the critical business functions into a single workspace. The platform's development is designed to integrate customer relationship management, sales tracking, project management, team communication, and file storage, providing a more streamlined and efficient approach for businesses to manage their daily operations. Integrated tools and a unified dashboard simplify the way teams access vital information, coordinate tasks and track business activity without the constant need to switch to a different app. The aim is to make processes easier and give a comprehensive overview of the business at a single glance.",
+    ),
   },
   {
     id: "tg-section-idea",
@@ -334,19 +340,45 @@ const terminalGatewaySections = [
     image: "tg-idea",
     layout: "Image left",
     body: richText(
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since 1966, when designers at Letraset and James Mosley.",
-      loremLong,
+      "The concept behind Terminal Gateway was to come up with a single CRM system that brings together all moving parts of a business. Customer conversations, sales leads, project deadlines, team files and performance data can often be in different tools, making it difficult to manage information consistently. These are the critical capabilities combined in a reachable environment: Terminal Gateway. The platform aims to seamlessly integrate customer management, collaboration, and project organization to keep teams connected, ensure visibility of all their work, and streamline business activities with a more efficient digital experience.",
     ),
   },
-  { id: "tg-section-challenge", title: "The Challenge", image: "tg-challenge", layout: "Image right", body: richText(...loremThree) },
-  { id: "tg-section-solution", title: "The Solution", image: "tg-solution", layout: "Image left", body: richText(...loremThree) },
-  { id: "tg-section-impact", title: "The Impact Of Terminal Gateway", image: "tg-impact", layout: "Image right", body: richText(...loremThree) },
+  {
+    id: "tg-section-challenge",
+    title: "The Challenge",
+    image: "tg-challenge",
+    layout: "Image right",
+    body: richText(
+      "As a business expands, there are countless demands on the business owner to manage customer connections, sales schedules, deadlines, internal communications and documents, all at once. These tasks become fragmented across separate applications, which can lead to increased time spent looking for information, switching between tools and coordinating updates. This disintegration can be harder to manage and keep track of customer communications and project progress. The problem was to overcome the typical operational challenges with a centralized business management system that gathers all the information needed and simplifies everyday business workflow.",
+    ),
+  },
+  {
+    id: "tg-section-solution",
+    title: "The Solution",
+    image: "tg-solution",
+    layout: "Image left",
+    body: richText(
+      "These challenges are overcome with Terminal Gateway's single CRM and business management platform, bringing together customer data, sales activity, team communication, project workflows, shared files and customer analytics. It offers a dashboard view of key business activity and a centralized inbox, allowing teams to keep conversations organized in one place. Task coordination and deadlines are facilitated with project boards, templates and a common calendar and the shared file space of My Drive is used for team files. Customer Analytics gives an added layer of visibility and includes information on customer sentiment, distribution and demographics. These characteristics make for a more cohesive environment in which to run the day-to-day business.",
+    ),
+  },
+  {
+    id: "tg-section-impact",
+    title: "The Impact of Terminal Gateway",
+    image: "tg-impact",
+    layout: "Image right",
+    body: richText(
+      "By making businesses more connected, Terminal Gateway offers a better approach to organizing everyday operations. This integration streamlines the process of customer conversations, sales visibility, project planning, file storage, and customer analytics, all of which reduce the need to navigate between multiple tools. Teams will be able to locate pertinent information more quickly, collaborate on projects using shared workflows, and have a better sense of what is happening. Additionally, its centralized system establishes an environment for greater uniformity in collaboration and smart company choices. Instead of using fragmented systems, businesses can have one integrated workspace to help them manage their work day to day and future operational requirements.",
+    ),
+  },
   {
     id: "tg-section-closing",
     title: "One Platform For The Whole Business",
     image: "tg-apps",
     layout: "Image right",
-    body: richText(boldParagraph("Will Your Business Be Next?"), loremThree[0]),
+    body: richText(
+      "Terminal Gateway integrates CRM, sales, communications, project management, file storage and customer analytics all in one place.",
+      "With a single, unified workspace, businesses can gain access to the tools and information they need for managing customer relationships and coordinating internal work.",
+    ),
   },
 ];
 
@@ -371,17 +403,17 @@ await upsert("tg-showcase-screens", "caseStudyShowcase", {
   name: "Terminal Gateway screens",
   image: link("tg-screens", "Asset"),
 });
+// The document's six features each have a title too; a card holds one line of up to 160
+// characters, so the cards show the descriptions.
 await upsert("tg-features", "caseStudyFeatureGrid", {
-  title: "Features Of The Terminal Gateway CRM",
-  intro:
-    "Terminal Gateway brings a growing team's daily work into one place. These are the parts of the platform the team relies on most:",
+  title: "Six Features of the Terminal Gateway CRM",
   items: [
-    "A dashboard with revenue, leads, deals, and team activity at a glance.",
-    "One inbox for chats, messages, and customer conversations.",
-    "Projects and workflows on boards, with ready-made templates.",
-    "A project planner with a shared calendar of events and deadlines.",
-    "File storage for the whole team in My Drive.",
-    "Customer analytics: sentiment, distribution, and audience demographics.",
+    "View revenue, leads, deals, and team activity from one dashboard for a clearer overview of business operations.",
+    "Bring chats, messages, and customer conversations into one accessible inbox to simplify communication management.",
+    "Organize projects, manage workflows, and use ready-made templates to help teams structure their work efficiently.",
+    "Coordinate events, track important deadlines, and keep team schedules organized through a shared planning calendar.",
+    "Keep business files in a shared digital workspace so team members can access and organize important documents.",
+    "Explore customer sentiment, distribution, and audience demographics to better understand customer patterns and business audiences.",
   ],
 });
 

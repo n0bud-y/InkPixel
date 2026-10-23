@@ -244,7 +244,7 @@ export function ServiceTabs({ categories }: { categories: ServiceCategory[] }) {
                         <FeatureItem
                           icon={service.icon}
                           title={service.title}
-                          description={service.description}
+                          description={service.summary}
                         />
                       </Link>
                     </li>

@@ -1,12 +1,13 @@
+import { LetterWave } from "@/components/motion/LetterWave";
 import { Magnetic } from "@/components/motion/Magnetic";
 import { Button } from "@/components/ui/Button";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 
+// From the content document (23 Oct 2026).
 const headlineLines = [
-  { text: "We make" },
-  { text: "brand", accent: true },
-  { text: "that earns" },
-  { text: "its place." },
+  { text: "Build Smarter." },
+  { text: "Innovate Faster.", accent: true },
+  { text: "Grow Without Limits." },
 ];
 
 // Entrance animations are CSS (`motion-safe:animate-*` in globals.css) so they start on the
@@ -47,19 +48,25 @@ export function Hero() {
           </div>
 
           {/* Sizes follow the 1920px design frame and scale down with the viewport.
-              Each line rises out of its own mask; the padding keeps descenders visible. */}
+              Each line rises out of its own mask; the padding keeps descenders visible. The
+              accent line's letters rise one by one, then a wave runs through them every few
+              seconds (LetterWave); its mask has room above for the letters' hop. */}
           <h1
             id="hero-title"
             className="mt-7 font-display text-[clamp(2.75rem,5.8vw,7rem)] leading-[1.04] font-bold tracking-[-0.02em] text-light sm:mt-8"
           >
             {headlineLines.map((line, index) => (
-              <span key={line.text} className="-mb-[0.14em] block overflow-hidden pb-[0.14em]">
-                <span
-                  className={`block motion-safe:animate-line-up ${line.accent ? "text-crimson" : ""}`}
-                  style={{ animationDelay: `${120 + index * 90}ms` }}
-                >
-                  {line.text}
-                </span>
+              <span
+                key={line.text}
+                className={`-mb-[0.14em] block overflow-hidden pb-[0.14em] ${line.accent ? "-mt-[0.2em] pt-[0.2em]" : ""}`}
+              >
+                {line.accent ? (
+                  <LetterWave text={line.text} delay={120 + index * 90} className="block text-crimson" />
+                ) : (
+                  <span className="block motion-safe:animate-line-up" style={{ animationDelay: `${120 + index * 90}ms` }}>
+                    {line.text}
+                  </span>
+                )}
               </span>
             ))}
           </h1>
@@ -68,8 +75,8 @@ export function Hero() {
             className="mt-6 max-w-[41em] text-[clamp(0.9375rem,1.05vw,1.25rem)] leading-[1.75] text-light/70 motion-safe:animate-rise"
             style={{ animationDelay: "520ms" }}
           >
-            Ink Pixel Studios is a leading software development company in Pakistan, providing
-            innovative, scalable, and customized software solutions for businesses of all sizes.
+            Ink Pixel Studios is a place where you get to convert your visions into digital products
+            that are successful and strong for businesses today and tomorrow.
           </p>
 
           <div

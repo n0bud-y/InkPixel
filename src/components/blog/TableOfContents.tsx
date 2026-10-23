@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, type MouseEvent } from "react";
+import { useEffect, useRef, useState, type MouseEvent } from "react";
 import type { Heading } from "@/contentful/rich-text";
 import { MOTION_OK, ScrollSmoother, ScrollTrigger, gsap, useGSAP } from "@/lib/gsap";
 
@@ -9,13 +9,27 @@ const OFFSET = 128;
 
 // "In this article": the article's headings (level 3 indented), each a link to its heading.
 // Desktop: a column beside the text that stays in view while the article is read (pinned with
-// GSAP: CSS sticky doesn't work inside the smooth scroller) and marks the heading being read.
+// GSAP: CSS sticky doesn't work inside the smooth scroller) and marks the heading being read; a
+// list taller than the screen scrolls inside itself, keeping the marked heading in view.
 // Phones and tablets: a box above the text that opens to the list. Also used by the legal pages,
 // with their own `label`.
 export function TableOfContents({ headings, label = "In this article" }: { headings: Heading[]; label?: string }) {
   const root = useRef<HTMLDivElement>(null);
   const nav = useRef<HTMLElement>(null);
+  const scroller = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(-1);
+
+  // Scroll the list (not the page) so the marked heading stays in view.
+  useEffect(() => {
+    const box = scroller.current;
+    const link = box?.querySelector("[aria-current]");
+    if (!box || !link || box.scrollHeight <= box.clientHeight) return;
+    const outer = box.getBoundingClientRect();
+    const inner = link.getBoundingClientRect();
+    if (inner.top >= outer.top && inner.bottom <= outer.bottom) return;
+    const top = box.scrollTop + inner.top - outer.top - (outer.height - inner.height) / 2;
+    box.scrollTo({ top, behavior: window.matchMedia(MOTION_OK).matches ? "smooth" : "auto" });
+  }, [active]);
 
   useGSAP(
     () => {
@@ -91,11 +105,13 @@ export function TableOfContents({ headings, label = "In this article" }: { headi
         <div className="mt-4">{list(-1)}</div>
       </details>
 
-      <nav ref={nav} aria-labelledby="toc-title" className="hidden lg:block">
+      <nav ref={nav} aria-labelledby="toc-title" className="hidden max-h-[calc(100vh-10rem)] flex-col lg:flex">
         <p id="toc-title" className="mb-4 font-mono text-[0.75rem] tracking-[0.14em] text-primary/55 uppercase">
           {label}
         </p>
-        {list(active)}
+        <div ref={scroller} className="min-h-0 overflow-y-auto overscroll-contain pl-px [scrollbar-width:thin]">
+          {list(active)}
+        </div>
       </nav>
     </div>
   );

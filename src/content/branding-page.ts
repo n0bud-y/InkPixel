@@ -4,9 +4,9 @@
 // section; its projects are the case studies with "branding" ticked in Contentful; the page's
 // meta title and description can be set in its Contentful Page SEO entry.
 //
-// PLACEHOLDER (issue I11): the intro paragraph is the design's lorem ipsum, and the hero line and
-// the "Branding Services" line are the design's own (the latter is about websites); replace them
-// with the real copy.
+// The intro is the content document's (service-copy.ts). PLACEHOLDER (issue I11): the hero line
+// and the "Branding Services" line are the design's own (the latter is about websites); replace
+// them with the real copy.
 import type { StaticImageData } from "next/image";
 import gulbaanLogo from "@/assets/images/about/clients/gulbaan.webp";
 import introMockups from "@/assets/images/services/branding/intro-brand-mockups.webp";
@@ -14,12 +14,10 @@ import introSketch from "@/assets/images/services/branding/intro-branding-sketch
 import drumondLogo from "@/assets/images/services/branding/logo-drumond.webp";
 import ihrLogo from "@/assets/images/services/branding/logo-ihr.webp";
 import pakArmoringLogo from "@/assets/images/services/branding/logo-pak-armoring.webp";
+import { coreIntros } from "@/content/service-copy";
 import { serviceCategories } from "@/content/services";
 
 type Picture = { image: StaticImageData; alt: string };
-
-const lorem =
-  "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing Library in London.";
 
 export const brandingPage = {
   /** The page's name, e.g. in the browser tab and the breadcrumb. */
@@ -43,10 +41,11 @@ export const brandingPage = {
     },
   },
 
+  // From the content document (service-copy.ts).
   intro: {
     /** Lines of the title; accented words are in *stars*. */
-    title: ["Digital Thinkers.", "Small Studios *Build*", "*Awesome Design.*"],
-    text: lorem,
+    title: coreIntros.branding.title,
+    text: coreIntros.branding.text,
     images: [
       { image: introSketch, alt: "A notebook page sketching a brand: logo, design, value, strategy, and trust" },
       { image: introMockups, alt: "A brand identity applied to a mug, stationery, a van, a shirt, a jacket, and a cap" },

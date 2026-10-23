@@ -37,6 +37,7 @@ import typeWebApps from "@/assets/images/services/icons/type-web-apps.svg";
 import typeWebsites from "@/assets/images/services/icons/type-websites.svg";
 import devices from "@/assets/images/services/web-development/devices.webp";
 import estimatorPhoto from "@/assets/images/services/web-development/estimator-photo.webp";
+import { serviceCopy } from "@/content/service-copy";
 import { serviceCategories, type Service, type ServiceCategory } from "@/content/services";
 
 const lorem =
@@ -79,6 +80,9 @@ export type ServicePage = {
 
 const contact = "/contact";
 
+// "Why choose us?" (the document's title for every service page's steps), its last word accented.
+const whyChooseUsTitle = "Why choose *us?*";
+
 const webDevelopment: ServicePage = {
   slug: "web-development",
   name: "Web Development",
@@ -98,32 +102,22 @@ const webDevelopment: ServicePage = {
     text: "Tell us what you're working on. We'll come back within a working day.",
     button: { label: "Schedule A Call", href: contact },
   },
-  intro: {
-    title: "Web Development for Multi-Channel Visibility",
-    text: [`${lorem} ${loremShort}`], // lorem
-    image: devices,
-  },
+  // Intro, "Why choose us?", and the "Broaden …" list: the content document (service-copy.ts);
+  // the list keeps the design's icons.
+  intro: { ...serviceCopy["web-development"].intro, image: devices },
   offerings: {
-    title: "Web Development Services for Novel, *Best-Functioning Websites*",
-    text: lorem, // lorem
+    title: whyChooseUsTitle,
+    text: serviceCopy["web-development"].whyChooseUs.text,
     button: { label: "Start with a Free Consultation", href: contact },
-    items: [
-      { title: "UI/UX Web Design", text: lorem },
-      { title: "Frontend Development", text: lorem },
-      { title: "Backend Development", text: lorem },
-      { title: "Full Stack Development", text: lorem },
-      { title: "No/Low Code Development", text: lorem },
-    ],
+    items: serviceCopy["web-development"].whyChooseUs.steps,
   },
   types: {
-    title: "Custom Web Development Services to Broaden Business Prospects",
-    text: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since 1966, when designers at Letraset and James Mosley.", // lorem
-    items: [
-      { title: "Websites", text: loremShort, icon: typeWebsites },
-      { title: "E-Commerce", text: loremShort, icon: typeEcommerce },
-      { title: "Web Applications", text: loremShort, icon: typeWebApps },
-      { title: "Content Management System", text: loremShort, icon: typeCms },
-    ],
+    title: serviceCopy["web-development"].more.title,
+    text: serviceCopy["web-development"].more.text,
+    items: serviceCopy["web-development"].more.items.map((item, index) => ({
+      ...item,
+      icon: [typeWebsites, typeEcommerce, typeWebApps, typeCms][index],
+    })),
     button: { label: "Discuss Project Scope", href: contact },
   },
   projects: {
@@ -210,6 +204,24 @@ const webDevelopment: ServicePage = {
   ],
 };
 
+// The icon of the service a "Broaden …" item names (the menu's icons; the document's names differ
+// a little from services.ts, e.g. "Websites" or "Content Management System").
+const itemAliases: Record<string, string> = {
+  websites: "websitedevelopment",
+  ecommerce: "ecommercedevelopment",
+  webapplications: "webapplicationspwas",
+  contentmanagementsystem: "cmsdevelopment",
+  aicontentandmarketingautomation: "aicontentmarketingautomation",
+  customaiagentintegration: "customaiagentsintegrations",
+};
+const plain = (title: string) => title.toLowerCase().replace(/[^a-z0-9]/g, "");
+function serviceIconFor(title: string): StaticImageData {
+  const key = itemAliases[plain(title)] ?? plain(title);
+  const service = serviceCategories.flatMap((category) => category.services).find((item) => plain(item.title) === key);
+  if (!service) throw new Error(`service-pages: no service icon for "${title}"`);
+  return service.icon;
+}
+
 // PLACEHOLDER (issue I12): every other service's page is a dummy page made from its entry in
 // src/content/services.ts (name, one-line description) and Web Development's: stand-in titles,
 // lorem ipsum, the category's photo, the other services of its category as "types" (with Web
@@ -217,33 +229,45 @@ const webDevelopment: ServicePage = {
 // service its own entry (like webDevelopment) to replace it.
 function dummyServicePage(category: ServiceCategory, service: Service): ServicePage {
   const name = service.title;
+  const slug = service.href.slice(service.href.lastIndexOf("/") + 1);
+  const copy = serviceCopy[slug];
+  const siblingCopy = category.services.map((item) => serviceCopy[item.href.slice(item.href.lastIndexOf("/") + 1)]).find(Boolean);
   const others = category.services.filter((item) => item !== service).slice(0, 4);
   return {
-    slug: service.href.slice(service.href.lastIndexOf("/") + 1),
+    slug,
     name,
     caseStudyService: category.slug,
     description: service.description,
     hero: { ...webDevelopment.hero, title: `${name} Services Built to Grow Your Business` },
     consultation: webDevelopment.consultation,
-    intro: { title: `${name} That Works as Hard as You Do`, text: [`${lorem} ${loremShort}`], image: category.image },
-    offerings: {
-      title: `${name} Services for Novel, *Best-Functioning Results*`,
-      text: lorem,
-      button: webDevelopment.offerings.button,
-      items: ["Discovery & Strategy", "Planning & Design", "Build & Integration", "Testing & Launch", "Support & Growth"].map(
-        (title) => ({ title, text: lorem }),
-      ),
-    },
-    types: {
-      title: `More ${category.label} Services to Broaden Business Prospects`,
-      text: webDevelopment.types.text,
-      items: others.map((item, index) => ({
-        title: item.title,
-        text: item.description,
-        icon: webDevelopment.types.items[index % webDevelopment.types.items.length].icon,
-      })),
-      button: webDevelopment.types.button,
-    },
+    // The content document's copy (service-copy.ts) where it has the service; else placeholders.
+    intro: copy
+      ? { title: copy.intro.title, text: copy.intro.text, image: category.image }
+      : { title: `${name} That Works as Hard as You Do`, text: [`${lorem} ${loremShort}`], image: category.image },
+    offerings: copy
+      ? { title: whyChooseUsTitle, text: copy.whyChooseUs.text, button: webDevelopment.offerings.button, items: copy.whyChooseUs.steps }
+      : {
+          title: `${name} Services for Novel, *Best-Functioning Results*`,
+          text: lorem,
+          button: webDevelopment.offerings.button,
+          items: ["Discovery & Strategy", "Planning & Design", "Build & Integration", "Testing & Launch", "Support & Growth"].map(
+            (title) => ({ title, text: lorem }),
+          ),
+        },
+    types: copy
+      ? {
+          title: copy.more.title,
+          text: copy.more.text,
+          items: copy.more.items.map((item) => ({ ...item, icon: serviceIconFor(item.title) })),
+          button: webDevelopment.types.button,
+        }
+      : {
+          // Without its own copy: the title and line another service of the same core has.
+          title: siblingCopy?.more.title ?? `More ${category.label} Services to Broaden Business Prospects`,
+          text: siblingCopy?.more.text ?? "",
+          items: others.map((item) => ({ title: item.title, text: item.summary, icon: item.icon })),
+          button: webDevelopment.types.button,
+        },
     projects: { ...webDevelopment.projects, title: `Our ${category.label} Projects, Ground-Up Launches to Makeovers` },
     estimator: {
       title: `Estimate Your ${name} Cost in Seconds`,

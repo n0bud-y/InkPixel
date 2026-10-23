@@ -4,10 +4,10 @@ import { Magnetic } from "@/components/motion/Magnetic";
 import { Reveal } from "@/components/motion/Reveal";
 import { Button } from "@/components/ui/Button";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { processOutcome, processSteps } from "@/content/home";
+import { processIntro, processOutcome, processSteps } from "@/content/home";
 import { ProcessTimeline } from "./ProcessTimeline";
 
-// "Our Process". On desktop the section locks to one screen while the timeline scrolls (see
+// The process ("Built With Precision. Designed for Compliance."). On desktop the section locks to one screen while the timeline scrolls (see
 // ProcessTimeline); the data-pinned classes below only apply once that is running.
 export function Process() {
   return (
@@ -29,8 +29,8 @@ export function Process() {
             size="lg"
             tone="onLight"
             descriptionTone="bright"
-            title="Our Process"
-            description="Simple. Transparent. Operational. We build products that execute."
+            title={processIntro.title}
+            description={processIntro.description}
           />
           <div data-reveal className="mt-5 2xl:mt-4">
             <Magnetic>

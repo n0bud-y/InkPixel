@@ -5,12 +5,14 @@
 // Page SEO entry for its address.
 //
 // PLACEHOLDER (issue I12): the pages other than Branding are dummy pages made from their category
-// in services.ts (name, description, services): a stand-in hero line, the intro is lorem ipsum,
-// and the pictures are other pages' photos (the category's photo from the Services page and the
-// office from the Branding hero). Give a page its own content here to replace it.
+// in services.ts (name, description, services): a stand-in hero line, and pictures from other
+// pages (the category's photo from the Services page and the office from the Branding hero).
+// Their intros are the content document's (service-copy.ts). Give a page its own content here to
+// replace it.
 import type { StaticImageData } from "next/image";
 import officePhoto from "@/assets/images/services/branding/hero-office.webp";
 import { brandingPage, type BrandingPage } from "@/content/branding-page";
+import { coreIntros } from "@/content/service-copy";
 import { serviceCategories, type ServiceCategory } from "@/content/services";
 
 export type CorePage = BrandingPage;
@@ -48,9 +50,10 @@ function dummyCorePage(category: ServiceCategory): CorePage {
     description: category.description,
     caseStudyService: category.slug,
     hero: { ...brandingPage.hero, title, text: category.description },
+    // The content document's intro (service-copy.ts); the stand-in if it has none.
     intro: {
-      title: ["Digital Thinkers.", "Small Studios *Build*", "*Awesome Products.*"],
-      text: lorem,
+      title: coreIntros[category.slug]?.title ?? ["Digital Thinkers.", "Small Studios *Build*", "*Awesome Products.*"],
+      text: coreIntros[category.slug]?.text ?? lorem,
       images: [{ image: category.image, alt: photoAlt }, office],
     },
     services: {

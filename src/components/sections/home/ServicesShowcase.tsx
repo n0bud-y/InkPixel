@@ -26,11 +26,11 @@ export function ServicesShowcase() {
             align="center"
             title={
               <>
-                Building The Future of
-                <br className="max-sm:hidden" /> Digital Products
+                Technology Solutions Designed
+                <br className="max-sm:hidden" /> Around Your Business
               </>
             }
-            description="From startups finding product-market fit to enterprises modernizing at scale, we engineer digital products that perform in the market."
+            description="From developing mobile apps, creating custom software solutions, advancing artificial intelligence, building cloud-based systems, designing blockchain-based architectures, or driving user experience, every solution we create brings our expertise in strategy, technology, and creativity to bear, addressing real business problems, enhancing user experiences, and enabling faster sustainable growth."
           />  
         </Reveal>
 

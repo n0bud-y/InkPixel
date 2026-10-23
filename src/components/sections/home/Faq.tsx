@@ -5,8 +5,8 @@ import { faqs } from "@/content/faq";
 import { siteConfig } from "@/lib/site";
 import { FaqTimeline } from "./FaqTimeline";
 
-// "Common questions.": heading and an email prompt on the left, the questions on the right as
-// a timeline, like "Our Process". The eyebrow numbers the section on its page (home, About,
+// "Frequently Asked Questions": heading and an email prompt on the left, the questions on the
+// right as a timeline, like the process section. The eyebrow numbers the section on its page (home, About,
 
 // service pages).
 export function Faq({ eyebrow = "08 · FAQ" }: { eyebrow?: string }) {
@@ -26,8 +26,8 @@ export function Faq({ eyebrow = "08 · FAQ" }: { eyebrow?: string }) {
             tone="onLight"
             title={
               <>
-                Common <br />
-                questions.
+                Frequently Asked <br />
+                Questions
               </>
             }
           />

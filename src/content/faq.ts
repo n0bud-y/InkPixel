@@ -1,5 +1,9 @@
 // Frequently asked questions. Static content: edited here, not in Contentful.
-// Used by the home page FAQ; reusable on other pages (e.g. Services, Contact).
+// Used by the FAQ section (home, About, service pages).
+//
+// From the content document (23 Oct 2026), with the studio's name corrected. TO CONFIRM (issue
+// I17): some answers name services and industries the site doesn't offer yet (blockchain, game
+// development, cloud services, staff augmentation; telecom and construction).
 
 export type Faq = {
   question: string;
@@ -9,36 +13,45 @@ export type Faq = {
 
 export const faqs: Faq[] = [
   {
-    question: "How long does a typical engagement take?",
+    question: "What services does Ink Pixel Studios provide?",
     answer: [
-      "Sprints run two weeks. Full projects are usually 8–16 weeks depending on scope.",
-      "We can move faster when needed — ask us about our 4-week MVP track.",
-    ],
-  },
-  // PLACEHOLDER: the answers below are drafts (the design only shows the first answer).
-  // They are promises to clients, so the studio must confirm or rewrite them before launch.
-  {
-    question: "Do you work with companies outside Pakistan?",
-    answer: [
-      "Yes. We work with clients worldwide from our Karachi studio, with regular calls scheduled across time zones.",
+      "Ink Pixel Studios offers a wide array of technology and digital solutions such as mobile app development, web development, custom software development, AI development, cloud services, blockchain development, game development, digital marketing, staff augmentation, and technology consulting.",
     ],
   },
   {
-    question: "Who owns the work after launch?",
+    question: "Are you able to build an app for iOS and Android?",
     answer: [
-      "You do. Once the project is paid for, the code, designs, and accounts are handed over to you.",
+      "Yes. Depending on the project needs, our mobile app development teams can create apps designed for iOS and Android, or build cross-platform apps, such as the ones built using Flutter and React Native.",
     ],
   },
   {
-    question: "Can you take over an existing codebase?",
+    question: "Will Ink Pixel Studios be able to create a custom software solution for my business?",
     answer: [
-      "Yes. We start with a short audit of the code and infrastructure, then agree a plan with you before changing anything.",
+      "Absolutely. Rather than putting your business into a “one size fits all” solution, we create custom software solutions tailored to your workflows, your users, your requirements for operation, and your business goals.",
     ],
   },
   {
-    question: "Do you do retainers or ongoing support?",
+    question: "Do you offer AI and automation solutions?",
     answer: [
-      "Yes. After launch, we can stay on a monthly retainer for maintenance, improvements, and new features.",
+      "Yes. AI Development, AI Agent Development, Generative AI, Machine Learning, Natural Language Processing, Chatbots, and AI Automation Solutions to boost productivity, automate repetitive tasks, and optimize decision-making.",
+    ],
+  },
+  {
+    question: "Will you support us in moving our business to the cloud?",
+    answer: [
+      "Yes. Our cloud services range from cloud migration, infrastructure migration, cloud application development, managed cloud services, serverless computing, DevOps enablement, cloud infrastructure and cloud cost optimization.",
+    ],
+  },
+  {
+    question: "Does your website offer follow up support after it's published?",
+    answer: [
+      "Yes. App Support and Maintenance, Cloud Support, Software Maintenance, optimization, updates, troubleshooting and continuing technical help are all available to help maintain the security and performance of your digital product.",
+    ],
+  },
+  {
+    question: "Are you able to come up with ideas for particular industries?",
+    answer: [
+      "Yes. We develop industry specific technology solutions for industries such as fintech, healthcare, real estate, e-commerce, retail, logistics, telecom, construction and on-demand.",
     ],
   },
 ];

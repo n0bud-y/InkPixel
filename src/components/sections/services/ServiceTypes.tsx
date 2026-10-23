@@ -1,4 +1,4 @@
-import Image from "next/image";
+import type { CSSProperties } from "react";
 import { Magnetic } from "@/components/motion/Magnetic";
 import { Reveal } from "@/components/motion/Reveal";
 import { withAccent } from "@/components/ui/accent";
@@ -6,9 +6,22 @@ import { Button } from "@/components/ui/Button";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import type { ServicePage } from "@/content/service-pages";
 
-// "Custom … Services to …": centred title and text, then the kinds of work in columns (an icon in
-// a white disc, title, text) divided by thin lines, then a button. Two columns on tablets, one on
-// phones (no dividers there).
+// An icon as a shape filled with the brand gradient (CSS mask), so the design's gradient icons and
+// the menus' white line icons look the same here.
+const maskOf = (src: string): CSSProperties => ({
+  maskImage: `url(${src})`,
+  maskSize: "contain",
+  maskRepeat: "no-repeat",
+  maskPosition: "center",
+  WebkitMaskImage: `url(${src})`,
+  WebkitMaskSize: "contain",
+  WebkitMaskRepeat: "no-repeat",
+  WebkitMaskPosition: "center",
+});
+
+// "Broaden Your Businesses with …" (was "Custom … Services to …"): centred title and text, then
+// the kinds of work in columns (an icon in a white disc, title, text) divided by thin lines, then
+// a button. Two columns on tablets, one on phones (no dividers there).
 export function ServiceTypes({ page }: { page: ServicePage }) {
   const { types } = page;
 
@@ -37,7 +50,7 @@ export function ServiceTypes({ page }: { page: ServicePage }) {
               className={`group flex flex-col items-center px-[clamp(0.5rem,1.6vw,2rem)] text-center text-white ${index > 0 ? "lg:border-l lg:border-white/40" : ""} ${index % 2 ? "sm:max-lg:border-l sm:max-lg:border-white/40" : ""}`}
             >
               <span className="grid size-[clamp(5rem,6.25vw,7.5rem)] place-items-center rounded-full bg-white shadow-[0_0_0_clamp(1rem,1.6vw,2rem)_rgb(255_255_255_/_0.025)] motion-safe:transition-transform motion-safe:duration-500 motion-safe:group-hover:-translate-y-1.5">
-                <Image src={item.icon} alt="" className="size-[48%]" />
+                <span aria-hidden="true" className="block size-[48%] bg-brand-gradient-reverse" style={maskOf(item.icon.src)} />
               </span>
               <h3 className="mt-[clamp(1.75rem,3.4vw,4rem)] font-display text-[clamp(1.125rem,1.15vw,1.375rem)] leading-snug font-semibold">
                 {item.title}

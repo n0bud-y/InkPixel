@@ -3,7 +3,8 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { industries } from "@/content/industries";
 import { IndustryTabs } from "./IndustryTabs";
 
-// "Industry-Specific Solutions For Every Business Need": heading + intro, then the industry
+// "One Technology Partner. Solutions for all industries." (content document, 23 Oct 2026; was
+// "Industry-Specific Solutions For Every Business Need"): heading + intro, then the industry
 // tabs (industry list on the left, its solutions on the right). Navy on the home page; cream
 // (`tone="onLight"`) on the About page, where it sits between two navy sections.
 export function Industries({ tone = "onDark" }: { tone?: "onDark" | "onLight" }) {
@@ -23,8 +24,8 @@ export function Industries({ tone = "onDark" }: { tone?: "onDark" | "onLight" })
               tone={tone}
               title={
                 <>
-                  Industry-Specific Solutions
-                  <br className="max-sm:hidden" /> For Every Business Need
+                  One Technology Partner.
+                  <br className="max-sm:hidden" /> Solutions for all industries.
                 </>
               }
             />
@@ -33,9 +34,9 @@ export function Industries({ tone = "onDark" }: { tone?: "onDark" | "onLight" })
             data-reveal
             className={`text-[clamp(0.9375rem,0.99vw,1.1875rem)] leading-[1.63] lg:pt-[1.2vw] ${light ? "text-primary" : "text-white"}`}
           >
-            Behind every project is a multidisciplinary team of strategists, researchers, designers,
-            developers, and problem solvers working toward the same goal. Instead of handing work
-            from one disconnected vendor to another, we bring the disciplines together.
+            There are challenges, customers, rules and opportunities in each industry. Software
+            solutions are provided specifically for your industry, to fit your business and to leave
+            the space for innovation and growth.
           </p>
         </Reveal>
 

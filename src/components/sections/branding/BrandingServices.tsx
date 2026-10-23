@@ -69,7 +69,7 @@ export function BrandingServices({ services }: { services: BrandingPage["service
                   <p
                     className={`mt-2 max-w-[22em] text-[clamp(0.875rem,0.95vw,1.125rem)] leading-[1.45] ${lit ? "text-white/90" : "text-primary/70"}`}
                   >
-                    {service.description}
+                    {service.summary}
                   </p>
                 </li>
               );
