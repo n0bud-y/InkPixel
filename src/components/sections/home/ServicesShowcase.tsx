@@ -1,7 +1,11 @@
 import { Reveal } from "@/components/motion/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { serviceCategories } from "@/content/services";
+import { withShowcaseIcons } from "@/content/showcase-icons";
 import { ServiceTabs } from "./ServiceTabs";
+
+// The tabs show the previous, more detailed icons (showcase-icons.ts), not the menu's.
+const categories = serviceCategories.map((category) => ({ ...category, services: withShowcaseIcons(category.services) }));
 
 export function ServicesShowcase() {
   return (
@@ -31,7 +35,7 @@ export function ServicesShowcase() {
         </Reveal>
 
         <Reveal y={60} start="top 80%" className="mt-[clamp(2.5rem,3.1vw,3.75rem)]">
-          <ServiceTabs categories={serviceCategories} />
+          <ServiceTabs categories={categories} />
         </Reveal>
       </div>
     </section>

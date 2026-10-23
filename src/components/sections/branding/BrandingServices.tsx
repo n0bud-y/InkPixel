@@ -7,8 +7,8 @@ import type { BrandingPage } from "@/content/branding-page";
 
 // "Branding Services", on navy: the six services as cards (icon, name, description), three to a
 // row on desktop. One card is filled with the brand gradient: the first, or the one under the
-// pointer. The icons are the mega menu's, painted with a CSS mask (gradient, or white on the
-// filled card).
+// pointer. The icons (the previous, detailed set from showcase-icons.ts, not the menu's) are
+// painted with a CSS mask (gradient, or white on the filled card).
 // On desktop the section is one screen tall, with the heading and cards centred (even space
 // above and below). The sizes follow the screen height (svh) as well as its width, so the
 // heading and all six cards fit in the space under the header (h-24, 2xl:h-32), short laptop

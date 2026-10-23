@@ -9,6 +9,7 @@ import { Industries } from "@/components/sections/home/Industries";
 import { ServiceProjects } from "@/components/sections/services/ServiceProjects";
 import { PageSchema } from "@/components/seo/PageSchema";
 import { corePages, getCorePage } from "@/content/core-pages";
+import { withShowcaseIcons } from "@/content/showcase-icons";
 import { breadcrumbSchema, pageMetadataFromCms, serviceSchema } from "@/lib/seo";
 
 // One page per core service in src/content/services.ts; any other address is a 404.
@@ -55,7 +56,8 @@ export default async function CoreServicePage(props: PageProps<"/services/[core]
         <CoreHero slug={core} label={found.category.label} hero={content.hero} />
       )}
       <BrandingIntro intro={content.intro} />
-      <BrandingServices services={content.services} />
+      {/* With the previous, more detailed icons (showcase-icons.ts), not the menu's. */}
+      <BrandingServices services={{ ...content.services, items: withShowcaseIcons(content.services.items) }} />
       <Industries tone="onLight" />
       <ServiceProjects
         tone="dark"
