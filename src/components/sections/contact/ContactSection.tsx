@@ -41,7 +41,7 @@ export function ContactSection({ services, estimators }: { services: ServiceChoi
 
             <p className="mt-[clamp(1.25rem,1.6vw,2rem)] max-w-[30em] text-[clamp(0.9375rem,1vw,1.1875rem)] leading-[1.6]">{visitUs.text}</p>
 
-            <OfficeMap className="mt-[clamp(1.25rem,1.6vw,2rem)]" />
+            <OfficeMap className="mt-[clamp(1.25rem,1.6vw,2rem)] aspect-[516/214]" />
 
             <address className="mt-[clamp(1.25rem,1.6vw,2rem)] flex flex-col gap-2.5 not-italic">
               {contactLines.map((line) => (

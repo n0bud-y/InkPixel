@@ -35,7 +35,8 @@ export function VisitUs() {
             <div className="my-auto">
               <p className="max-w-[30em] text-[clamp(0.9375rem,1vw,1.1875rem)] leading-[1.6]">{visitUs.text}</p>
 
-              <OfficeMap className="mt-[clamp(1.25rem,1.6vw,2rem)]" />
+              {/* 3:2 fills the panel beside the form on desktop without making the card taller. */}
+              <OfficeMap className="mt-[clamp(1.25rem,1.6vw,2rem)] aspect-[3/2]" />
 
               <address className="mt-[clamp(1.25rem,1.6vw,2rem)] space-y-[clamp(0.75rem,1vw,1.1rem)] text-[clamp(0.9375rem,1vw,1.1875rem)] leading-snug not-italic">
                 {contactLines.map((line) => (

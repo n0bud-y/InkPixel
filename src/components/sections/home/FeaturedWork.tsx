@@ -6,14 +6,12 @@ import { StackPin } from "@/components/motion/StackPin";
 import { Button } from "@/components/ui/Button";
 import { ProjectCard } from "@/components/ui/ProjectCard";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { featuredProject } from "@/content/home";
 import { getCaseStudies, type CaseStudySummary } from "@/contentful/queries/case-studies";
 
-// "Ideas Engineered Into Impact": capabilities intro + the projects, Pak Armoring first, then
-// every published case study from Contentful, newest first. Desktop (motion allowed): the
-// section locks while the cards arrive one over another (StackPin), with a counter and a
-// progress bar on the left; phones, tablets, and reduced motion: a sideways-scrolling row.
-// If Contentful is down, only Pak Armoring shows.
+// "Ideas Engineered Into Impact": capabilities intro + every published case study from
+// Contentful, newest first. Desktop (motion allowed): the section locks while the cards arrive
+// one over another (StackPin), with a counter and a progress bar on the left; phones, tablets,
+// and reduced motion: a sideways-scrolling row. If Contentful is down, only the intro shows.
 export async function FeaturedWork() {
   let caseStudies: CaseStudySummary[] = [];
   try {
@@ -21,10 +19,7 @@ export async function FeaturedWork() {
   } catch (error) {
     console.error("Home page: could not load the case studies.", error);
   }
-  const projects = [
-    featuredProject,
-    ...caseStudies.map(({ title, excerpt, href, image }) => ({ name: title, summary: excerpt, href, image })),
-  ];
+  const projects = caseStudies.map(({ title, excerpt, href, image }) => ({ name: title, summary: excerpt, href, image }));
 
   return (
     <StackPin
@@ -82,20 +77,22 @@ export async function FeaturedWork() {
           </div>
         </Reveal>
 
-        <Reveal y={70} delay={0.1}>
-          {/* A sideways-scrolling row; while locked, every card shares one grid cell. */}
-          <ul className="-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 sm:-mx-8 sm:px-8 lg:mx-0 lg:px-0 group-data-[pinned=true]/stack:grid group-data-[pinned=true]/stack:overflow-visible group-data-[pinned=true]/stack:pb-0">
-            {projects.map((project) => (
-              <li
-                key={project.href}
-                data-stack-card
-                className="w-[min(85%,40rem)] shrink-0 snap-start only:w-full group-data-[pinned=true]/stack:col-start-1 group-data-[pinned=true]/stack:row-start-1 group-data-[pinned=true]/stack:w-full"
-              >
-                <ProjectCard {...project} sizes="(min-width: 1024px) 42vw, 85vw" />
-              </li>
-            ))}
-          </ul>
-        </Reveal>
+        {projects.length > 0 && (
+          <Reveal y={70} delay={0.1}>
+            {/* A sideways-scrolling row; while locked, every card shares one grid cell. */}
+            <ul className="-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 sm:-mx-8 sm:px-8 lg:mx-0 lg:px-0 group-data-[pinned=true]/stack:grid group-data-[pinned=true]/stack:overflow-visible group-data-[pinned=true]/stack:pb-0">
+              {projects.map((project) => (
+                <li
+                  key={project.href}
+                  data-stack-card
+                  className="w-[min(85%,40rem)] shrink-0 snap-start only:w-full group-data-[pinned=true]/stack:col-start-1 group-data-[pinned=true]/stack:row-start-1 group-data-[pinned=true]/stack:w-full"
+                >
+                  <ProjectCard {...project} sizes="(min-width: 1024px) 42vw, 85vw" />
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+        )}
       </div>
     </StackPin>
   );

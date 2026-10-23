@@ -1,4 +1,4 @@
-# Brand Portfolio Platform — Architecture Plan (v2.18)
+# Brand Portfolio Platform — Architecture Plan (v2.19)
 
 | | |
 |---|---|
@@ -13,6 +13,7 @@
 
 | Version | Date | Change |
 |---|---|---|
+| v2.19 | 22 Oct 2026 | Optional **card image** on `caseStudy` (`0009-case-study-card-image.cjs`, project head request): the image on the project cards on service pages; without it the card shows the hero image |
 | v2.18 | 17 Oct 2026 | **Every core service and service page exists** (project head request, §5): one core-page template (`services/[core]`, Branding's layout; content in `src/content/core-pages.ts`, Branding's still in `branding-page.ts`) and the service template for all 36 services. The 40 pages without real content are dummy pages made from `services.ts` (issue I12), indexed and in the sitemap. Folder structure updated (§7) |
 | v2.17 | 17 Oct 2026 | **Service pages nested under their core service** (project head decision, §5): `/services/<core>/<service>`, e.g. `/services/development/web-development` (route `services/[core]/[service]`); a service at another core's address is a 404. Core pages stay at `/services/<core>`. The old `/services/web-development` redirects permanently (308) to the new address (`next.config.ts`); the Web Development Page SEO entry's path updated in Contentful. Folder structure updated (§7) |
 | v2.16 | 16 Oct 2026 | **Services structure** written down (§5): 6 core services, each with 6 services; core service pages at `/services/<core>` (Branding built), service pages at `/services/<service>`, both flat under `/services`. The list lives in `src/content/services.ts` |
@@ -260,7 +261,7 @@ A core service's address is its `href` in `services.ts`; its page is in `src/con
 
 Contentful holds **only case studies and blog posts**, plus the small types they link to (project head decision, 30 Sep 2026), and the **search settings of every other page** (`pageSeo`: meta title, description, canonical URL; manager decision, 15 Oct 2026), so they can be changed without a developer. Services, industries, offices, FAQs, navigation, page sections, and site settings are static content in code. Contentful has no nested objects, so SEO fields are their own content type, linked by reference. The model uses about 8 content types, far under the plan limit (free tier ≈ 48).
 
-**When:** the content types are created as migration scripts in `contentful/migrations/` when the case-study and blog pages are built (P3-01), not by hand in the web app. **Created so far:** blog (`0001`, 3 Oct 2026), case studies (`0002`–`0004`, 8 Oct 2026; `0005`, 9 Oct 2026; `0006`, 10 Oct 2026), and Page SEO (`0007`, 15 Oct 2026). Rows marked _planned_ are the remaining draft.
+**When:** the content types are created as migration scripts in `contentful/migrations/` when the case-study and blog pages are built (P3-01), not by hand in the web app. **Created so far:** blog (`0001`, 3 Oct 2026), case studies (`0002`–`0004`, 8 Oct 2026; `0005`, 9 Oct 2026; `0006`, 10 Oct 2026; `0009`, 22 Oct 2026), and Page SEO (`0007`, 15 Oct 2026). Rows marked _planned_ are the remaining draft.
 
 **Case studies are sections, not fixed fields** (project head, 8 Oct 2026). The designs give each case study its own section titles and order (Gulbaan: "The Idea Behind Gulbaan", "Platform Features", "Insights from Client"…; CRM Terminal Gateway: "Introduction", "The Challenge", "The Solution", a numbered features grid…), so fixed challenge / solution / results fields cannot build them. A case study is a hero plus an ordered list of section entries; one template renders them all, alternating navy and white so every case study stays consistent. New section types are added as new migrations when a design needs them: the CRM Terminal Gateway design added the Centered hero layout, numbered features, and the wide image (`0003`); the app design (Cathy O’Bryan’s Books) added the Light hero, cards, screens, testimonials, and the call-to-action panel (`0005`). Titles from Contentful can mark \*accent\* words, shown in the brand gradient.
 

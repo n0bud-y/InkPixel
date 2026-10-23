@@ -128,12 +128,18 @@ const pages = [
   ],
   [
     "privacy-policy",
-    "Privacy policy",
+    "Privacy Policy",
     "/privacy-policy",
-    "Privacy policy | Ink Pixel Studios",
+    "Privacy Policy | Ink Pixel Studios",
     "How Ink Pixel Studios collects, uses, and protects personal data on this website.",
   ],
-  ["terms", "Terms", "/terms", "Terms | Ink Pixel Studios", "The terms of use of the Ink Pixel Studios website."],
+  [
+    "terms",
+    "Terms and Conditions",
+    "/terms",
+    "Terms and Conditions | Ink Pixel Studios",
+    "The terms and conditions for using the Ink Pixel Studios website.",
+  ],
 ];
 
 console.log(`Seeding space ${spaceId}, environment "${environmentId}" (locale ${locale})`);

@@ -309,6 +309,7 @@ type ProjectCardsData = {
       services: (string | null)[] | null;
       cardHighlight: string | null;
       cardPoints: (string | null)[] | null;
+      cardImage: AssetData;
       heroImage: AssetData;
       client: { name: string | null; logoApproved: boolean | null; logo: AssetData } | null;
     } | null)[];
@@ -524,6 +525,9 @@ const PROJECT_CARDS = /* GraphQL */ `
         services
         cardHighlight
         cardPoints
+        cardImage {
+          ...ImageFields
+        }
         heroImage {
           ...ImageFields
         }
@@ -767,7 +771,8 @@ export const getProjectCards = cache(async (service: string): Promise<CaseStudyC
   const data = await caseStudyQuery<ProjectCardsData>(PROJECT_CARDS, { tags: ["caseStudy"] });
 
   const cards = (data?.caseStudyCollection.items ?? []).flatMap((item) => {
-    const image = toImage(item?.heroImage ?? null);
+    // The card image (0009) when set, otherwise the hero image.
+    const image = toImage(item?.cardImage ?? null) ?? toImage(item?.heroImage ?? null);
     if (!item?.title || !item.slug || !item.excerpt || !image) return [];
     const card: CaseStudyCard = {
       title: item.title,

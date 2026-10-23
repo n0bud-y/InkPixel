@@ -10,8 +10,9 @@ const OFFSET = 128;
 // "In this article": the article's headings (level 3 indented), each a link to its heading.
 // Desktop: a column beside the text that stays in view while the article is read (pinned with
 // GSAP: CSS sticky doesn't work inside the smooth scroller) and marks the heading being read.
-// Phones and tablets: a box above the text that opens to the list.
-export function TableOfContents({ headings }: { headings: Heading[] }) {
+// Phones and tablets: a box above the text that opens to the list. Also used by the legal pages,
+// with their own `label`.
+export function TableOfContents({ headings, label = "In this article" }: { headings: Heading[]; label?: string }) {
   const root = useRef<HTMLDivElement>(null);
   const nav = useRef<HTMLElement>(null);
   const [active, setActive] = useState(-1);
@@ -82,7 +83,7 @@ export function TableOfContents({ headings }: { headings: Heading[] }) {
     <div ref={root} className="lg:h-full">
       <details className="group rounded-2xl border border-primary/10 bg-light/60 px-5 py-4 lg:hidden">
         <summary className="flex cursor-pointer list-none items-center justify-between font-mono text-[0.75rem] tracking-[0.14em] text-primary/70 uppercase [&::-webkit-details-marker]:hidden">
-          In this article
+          {label}
           <span aria-hidden="true" className="text-lg leading-none transition-transform duration-200 group-open:rotate-45">
             +
           </span>
@@ -92,7 +93,7 @@ export function TableOfContents({ headings }: { headings: Heading[] }) {
 
       <nav ref={nav} aria-labelledby="toc-title" className="hidden lg:block">
         <p id="toc-title" className="mb-4 font-mono text-[0.75rem] tracking-[0.14em] text-primary/55 uppercase">
-          In this article
+          {label}
         </p>
         {list(active)}
       </nav>

@@ -104,14 +104,14 @@ export function ContactIcon({ icon, className }: { icon: ReactNode; className: s
 }
 
 // The office map: a picture that opens Google Maps (no map scripts on the page), with the
-// studio's label on it.
+// studio's label on it. Its shape (an aspect class) comes from the card in `className`.
 export function OfficeMap({ className }: { className: string }) {
   return (
     <a
       href={visitUs.mapUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className={`group relative block aspect-[516/214] overflow-hidden rounded-[clamp(0.5rem,0.6vw,0.75rem)] bg-white ${className}`}
+      className={`group relative block overflow-hidden rounded-[clamp(0.5rem,0.6vw,0.75rem)] bg-white ${className}`}
     >
       <span className="sr-only">Open our office in Google Maps (opens in a new tab)</span>
       <Image

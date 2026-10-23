@@ -62,7 +62,7 @@ export const footerNav = {
     { href: "/services/ai-automation", label: "AI Automation" },
   ],
   legal: [
-    { href: "/privacy-policy", label: "Privacy" },
-    { href: "/terms", label: "Terms" },
+    { href: "/privacy-policy", label: "Privacy Policy" },
+    { href: "/terms", label: "Terms and Conditions" },
   ],
 } as const;

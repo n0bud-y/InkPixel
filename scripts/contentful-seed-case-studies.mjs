@@ -9,7 +9,7 @@
 //   except the parts copied from other projects (see that section below).
 // Replace the placeholder text in Contentful before launch.
 // Usage: npm run contentful:seed-case-studies
-// (needs the model: migrations 0002 to 0005)
+// (needs the model: migrations 0002 to 0005, and 0009 for the card images)
 // Everything has a fixed id, so running it again skips what already exists.
 import { readFile } from "node:fs/promises";
 
@@ -398,6 +398,15 @@ for (const [index, screen] of heroLayerScreens.entries()) {
 }
 const heroLayers = heroLayerScreens.map((_, index) => link(`tg-hero-layer-${index + 1}`, "Asset"));
 
+// The image on its project card on service pages (from the project head, 22 Oct 2026).
+await upsertAsset(
+  "tg-card",
+  "crm-terminal-gateway/card.webp",
+  "image/webp",
+  "Terminal Gateway CRM on a laptop, showing the My Drive screen",
+);
+const terminalGatewayCard = { cardImage: link("tg-card", "Asset") };
+
 // Page order, as in the design: four text + image sections, the screens, the features, then two
 // more text + image sections.
 const [intro, idea, challenge, solution, impact, closing] = terminalGatewaySections.map(({ id }) => id);
@@ -411,10 +420,13 @@ await upsert("case-study-crm-terminal-gateway", "caseStudy", {
   heroImage: link("tg-hero", "Asset"),
   heroLayers,
   heroLayout: "Centered",
+  ...terminalGatewayCard,
   sections: [intro, idea, challenge, solution, "tg-showcase-screens", "tg-features", impact, closing].map((id) => link(id)),
 });
 // Spaces seeded before the hero layers existed (0004) get them added here.
 await addMissingFields("case-study-crm-terminal-gateway", { heroLayers });
+// Spaces seeded before the card images (0009, 22 Oct 2026) get them added here.
+await addMissingFields("case-study-crm-terminal-gateway", terminalGatewayCard);
 
 // Cathy O’Bryan’s Books (from application-Cathy-O’Bryan’s-Books.svg). The copy is the design's,
 // except where it came from another project: the hero eyebrow ("Swipe, Watch, Order"),
@@ -555,6 +567,15 @@ await upsert("cathy-cta", "caseStudyCallToAction", {
   image: asset("cathy-img-cta"),
 });
 
+// The image on its project card on service pages (from the project head, 22 Oct 2026).
+await upsertAsset(
+  "cathy-card",
+  "cathy-obryans-books/card.webp",
+  "image/webp",
+  "The Cathy O’Bryan app on two phones: the book covers and the sign-in screen",
+);
+const cathyCard = { cardImage: asset("cathy-card") };
+
 await upsert("case-study-cathy-obryans-books", "caseStudy", {
   title: "Cathy O’Bryan’s Books",
   slug: "cathy-obryans-books",
@@ -568,6 +589,7 @@ await upsert("case-study-cathy-obryans-books", "caseStudy", {
   // The button shows once it has a link too (e.g. the app's store page).
   heroButtonLabel: "Explore The App",
   heroImage: asset("cathy-img-hero"),
+  ...cathyCard,
   sections: [
     "cathy-about",
     "cathy-gallery",
@@ -581,5 +603,7 @@ await upsert("case-study-cathy-obryans-books", "caseStudy", {
   ].map((id) => link(id)),
   services: ["applications"],
 });
+// Spaces seeded before the card images (0009, 22 Oct 2026) get them added here.
+await addMissingFields("case-study-cathy-obryans-books", cathyCard);
 
 console.log("Done.");

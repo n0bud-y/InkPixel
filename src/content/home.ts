@@ -1,27 +1,7 @@
 // Home page content that is not in Contentful.
 import type { StaticImageData } from "next/image";
-import pakArmoring from "@/assets/images/pak-armoring.webp";
 import client1 from "@/assets/images/testimonials/client-1.webp";
 import clientReview from "@/assets/images/testimonials/client-review.webp";
-
-export type FeaturedProject = {
-  name: string;
-  summary: string;
-  href: string;
-  image: StaticImageData;
-};
-
-// The first card in the home page's project stack (FeaturedWork), before the case studies
-// from Contentful. PLACEHOLDER: Pak Armoring is not a Contentful case study yet, so its page
-// (/case-studies/pak-armoring) does not exist; add it to Contentful to give it one, then remove
-// this entry.
-export const featuredProject: FeaturedProject = {
-  name: "Pak Armoring (Pvt) Ltd",
-  summary:
-    "Meeting the evolving security and mobility requirements of Pakistan's law enforcement agencies and Armed Forces.",
-  href: "/case-studies/pak-armoring",
-  image: pakArmoring,
-};
 
 export type TestimonialStat = {
   value: number;

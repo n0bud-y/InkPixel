@@ -1,25 +1,17 @@
 import type { Metadata } from "next";
-import { PageSchema } from "@/components/seo/PageSchema";
-import { breadcrumbSchema, pageMetadataFromCms } from "@/lib/seo";
+import { LegalPage } from "@/components/sections/legal/LegalPage";
+import { privacyPolicy } from "@/content/legal";
+import { pageMetadataFromCms } from "@/lib/seo";
 
-// From the page's Page SEO entry in Contentful; this is the fallback (stand-in description, issue I9).
+// From the page's Page SEO entry in Contentful; this is the fallback.
 export function generateMetadata(): Promise<Metadata> {
   return pageMetadataFromCms({
-    title: "Privacy policy",
-    description:
-      "How Ink Pixel Studios collects, uses, and protects personal data on this website.",
-    path: "/privacy-policy",
+    title: privacyPolicy.name,
+    description: privacyPolicy.description,
+    path: privacyPolicy.path,
   });
 }
 
 export default function PrivacyPolicyPage() {
-  return (
-    <div className="mx-auto max-w-6xl px-4 pt-32 pb-16">
-      <PageSchema path="/privacy-policy" items={[breadcrumbSchema([{ name: "Privacy policy", path: "/privacy-policy" }])]} />
-      <h1 className="text-4xl font-semibold">Privacy policy</h1>
-      <p className="mt-4 text-foreground/70">
-        Placeholder. The privacy policy (static legal text) must be added before launch.
-      </p>
-    </div>
-  );
+  return <LegalPage document={privacyPolicy} />;
 }

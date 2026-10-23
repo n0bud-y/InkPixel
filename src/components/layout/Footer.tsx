@@ -5,7 +5,7 @@ import { footerNav, siteConfig } from "@/lib/site";
 // Footer text colours from the design: warm greys, not tints of the page's light colour.
 const linkClass = "text-[#b9aea9] transition-colors duration-200 hover:text-white";
 const columnTitle =
-  "font-mono text-[clamp(0.6875rem,0.68vw,0.8125rem)] leading-none tracking-[0.24em] text-[#7d716c] uppercase";
+  "font-mono text-[clamp(0.8125rem,0.78vw,0.9375rem)] leading-none tracking-[0.24em] text-light uppercase";
 const bodyText = "text-[clamp(0.9375rem,0.9vw,1.0625rem)] leading-[1.76]";
 const linkText = "text-[clamp(0.9375rem,0.94vw,1.125rem)] leading-[1.4]";
 
