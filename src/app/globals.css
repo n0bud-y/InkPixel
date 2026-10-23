@@ -86,11 +86,22 @@
 
   /* Core service heroes (CoreHero scenes): cards drifting (the float keyframes, slower), lines
      drawing in, a short dash travelling along a line (an SVG path with pathLength="1" and
-     stroke-dasharray "0.08 0.92"), and text typing in from the left. */
+     stroke-dasharray "0.08 0.92"), text typing in from the left, and a scan line sweeping down
+     its container (service scenes: Document & Data Processing). */
   --animate-drift: float 5s ease-in-out infinite alternate;
   --animate-draw: draw 2.2s var(--ease-out-soft) both;
   --animate-dash-travel: dash-travel 2.6s linear infinite;
   --animate-type: type 0.9s steps(18, end) both;
+  --animate-scan: scan 2.6s ease-in-out infinite;
+
+  @keyframes scan {
+    from {
+      top: -8%;
+    }
+    to {
+      top: 92%;
+    }
+  }
 
   @keyframes draw {
     from {

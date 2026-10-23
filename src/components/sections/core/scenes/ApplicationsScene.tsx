@@ -1,24 +1,10 @@
-import type { CSSProperties, ReactNode } from "react";
 import flutter from "@/assets/images/technologies/menu/flutter.svg";
 import kotlin from "@/assets/images/technologies/menu/kotlin.svg";
 import swift from "@/assets/images/technologies/menu/swift.svg";
-import { at, Bar, Canvas, delay, LineIcon, LogoTile, Paper } from "./parts";
+import { at, Bar, Canvas, delay, LineIcon, LogoTile, Paper, Phone } from "./parts";
 
 // Applications: two phones (a light app screen in front, a dark one behind), a notification,
 // an in-app "rate your experience" prompt, and iOS, Android, and Flutter tiles.
-
-function Phone({ style, className = "", children }: { style: CSSProperties; className?: string; children: ReactNode }) {
-  return (
-    <div className={`absolute ${className}`} style={style}>
-      <div className="relative size-full rounded-[5cqw] border border-white/15 bg-[#0b0e24] p-[1.1cqw] shadow-[0_4cqw_8cqw_-2cqw_rgb(0_0_0_/_0.7)]">
-        <div className="relative size-full overflow-hidden rounded-[4cqw]">
-          {children}
-          <span className="absolute top-[1.2cqw] left-1/2 h-[2cqw] w-[9cqw] -translate-x-1/2 rounded-full bg-[#0b0e24]" />
-        </div>
-      </div>
-    </div>
-  );
-}
 
 // The bottom tab bar: four icons, the first active.
 function TabBar({ dark = false }: { dark?: boolean }) {

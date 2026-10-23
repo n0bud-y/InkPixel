@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { SceneHero } from "@/components/sections/core/SceneHero";
+import { serviceScenes } from "@/components/sections/core/scenes/services";
 import { ContactCta } from "@/components/sections/home/ContactCta";
 import { Faq } from "@/components/sections/home/Faq";
 import { Insights } from "@/components/sections/home/Insights";
@@ -47,6 +49,9 @@ export default async function ServicePage(props: PageProps<"/services/[core]/[se
   if (!found) notFound();
   const { page, path } = found;
   const category = found.core;
+  // The split hero with the service's illustration, once it has one; until then the photo hero
+  // with the consultation card.
+  const Scene = serviceScenes[page.slug];
 
   return (
     <>
@@ -62,7 +67,20 @@ export default async function ServicePage(props: PageProps<"/services/[core]/[se
           serviceSchema({ name: page.name, description: page.description, path }),
         ]}
       />
-      <ServiceHero page={page} />
+      {Scene ? (
+        <SceneHero
+          eyebrow={`${category.label} · ${page.name}`}
+          // The service's name in the brand gradient.
+          title={page.hero.title.replace(page.name, `*${page.name}*`)}
+          text={page.hero.text}
+          button={page.consultation.button}
+          workHref={`/case-studies?service=${category.slug}`}
+          compact
+          scene={<Scene />}
+        />
+      ) : (
+        <ServiceHero page={page} />
+      )}
       <Stats />
       <ServiceIntro page={page} />
       <ServiceOfferings page={page} />

@@ -101,6 +101,77 @@ export function LogoTile({
   );
 }
 
+// A phone: a dark frame with the camera pill, its screen as children.
+export function Phone({ style, className = "", children }: { style: CSSProperties; className?: string; children: ReactNode }) {
+  return (
+    <div className={`absolute ${className}`} style={style}>
+      <div className="relative size-full rounded-[5cqw] border border-white/15 bg-[#0b0e24] p-[1.1cqw] shadow-[0_4cqw_8cqw_-2cqw_rgb(0_0_0_/_0.7)]">
+        <div className="relative size-full overflow-hidden rounded-[4cqw]">
+          {children}
+          <span className="absolute top-[1.2cqw] left-1/2 h-[2cqw] w-[9cqw] -translate-x-1/2 rounded-full bg-[#0b0e24]" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// A white browser window: the title bar's dots and address, the page as children.
+export function Browser({
+  url,
+  style,
+  className = "",
+  children,
+}: {
+  url: string;
+  style: CSSProperties;
+  className?: string;
+  children: ReactNode;
+}) {
+  return (
+    <Paper style={style} className={`overflow-hidden ${className}`}>
+      <div className="flex items-center gap-[1.6cqw] border-b border-primary/10 bg-primary/[0.03] px-[1.8cqw] py-[1.3cqw]">
+        <WindowDots />
+        <span className="flex-1 truncate rounded-full bg-primary/[0.06] px-[1.6cqw] py-[0.4cqw] text-[1.5cqw] text-primary/50">{url}</span>
+      </div>
+      {children}
+    </Paper>
+  );
+}
+
+// A floating white pill: a line icon on the brand gradient and a short label (and an optional
+// second line).
+export function Toast({
+  label,
+  detail,
+  style,
+  wait = 0,
+  children,
+}: {
+  label: string;
+  detail?: string;
+  style: CSSProperties;
+  wait?: number;
+  /** The icon's paths (24 × 24). */
+  children: ReactNode;
+}) {
+  return (
+    <div className="absolute" style={style}>
+      <div
+        className="flex w-fit items-center gap-[1.4cqw] rounded-full bg-white py-[1.2cqw] pr-[2.2cqw] pl-[1.3cqw] shadow-[0_2.5cqw_5cqw_-1.5cqw_rgb(0_0_0_/_0.55)] motion-safe:animate-drift"
+        style={delay(wait)}
+      >
+        <span className="grid size-[3.6cqw] shrink-0 place-items-center rounded-full bg-brand-gradient text-white">
+          <LineIcon className="size-[2.2cqw]">{children}</LineIcon>
+        </span>
+        <span className="min-w-0">
+          <span className="block text-[2cqw] leading-tight font-semibold whitespace-nowrap text-primary">{label}</span>
+          {detail && <span className="mt-[0.3cqw] block text-[1.5cqw] leading-tight whitespace-nowrap text-primary/55">{detail}</span>}
+        </span>
+      </div>
+    </div>
+  );
+}
+
 // A floating round badge with a line icon in the brand gradient.
 export function IconBadge({ style, wait = 0, children }: { style: CSSProperties; wait?: number; children: ReactNode }) {
   return (

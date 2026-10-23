@@ -31,7 +31,7 @@ function LinkColumn({ title, links }: { title: string; links: readonly { href: s
 // Phones: one column; tablets: two; desktop: four.
 export function Footer() {
   return (
-    <footer className="bg-primary pt-[clamp(4rem,5.65vw,6.8rem)] pb-[clamp(3.5rem,8.3vw,10rem)]">
+    <footer className="bg-primary pt-[clamp(4rem,5.65vw,6.8rem)] pb-[clamp(1.5rem,1.75vw,2.125rem)]">
       <div className="container-site">
         <Reveal y={50} stagger={0.12}>
           <p

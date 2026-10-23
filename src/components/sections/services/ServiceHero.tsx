@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/Button";
 import type { ServicePage } from "@/content/service-pages";
 import { siteConfig } from "@/lib/site";
 
-// The service hero (service pages and the Services overview): the About photo (the designs use
+// The photo hero of the Services overview (and of a service page without an illustration in
+// core/scenes/services; every service has one as of 23 Oct 2026): the About photo (the designs use
 // the same one) behind a navy veil, the title, intro, and button on the left, and the "Book a
 // Free Consultation" card on the right. The design's form comes with the lead pipeline (P3-14);
 // until then the card links to the contact page and the email address. The entrance is CSS; the
