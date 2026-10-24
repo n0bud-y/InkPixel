@@ -4,7 +4,7 @@ import { servicePages, servicePlace } from "@/content/service-pages";
 import { getCaseStudies, type CaseStudySummary } from "@/contentful/queries/case-studies";
 import { getCategories, getPosts, type Category, type PostSummary } from "@/contentful/queries/posts";
 import { absoluteUrl } from "@/lib/seo";
-import { contactCta, footerNav, mainNav } from "@/lib/site";
+import { contactCta, features, footerNav, mainNav } from "@/lib/site";
 
 // The built pages: the main menu, contact, and legal pages; the core service and service pages
 // (dummy ones included, issue I12); every case study and blog post from Contentful, with the date it was last published
@@ -19,10 +19,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   } catch (error) {
     console.error("Sitemap: could not load the case studies.", error);
   }
-  try {
-    [posts, categories] = await Promise.all([getPosts(), getCategories()]);
-  } catch (error) {
-    console.error("Sitemap: could not load the blog posts.", error);
+  // Left out while the blog is switched off (features.blog).
+  if (features.blog) {
+    try {
+      [posts, categories] = await Promise.all([getPosts(), getCategories()]);
+    } catch (error) {
+      console.error("Sitemap: could not load the blog posts.", error);
+    }
   }
 
   return [

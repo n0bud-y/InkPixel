@@ -30,6 +30,14 @@ export const siteConfig = {
   socialProfiles: [] as string[],
 };
 
+/** Parts of the site that can be switched off until they are ready. */
+export const features = {
+  /** The blog ("Insights"): off until launch posts are written (project head, 23 Oct 2026). Off,
+   *  /blog pages show 404 and leave the sitemap, and the menu link and the Insights sections on
+   *  Home, About, and the service pages are hidden. Set to true to bring it all back. */
+  blog: false,
+};
+
 // "Insights" is the blog and "Our Work" the case studies; the URLs stay descriptive for SEO.
 export const mainNav = [
   { href: "/", label: "Home" },
@@ -39,7 +47,7 @@ export const mainNav = [
   { href: "/technologies", label: "Technologies" },
   { href: "/blog", label: "Insights" },
   { href: "/case-studies", label: "Our Work" },
-] as const;
+].filter(({ href }) => features.blog || href !== "/blog");
 
 export const contactCta = { href: "/contact", label: "Get in touch" } as const;
 

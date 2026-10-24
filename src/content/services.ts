@@ -427,7 +427,7 @@ export const serviceCategories: ServiceCategory[] = [
         href: "/services/ai-automation/ai-chatbots",
       },
       {
-        title: "AI Content & Marketing Automation",
+        title: "Marketing Automation",
         description:
           "AI-assisted copy & visuals, scheduled posting, personalized emails, campaign automation.",
         summary:

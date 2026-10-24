@@ -1,9 +1,10 @@
 import type { MetadataRoute } from "next";
+import { indexable } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
 
 export default function robots(): MetadataRoute.Robots {
-  // Only the production deployment may be crawled; previews and local dev block everything.
-  if (process.env.VERCEL_ENV !== "production") {
+  // Only the live site may be crawled (see `indexable`); everywhere else blocks everything.
+  if (!indexable) {
     return { rules: { userAgent: "*", disallow: "/" } };
   }
 

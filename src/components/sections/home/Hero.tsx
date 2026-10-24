@@ -1,34 +1,37 @@
+import poster from "@/assets/images/about/hero-video-poster.webp";
+import droplet from "@/assets/videos/about-droplet.mp4";
 import { LetterWave } from "@/components/motion/LetterWave";
 import { Magnetic } from "@/components/motion/Magnetic";
+import { AboutHeroVideo } from "@/components/sections/about/AboutHeroVideo";
 import { Button } from "@/components/ui/Button";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 
-// From the content document (23 Oct 2026).
+// From the content document (23 Oct 2026). A line break (\n) wraps a line there on every screen
+// ("Limits." on its own line: project head, 23 Oct 2026).
 const headlineLines = [
   { text: "Build Smarter." },
   { text: "Innovate Faster.", accent: true },
-  { text: "Grow Without Limits." },
+  { text: "Grow Without\nLimits." },
 ];
 
 // Entrance animations are CSS (`motion-safe:animate-*` in globals.css) so they start on the
 // first frame, before JavaScript loads. Parallax on the video comes from SmoothScroll.
+//
+// Background: the About hero's video of the red drop forming the Ink Pixel drop, placed as there.
+// On desktop it fills the right ~65% and fades into the navy toward the text; its near-black
+// background blends into the navy (lighten), so only the drop shows. Phones and tablets: behind
+// the text under a navy veil. (The Awards highlights clip it replaced, in public/videos/, is kept
+// for a case study.)
 export function Hero() {
   return (
-    <section
-      aria-labelledby="hero-title"
-      className="relative isolate flex min-h-svh items-center overflow-hidden before:pointer-events-none before:absolute before:inset-0 before:-z-10 before:bg-linear-to-r before:from-primary before:via-primary/55 before:to-transparent before:content-['']"
-    >
+    <section aria-labelledby="hero-title" className="relative isolate flex min-h-svh items-center overflow-hidden bg-primary">
       {/* Taller than the section so the parallax (data-speed="auto") never shows an edge. */}
-      <div aria-hidden="true" data-speed="auto" className="absolute inset-x-0 top-0 -z-20 h-[118%]">
-        <video
-          src="/videos/Awards-2025-Highlights-Snippet.mp4"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          className="size-full object-cover object-[72%_center] motion-safe:animate-hero-zoom lg:object-right"
-        />
+      <div
+        aria-hidden="true"
+        data-speed="auto"
+        className="absolute inset-x-0 top-0 -z-20 h-[118%] mix-blend-lighten [mask-image:linear-gradient(to_bottom,#000_75%,transparent)] lg:left-auto lg:w-[65%] lg:[mask-image:linear-gradient(to_right,transparent,#000_35%,#000_85%,transparent),linear-gradient(to_bottom,#000_80%,transparent)] lg:[mask-composite:intersect]"
+      >
+        <AboutHeroVideo src={droplet} poster={poster.src} className="size-full object-cover motion-safe:animate-hero-zoom" />
       </div>
       {/* Phones and tablets: the text sits over the photo, so darken it. */}
       <div
@@ -58,12 +61,12 @@ export function Hero() {
             {headlineLines.map((line, index) => (
               <span
                 key={line.text}
-                className={`-mb-[0.14em] block overflow-hidden pb-[0.14em] ${line.accent ? "-mt-[0.2em] pt-[0.2em]" : ""}`}
+                className={`-mb-[0.14em] block overflow-hidden ${line.accent ? "-mt-[0.2em]" : ""}`}
               >
                 {line.accent ? (
                   <LetterWave text={line.text} delay={120 + index * 90} className="block text-crimson" />
                 ) : (
-                  <span className="block motion-safe:animate-line-up" style={{ animationDelay: `${120 + index * 90}ms` }}>
+                  <span className="block whitespace-pre-line motion-safe:animate-line-up" style={{ animationDelay: `${120 + index * 90}ms` }}>
                     {line.text}
                   </span>
                 )}

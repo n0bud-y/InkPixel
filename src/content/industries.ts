@@ -53,6 +53,8 @@ export type Industry = {
   slug: string;
   label: string;
   description: string;
+  /** A short version of the description (about a line and a half) for the home tabs. */
+  summary: string;
   icon: StaticImageData;
   /** Six, so the 2-column grids stay even. */
   solutions: Solution[];
@@ -66,6 +68,7 @@ export const industries: Industry[] = [
     label: "Fintech",
     description:
       "We create secure fintech solutions, making financial services, payments, banking, lending and digital transactions easier and more secure, with scalability at the forefront.",
+    summary: "Secure fintech for payments, banking, lending and digital transactions, built to scale.",
     icon: fintech,
     solutions: [
       { title: "Digital Banking Apps", description: "Secure mobile and web banking with accounts, transfers, and statements.", icon: landmark },
@@ -81,6 +84,7 @@ export const industries: Industry[] = [
     label: "Healthcare",
     description:
       "The healthcare technology solutions we offer bridge the gap between patients, providers and operations via secure digital platforms, fostering greater access, efficiency and experience.",
+    summary: "Secure platforms connecting patients, providers and operations for better access and care.",
     icon: healthcare,
     solutions: [
       { title: "Patient Portals", description: "Records, results, and messages patients can reach anytime.", icon: contact },
@@ -96,6 +100,7 @@ export const industries: Industry[] = [
     label: "Real estate",
     description:
       "We build real estate tech solutions, from the process of discovering home, management, transactions, communication, to customer engagement.",
+    summary: "Tech for home discovery, property management, transactions and customer engagement.",
     icon: realEstate,
     solutions: [
       { title: "Property Listing Websites", description: "Searchable listings with filters, maps, and enquiry forms.", icon: house },
@@ -106,26 +111,28 @@ export const industries: Industry[] = [
       { title: "Mortgage & ROI Calculators", description: "Interactive tools that help buyers decide faster.", icon: calculator },
     ],
   },
-  {
-    slug: "on-demand",
-    label: "On demand",
-    description:
-      "We develop on-demand solutions that are scalable and bring customers to services fast via intuitive platforms with smart workflows and seamless digital experiences.",
-    icon: onDemand,
-    solutions: [
-      { title: "Customer Apps", description: "Browse, book, and pay for a service in a few taps.", icon: smartphone },
-      { title: "Booking & Scheduling", description: "Live availability, instant booking, and reminders.", icon: calendarCheck },
-      { title: "Provider & Rider Apps", description: "Jobs, routes, and earnings for the people doing the work.", icon: bike },
-      { title: "Real-Time Tracking", description: "Customers see their order or provider on the map.", icon: mapPin },
-      { title: "In-App Payments", description: "Cards, wallets, tips, and payouts handled securely.", icon: wallet },
-      { title: "Admin Dashboard", description: "Orders, providers, pricing, and reports in one place.", icon: chartPie },
-    ],
-  },
+  // {
+  //   slug: "on-demand",
+  //   label: "On demand",
+  //   description:
+  //     "We develop on-demand solutions that are scalable and bring customers to services fast via intuitive platforms with smart workflows and seamless digital experiences.",
+  //   summary: "Scalable on-demand platforms that connect customers to services fast, with smart workflows.",
+  //   icon: onDemand,
+  //   solutions: [
+  //     { title: "Customer Apps", description: "Browse, book, and pay for a service in a few taps.", icon: smartphone },
+  //     { title: "Booking & Scheduling", description: "Live availability, instant booking, and reminders.", icon: calendarCheck },
+  //     { title: "Provider & Rider Apps", description: "Jobs, routes, and earnings for the people doing the work.", icon: bike },
+  //     { title: "Real-Time Tracking", description: "Customers see their order or provider on the map.", icon: mapPin },
+  //     { title: "In-App Payments", description: "Cards, wallets, tips, and payouts handled securely.", icon: wallet },
+  //     { title: "Admin Dashboard", description: "Orders, providers, pricing, and reports in one place.", icon: chartPie },
+  //   ],
+  // },
   {
     slug: "logistics",
     label: "Logistics",
     description:
       "Our logistics software solution optimizes transportation, tracking, fleet operation, inventory and delivery process to enable businesses to move smarter.",
+    summary: "Software that streamlines transport, tracking, fleets, inventory and delivery.",
     icon: logistics,
     solutions: [
       { title: "Fleet & Shipment Tracking", description: "Live locations, status updates, and delivery history.", icon: truck },
@@ -141,6 +148,7 @@ export const industries: Industry[] = [
     label: "Ecommerce",
     description:
       "We develop eCommerce solutions that drive performance and deliver a compelling shopping journey, alongside smooth payment handling, engaging customer journeys and business expansion.",
+    summary: "High-performing online stores with smooth payments and engaging shopping journeys.",
     icon: ecommerce,
     solutions: [
       { title: "Online Stores", description: "Fast, branded storefronts on Shopify, WooCommerce, or custom builds.", icon: store },

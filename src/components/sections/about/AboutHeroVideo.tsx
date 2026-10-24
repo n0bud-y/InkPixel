@@ -4,8 +4,8 @@ import { useEffect, useRef } from "react";
 
 const motionOk = "(prefers-reduced-motion: no-preference)";
 
-// The About hero's background video (the red drop forming the Ink Pixel drop), looping and
-// silent. It starts as soon as the HTML arrives (autoPlay), but its only source is for visitors
+// The About and home heroes' background video (the red drop forming the Ink Pixel drop), looping
+// and silent. It starts as soon as the HTML arrives (autoPlay), but its only source is for visitors
 // who allow motion (the <source> media query), so with reduced motion, and before anything
 // loads, the poster (its first frame) shows. Once JavaScript runs it also makes sure it is muted
 // and playing, and pauses it for visitors saving data or switching to reduced motion.

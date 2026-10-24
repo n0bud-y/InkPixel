@@ -21,9 +21,10 @@ import type { ContentfulImage } from "@/contentful/queries/case-studies";
 import { getPageSeo } from "@/contentful/queries/page-seo";
 import { siteConfig } from "@/lib/site";
 
-/** Only the production deployment may be indexed; previews, local dev, and the cPanel demo are
- *  noindex (the same rule as robots.ts). */
-export const indexable = process.env.VERCEL_ENV === "production";
+/** Only the live site may be indexed: on cPanel, the server with `ALLOW_INDEXING=true` (set at
+ *  build time, as the pages are built ahead); on Vercel, the production deployment. Local dev,
+ *  previews, and the cPanel demo are noindex. robots.ts uses the same rule. */
+export const indexable = process.env.ALLOW_INDEXING === "true" || process.env.VERCEL_ENV === "production";
 
 /** A path on the site as a full URL on the live site. */
 export const absoluteUrl = (path: string) => new URL(path, siteConfig.url).toString();

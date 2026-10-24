@@ -159,7 +159,7 @@ export function IndustryTabs({
                     {industry.label}
                   </span>
                   <span className={`mt-1 hidden text-[clamp(0.9375rem,1.05vw,1.25rem)] leading-[1.3] lg:block ${colors.rowDescription}`}>
-                    {industry.description}
+                    {industry.summary}
                   </span>
                 </span>
               </Tab>
@@ -171,7 +171,7 @@ export function IndustryTabs({
           {industries.map((industry) => (
             <TabPanel key={industry.slug} value={industry.slug} className="rounded-2xl">
               {/* Phones and tablets: the description the desktop list shows in each row. */}
-              <p className={`mb-6 text-[15px] leading-relaxed lg:hidden ${colors.panelDescription}`}>{industry.description}</p>
+              <p className={`mb-6 text-[15px] leading-relaxed lg:hidden ${colors.panelDescription}`}>{industry.summary}</p>
               <ul className={`grid grid-cols-1 sm:grid-cols-2 ${colors.solutions}`}>
                 {industry.solutions.map((solution, index) => (
                   <li

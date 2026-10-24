@@ -9,6 +9,14 @@ export const env = createEnv({
     CONTENTFUL_ENVIRONMENT: z.string().min(1).default("master"),
     CONTENTFUL_DELIVERY_TOKEN: z.string().min(1),
     CONTENTFUL_PREVIEW_TOKEN: z.string().min(1),
+    // The mailbox the contact forms send through (src/lib/send-enquiry.ts). Optional: without
+    // them the site still builds, and the forms offer the visitor's email app instead.
+    SMTP_HOST: z.string().min(1).optional(),
+    SMTP_PORT: z.coerce.number().int().positive().default(465),
+    SMTP_USER: z.string().min(1).optional(),
+    SMTP_PASSWORD: z.string().min(1).optional(),
+    /** Where enquiries go; the studio's address (siteConfig.email) when unset. */
+    CONTACT_TO: z.email().optional(),
   },
   client: {},
   experimental__runtimeEnv: {},

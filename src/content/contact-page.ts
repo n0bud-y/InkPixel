@@ -42,14 +42,25 @@ export const contactPage = {
     /** The box with a visitor's answers from a service page's cost estimator. */
     estimate: { title: "From your {name} estimate", remove: "Remove", note: "My answers from the cost estimator" },
     submit: "Send message",
-    /** After Submit, which opens the visitor's email app (until the lead pipeline, P3-14). */
-    sent: {
-      title: "Almost there!",
-      text: "Your email app should open with your message ready to send. Just press Send there.",
-      fallback: "Nothing opened? Copy your message and email it to",
+    sending: "Sending…",
+    /** The thank-you popup after the message is sent to the studio (both contact forms). `*…*`
+     *  is shown in the brand gradient; {name} is the visitor's first name, {email} their address. */
+    thanks: {
+      eyebrow: "Message received",
+      title: "Thank you, *{name}*!",
+      text: "Your message is on its way to our team. We read every enquiry ourselves and will get back to you soon.",
+      reply: "We'll reply to {email} within one working day.",
+      close: "Back to the site",
+      closeLabel: "Close",
+      work: { label: "See our work", href: "/case-studies" },
+    },
+    /** When it couldn't be sent: the visitor can send it from their own email app instead. */
+    failed: {
+      unavailable: "Sorry, your message couldn't be sent just now. Please try again, or send it from your email app to",
+      busy: "You've sent several messages in a few minutes. Please wait a little, or send this one from your email app to",
+      open: "Open in my email app",
       copy: "Copy message",
       copied: "Copied",
-      again: "Write another message",
     },
   },
 

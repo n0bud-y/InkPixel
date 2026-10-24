@@ -169,7 +169,7 @@ export const founder = {
 
 // "Get in touch" (About, service pages, Services): the form, and the panel with the map and the
 // studio's details. The address, phone, email, and social links come from siteConfig
-// (src/lib/site.ts). Until the lead pipeline (P3-14), the form opens the visitor's email app. The
+// (src/lib/site.ts). The form emails the studio from the site (src/lib/send-enquiry.ts). The
 // map is a static image (no map scripts on the page) that opens Google Maps at the office (its
 // plus code, from the design).
 export const visitUs = {

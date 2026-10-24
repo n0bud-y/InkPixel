@@ -19,6 +19,7 @@ import { ServiceWorkflow } from "@/components/sections/services/ServiceWorkflow"
 import { PageSchema } from "@/components/seo/PageSchema";
 import { getServicePage, servicePages, servicePlace } from "@/content/service-pages";
 import { breadcrumbSchema, pageMetadataFromCms, serviceSchema } from "@/lib/seo";
+import { features } from "@/lib/site";
 
 // Only the services with content in src/content/service-pages.ts exist, each under its core
 // service (/services/development/web-development); any other address is a 404.
@@ -90,8 +91,8 @@ export default async function ServicePage(props: PageProps<"/services/[core]/[se
       <ServiceWorkflow page={page} />
       <ServiceStats page={page} />
       <DomainDiversity />
-      <Insights eyebrow="08 · Insights" />
-      <Faq eyebrow="09 · FAQ" />
+      {features.blog && <Insights eyebrow="08 · Insights" />}
+      <Faq eyebrow={features.blog ? "09 · FAQ" : "08 · FAQ"} />
       <VisitUs />
       <ContactCta />
     </>

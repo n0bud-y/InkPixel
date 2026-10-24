@@ -11,7 +11,7 @@ import { Stats } from "@/components/sections/home/Stats";
 import { Testimonials } from "@/components/sections/home/Testimonials";
 import { PageSchema } from "@/components/seo/PageSchema";
 import { pageMetadataFromCms } from "@/lib/seo";
-import { siteConfig } from "@/lib/site";
+import { features, siteConfig } from "@/lib/site";
 
 // From the home page's Page SEO entry in Contentful; this is the fallback.
 export function generateMetadata(): Promise<Metadata> {
@@ -37,7 +37,7 @@ export default function HomePage() {
       <Process />
       <Industries />
       <Faq />
-      <Insights />
+      {features.blog && <Insights />}
       <ContactCta />
     </>
   );

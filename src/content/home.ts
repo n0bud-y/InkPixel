@@ -79,7 +79,7 @@ export type ProcessStep = {
 // The process section: its heading and line, then the five phases, then the outcome ("Live").
 // Heading, line, and phases from the content document (23 Oct 2026).
 export const processIntro = {
-  title: "Built With Precision. Designed for Compliance.",
+  title: "Built With Precision.",
   description:
     "Great technology requires great ideas. From strategic planning to secure engineering, thorough testing, continuous improvement, and more, we ensure that each solution is designed around your business goals, technical needs, security needs, and applicable industry standard.",
 };

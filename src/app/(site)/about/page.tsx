@@ -11,6 +11,7 @@ import { Industries } from "@/components/sections/home/Industries";
 import { Insights } from "@/components/sections/home/Insights";
 import { PageSchema } from "@/components/seo/PageSchema";
 import { breadcrumbSchema, officeSchema, pageMetadataFromCms } from "@/lib/seo";
+import { features } from "@/lib/site";
 
 // From the page's Page SEO entry in Contentful; this is the fallback.
 export function generateMetadata(): Promise<Metadata> {
@@ -34,8 +35,8 @@ export default function AboutPage() {
       <Team />
       <DrivesUs />
       <Industries tone="onLight" />
-      <Insights eyebrow="08 · Insights" />
-      <Faq eyebrow="09 · FAQ" />
+      {features.blog && <Insights eyebrow="08 · Insights" />}
+      <Faq eyebrow={features.blog ? "09 · FAQ" : "08 · FAQ"} />
       <VisitUs />
       <ContactCta />
     </>
