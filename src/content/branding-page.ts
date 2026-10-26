@@ -29,10 +29,11 @@ export const brandingPage = {
   caseStudyService: "branding",
 
   hero: {
-    title: "Where Creativity Meets World",
+    title: "Where Creativity Meets *World*",
     text: "Envisioning a realm where the alchemy of thought transmutes into the gold of reality, where we sculpt dreams into digital monuments of inspiration.",
     button: { label: "Schedule a Free Call", href: "/contact" },
-    // Clients' logos floating around the title (approved for use, see about.ts).
+    // Clients' logos that floated around the title in the design's own hero (BrandingHero, unused
+    // since 26 Oct 2026: Branding now has the same banner as the other core pages).
     logos: {
       pakArmoring: { image: pakArmoringLogo, alt: "Pak Armoring" },
       drumond: { image: drumondLogo, alt: "Drumond Auto Body" },
