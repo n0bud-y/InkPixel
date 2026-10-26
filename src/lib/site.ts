@@ -25,9 +25,14 @@ export const siteConfig = {
     latitude: 24.86706,
     longitude: 67.08094,
   },
-  /** The studio's social profiles (structured data `sameAs`). None yet: add LinkedIn,
-   *  Instagram, Behance, Clutch, … here. */
-  socialProfiles: [] as string[],
+  /** The studio's social profiles (26 Oct 2026, from the project head), in display order: the
+   *  icons in the contact cards (SocialLinks) and structured data (`sameAs`). Add Behance,
+   *  Clutch, … here. */
+  socialProfiles: [
+    "https://www.facebook.com/inkpixelstudios/",
+    "https://www.linkedin.com/company/ink-pixel-studios/",
+    "https://www.instagram.com/inkpixelstudios1/",
+  ] as string[],
 };
 
 /** Parts of the site that can be switched off until they are ready. */

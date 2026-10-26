@@ -268,7 +268,8 @@ export function TestimonialCarousel({
                 />
               ))}
             </div>
-            <div aria-hidden="true" className="absolute inset-0 bg-black/25" />
+            {/* A dark veil only behind a video's play button; client cards show as they are. */}
+            {current.video && <div aria-hidden="true" className="absolute inset-0 bg-black/25" />}
 
             {current.video && (
               <video

@@ -4,7 +4,6 @@ import clientDrumond from "@/assets/images/testimonials/client-drumond.webp";
 import clientGulbaan from "@/assets/images/testimonials/client-gulbaan.webp";
 import clientIhr from "@/assets/images/testimonials/client-ihr.webp";
 import clientPakArmoring from "@/assets/images/testimonials/client-pak-armoring.webp";
-import clientReview from "@/assets/images/testimonials/client-review.webp";
 
 export type TestimonialStat = {
   value: number;
@@ -32,9 +31,10 @@ export const testimonialsIntro =
   "We believe it's important to understand our clients' goals and make their ideas a reality, and this is where great digital solutions start. Understand how our Web Development, Software Solutions, AI Automation and Digital Services enable businesses to advance.";
 
 // The clients' words, one per slide in order (content document, 23 Oct 2026; the project head
-// confirmed they are from these clients). The document has a sixth, unused while there are five
-// slides: "Ink Pixel Studios was able to leave a positive impression as they worked with us from
-// our initial needs through to the final solution, seeing how our technology could then work for us."
+// confirmed they are from these clients). The first was the video slide's, removed on 26 Oct 2026
+// (project head), and is unused now; the document also has a sixth, unused: "Ink Pixel Studios was
+// able to leave a positive impression as they worked with us from our initial needs through to the
+// final solution, seeing how our technology could then work for us."
 const quotes = [
   "What Ink Pixel Studios did was exactly what we wanted and they were able to execute that exactly as our brand. They knew what we wanted, and they made it easy for us.",
   "We required a software solution that fit our business operations and Ink Pixel Studios was able to accommodate our needs and make it a viable solution because they took a personal approach to us.",
@@ -52,19 +52,10 @@ const placeholderStats: Testimonial["stats"] = [
   { value: 94, suffix: "%", label: "Clients Exceed Targets" },
 ];
 
-// PLACEHOLDER (issue I8): stock footage standing in for a client's video (Contentful asset
-// "home-testimonial-video"), with a still from it (11 s in) as the photo.
-const videoTestimonial: Testimonial = {
-  quote: [quotes[0]],
-  stats: placeholderStats,
-  client: "Client testimonial",
-  image: clientReview,
-  videoAssetId: "home-testimonial-video",
-};
-
-// The video first, then the clients' logo cards (from the project head, 23 Oct 2026).
+// The clients' logo cards (from the project head, 23 Oct 2026). The first slide, a stand-in video
+// review (stock footage), was removed on 26 Oct 2026 (project head); a real client video can be
+// added back as a slide with `videoAssetId` (a Contentful asset) and a still as its `image`.
 export const testimonials: Testimonial[] = [
-  videoTestimonial,
   { quote: [quotes[1]], stats: placeholderStats, client: "IHR", image: clientIhr },
   { quote: [quotes[2]], stats: placeholderStats, client: "Gulbaan", image: clientGulbaan },
   { quote: [quotes[3]], stats: placeholderStats, client: "Drumond Auto Body", image: clientDrumond },
