@@ -39,9 +39,6 @@ import tahaAli from "@/assets/images/about/team/syed-taha-ali.webp";
 import tassinAhmed from "@/assets/images/about/team/tassin-ahmed.webp";
 import wali from "@/assets/images/about/team/wali.webp";
 
-const lorem =
-  "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing.";
-
 export const aboutHero = {
   title: "Where Creativity Meets Technology",
   text: "We build powerful digital experiences through smart technology, creative design, and strategic thinking—helping businesses grow, scale, and stand out in a digital-first world.",
@@ -145,25 +142,44 @@ export const team = {
   ] satisfies TeamMember[],
 };
 
-// "What Drives Us Forward". PLACEHOLDER: the text, mission, vision, and values are the design's
-// lorem ipsum; replace them with the studio's own words.
+// "What Drives Us Forward". Developer-written (26 Oct 2026; was the design's lorem ipsum) from the
+// studio's own lines (home hero, process); issue I5: the studio to confirm or rewrite.
 export const drivesUs = {
   title: "What Drives Us *Forward*",
-  text: lorem,
+  text: "We started Ink Pixel Studios to give businesses one partner for everything digital: strategy, design, development, marketing, and automation. What keeps us going is seeing the products we build make a real difference to the people who use them and the businesses behind them.",
   button: { label: "Talk to Us", href: "/contact" },
   items: [
-    { question: "Our Mission", answer: [lorem], icon: missionIcon },
-    { question: "Our Vision", answer: [lorem], icon: visionIcon },
-    { question: "Our Values", answer: [lorem], icon: valuesIcon },
+    {
+      question: "Our Mission",
+      answer: [
+        "To turn our clients' ideas into digital products that are useful, reliable, and built to grow, by bringing thoughtful design, solid engineering, and smart marketing together in one team.",
+      ],
+      icon: missionIcon,
+    },
+    {
+      question: "Our Vision",
+      answer: [
+        "To be the technology partner businesses in Pakistan and around the world trust first: known for honest advice, work that lasts, and results our clients can see.",
+      ],
+      icon: visionIcon,
+    },
+    {
+      question: "Our Values",
+      answer: [
+        "Clarity: we explain what we're doing and why. Craft: we care about the details others skip. Ownership: we treat your product like our own. Partnership: we stay with you after launch and grow as you grow.",
+      ],
+      icon: valuesIcon,
+    },
   ],
 };
 
-// Founder card. Monis Bari agreed to appear (confirmed by the project head on 9 Oct 2026).
-// PLACEHOLDER: the bio is the design's lorem ipsum.
+// Founder card. Monis Bari agreed to appear (confirmed by the project head on 9 Oct 2026). The
+// bio is developer-written from the role only (26 Oct 2026; was lorem ipsum); issue I5: replace
+// it with Monis's own words.
 export const founder = {
   name: "Monis Bari",
   role: "Founder & CEO",
-  bio: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing Library in London, took a 1914 Cicero translation and scrambled it to make dummy text for Letraset's Body Type sheets.",
+  bio: "As Founder & CEO, Monis Bari leads Ink Pixel Studios' vision and client partnerships, bringing design, engineering, and marketing together under one roof so businesses can build, launch, and grow with a single partner they trust.",
   photo: monisBari,
 };
 

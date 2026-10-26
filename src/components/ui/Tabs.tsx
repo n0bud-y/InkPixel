@@ -1,12 +1,15 @@
 "use client";
 
-import { createContext, useContext, useId, useState, type KeyboardEvent, type ReactNode } from "react";
+import { useRouter } from "next/navigation";
+import { createContext, useContext, useEffect, useId, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 
 // Accessible, unstyled tabs (WAI-ARIA tabs pattern):
 // - Arrow keys move between tabs (left/right and up/down, so vertical and horizontal
 //   layouts both work), Home/End jump to the ends; focus activates the tab.
 // - Only the active tab is in the Tab order; panels are linked to their tabs.
 // - Inactive panels stay in the HTML with `hidden`, so all content is indexable.
+// - Optionally (Tab's `selectOnHover` and `href`): the mouse switches tabs by hovering and a
+//   click opens the tab's page (the home services tabs).
 // Style with `data-state="active" | "inactive"`, e.g. `data-[state=active]:bg-crimson`.
 
 type TabsContextValue = {
@@ -108,17 +111,32 @@ export function TabList({
   );
 }
 
+// Milliseconds the mouse rests on a tab before `selectOnHover` switches to it, so sweeping
+// across the list doesn't flicker through every tab (as in the header menus).
+const HOVER_DELAY = 120;
+
 export function Tab({
   value,
+  href,
+  selectOnHover = false,
   className,
   children,
 }: {
   value: string;
+  /** A page the tab also opens: a mouse click opens it straight away; a tap, or Enter, opens it
+   *  when the tab is already active (the first tap or the arrow keys only switch tabs). */
+  href?: string;
+  /** Mouse only: resting on the tab switches to it (touch and keyboard still tap / use arrows). */
+  selectOnHover?: boolean;
   className?: string;
   children: ReactNode;
 }) {
   const { value: selected, select, baseId } = useTabs();
+  const router = useRouter();
+  const hoverTimer = useRef<number | undefined>(undefined);
   const active = selected === value;
+
+  useEffect(() => () => window.clearTimeout(hoverTimer.current), []);
 
   return (
     <button
@@ -130,9 +148,22 @@ export function Tab({
       tabIndex={active ? 0 : -1}
       data-state={active ? "active" : "inactive"}
       onClick={(event) => {
+        // Arrow keys "click" the next tab too, but with no pointer type, so they only switch.
+        const mouse = (event.nativeEvent as PointerEvent).pointerType === "mouse";
+        if (href && (active || mouse)) {
+          window.clearTimeout(hoverTimer.current);
+          if (event.metaKey || event.ctrlKey) window.open(href, "_blank", "noopener");
+          else router.push(href);
+          return;
+        }
         select(value);
         revealInList(event.currentTarget);
       }}
+      onPointerEnter={(event) => {
+        if (!selectOnHover || event.pointerType !== "mouse" || active) return;
+        hoverTimer.current = window.setTimeout(() => select(value), HOVER_DELAY);
+      }}
+      onPointerLeave={() => window.clearTimeout(hoverTimer.current)}
       className={className}
     >
       {children}

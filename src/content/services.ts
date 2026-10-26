@@ -60,6 +60,8 @@ export type Service = {
   /** A sentence or two (from the content document, 23 Oct 2026): the home page's service tabs,
    *  the core pages' service cards, and the service pages' "Broaden …" lists. */
   summary: string;
+  /** A short line (about half the summary) for the services panel on the home page (ServiceTabs). */
+  short: string;
   icon: StaticImageData;
   /** The service's own page. */
   href: string;
@@ -94,6 +96,7 @@ export const serviceCategories: ServiceCategory[] = [
           "Primary logo, secondary logo, icon/mark, logo variations, black & white versions.",
         summary:
           "Ink Pixel Studios creates a memorable impression with your brand identity design and creative logo design services.",
+        short: "A memorable brand identity and logo that set you apart.",
         icon: brandIdentity,
         href: "/services/branding/brand-identity-logo-design",
       },
@@ -103,6 +106,7 @@ export const serviceCategories: ServiceCategory[] = [
           "Logo usage, spacing, colors, typography, visual rules, do's & don'ts, brand consistency guide.",
         summary:
           "Create a visual identity by providing detailed brand guidelines for logo usage, color schemes, typography and brand elements.",
+        short: "Clear rules for your logo, colors, type, and brand elements.",
         icon: brandGuidelines,
         href: "/services/branding/brand-guidelines",
       },
@@ -112,6 +116,7 @@ export const serviceCategories: ServiceCategory[] = [
           "Business card, letterhead, envelope, email signature, invoice/quotation template.",
         summary:
           "Create a good first impression with branded business stationery, business cards, letterheads, envelopes, and more.",
+        short: "Branded business cards, letterheads, envelopes, and more.",
         icon: stationeryDesign,
         href: "/services/branding/stationery-design",
       },
@@ -121,6 +126,7 @@ export const serviceCategories: ServiceCategory[] = [
           "Profile/cover designs, social post templates, story templates, highlight covers, ad templates.",
         summary:
           "Develop a consistent and recognizable online brand identity by using consistent templates, profile pictograms, and graphics on social media platforms.",
+        short: "Consistent templates and graphics for every social platform.",
         icon: socialMediaBranding,
         href: "/services/branding/social-media-branding",
       },
@@ -130,6 +136,7 @@ export const serviceCategories: ServiceCategory[] = [
           "Website visual direction, UI style, buttons/icons, web banners, landing-page branding.",
         summary:
           "Develop a unified digital identity through website branding, with visual elements, typography, colors and digital assets that are associated with your identity.",
+        short: "One digital identity across your website and online assets.",
         icon: websiteBranding,
         href: "/services/branding/digital-branding",
       },
@@ -139,6 +146,7 @@ export const serviceCategories: ServiceCategory[] = [
           "Final asset organization, launch creatives, brand rollout across website/social/print and consistency check.",
         summary:
           "Whether you need help with establishing your visual presence on multiple platforms or creating and editing the assets you'll need for your marketing campaign, we have you covered.",
+        short: "Roll out your brand and campaign assets across every platform.",
         icon: brandLaunch,
         href: "/services/branding/brand-launch",
       },
@@ -158,6 +166,7 @@ export const serviceCategories: ServiceCategory[] = [
           "Business websites, landing pages, responsive layouts, contact forms, analytics setup.",
         summary:
           "We develop responsive business websites that are engaging and informative, convey your brand message and provide seamless web browsing experience across devices.",
+        short: "Responsive business websites that carry your brand message.",
         icon: webDevelopment,
         href: "/services/development/web-development",
       },
@@ -167,6 +176,7 @@ export const serviceCategories: ServiceCategory[] = [
           "Online stores, product catalogs, cart & checkout, payment gateways, order management.",
         summary:
           "We provide eCommerce website development solutions that enable businesses to create an online store that is easy to navigate, showcases products, and offers a smooth shopping experience.",
+        short: "Online stores that showcase products and make buying easy.",
         icon: ecommerceDevelopment,
         href: "/services/development/ecommerce-development",
       },
@@ -176,6 +186,7 @@ export const serviceCategories: ServiceCategory[] = [
           "Custom and headless CMS builds, editable pages, content models, user roles, editor training.",
         summary:
           "With our CMS development services, you can easily manage, update and organize the content on your website without having to be an expert in technical matters.",
+        short: "Update and manage your website content without technical skills.",
         icon: cmsDevelopment,
         href: "/services/development/cms-development",
       },
@@ -185,6 +196,7 @@ export const serviceCategories: ServiceCategory[] = [
           "Interfaces built from your designs, responsive layouts, animations, accessibility, speed.",
         summary:
           "We build engaging, responsive frontend interfaces using modern web technologies to ensure your website looks great and works smoothly across devices.",
+        short: "Engaging, responsive interfaces that work smoothly on any device.",
         icon: frontendDevelopment,
         href: "/services/development/frontend-development",
       },
@@ -194,6 +206,7 @@ export const serviceCategories: ServiceCategory[] = [
           "Server logic, databases, REST/GraphQL APIs, authentication, third-party integrations.",
         summary:
           "Our backend development and API integration services power your website behind the scenes, managing databases, business logic, user authentication, and communication between applications.",
+        short: "Databases, logic, logins, and APIs that power your product.",
         icon: backendApi,
         href: "/services/development/backend-api-development",
       },
@@ -203,6 +216,7 @@ export const serviceCategories: ServiceCategory[] = [
           "Updates, security patches, backups, uptime monitoring, bug fixes, content changes.",
         summary:
           "Our website maintenance and support services at Ink Pixel Studios ensure your website remains secure, reliable, and functioning smoothly, keeping your business online.",
+        short: "Keep your website secure, fast, and running smoothly.",
         icon: websiteMaintenance,
         href: "/services/development/website-maintenance",
       },
@@ -222,6 +236,7 @@ export const serviceCategories: ServiceCategory[] = [
           "Content calendars, post & story creatives, community management, campaigns, monthly reports.",
         summary:
           "Ink Pixel Studios is dedicated to helping businesses create meaningful connections online through innovative social media marketing solutions designed for businesses and their audience.",
+        short: "Build real connections with your audience on social media.",
         icon: socialMediaMarketing,
         href: "/services/marketing/social-media-marketing",
       },
@@ -231,6 +246,7 @@ export const serviceCategories: ServiceCategory[] = [
           "Keyword research, on-page optimization, technical audits, local SEO, ranking reports.",
         summary:
           "Get your website optimized for search engines to boost its visibility, covering keyword research, on page optimization, technical optimization and content optimization.",
+        short: "Rank higher with keyword, on-page, and technical SEO.",
         icon: seo,
         href: "/services/marketing/seo",
       },
@@ -240,6 +256,7 @@ export const serviceCategories: ServiceCategory[] = [
           "Search and social ad campaigns, audience targeting, ad creatives, A/B tests, budget tracking.",
         summary:
           "Connect with target audiences via relevant paid advertising like Google Ads and social media ads based on business goals, reach, frequency, and targets.",
+        short: "Google and social ads that reach the right audience.",
         icon: paidAdvertising,
         href: "/services/marketing/paid-advertising",
       },
@@ -249,6 +266,7 @@ export const serviceCategories: ServiceCategory[] = [
           "Blog articles, website copy, case studies, newsletters, video scripts, content strategy.",
         summary:
           "Engage customers with the right content marketing services, such as blogs, website content, social media and useful brand resources.",
+        short: "Blogs, web copy, and social content that engage customers.",
         icon: contentMarketing,
         href: "/services/marketing/content-marketing",
       },
@@ -258,6 +276,7 @@ export const serviceCategories: ServiceCategory[] = [
           "Campaign design, automated sequences, list segmentation, broadcast messages, reporting.",
         summary:
           "Improve customer relations by engaging them with tailored email marketing and WhatsApp marketing messages, which convey updates and offers and cultivate leads.",
+        short: "Tailored email and WhatsApp campaigns that nurture leads.",
         icon: emailWhatsappMarketing,
         href: "/services/marketing/email-whatsapp-marketing",
       },
@@ -267,6 +286,7 @@ export const serviceCategories: ServiceCategory[] = [
           "Tracking setup, dashboards, funnel & conversion analysis, growth experiments, roadmap.",
         summary:
           "Ink Pixel Studios' data-driven analytics and growth strategy services assist businesses in making intelligent decisions and fostering sustainable growth.",
+        short: "Data-driven insights for smarter decisions and steady growth.",
         icon: analyticsGrowth,
         href: "/services/marketing/analytics-growth-strategy",
       },
@@ -286,6 +306,7 @@ export const serviceCategories: ServiceCategory[] = [
           "Software built around your workflow: requirements, architecture, development, testing, deployment.",
         summary:
           "Ink Pixel Studios specializes in delivering bespoke custom software solutions that enable businesses to streamline their operations, address unique challenges, and boost productivity.",
+        short: "Bespoke software that streamlines operations and boosts productivity.",
         icon: customSoftware,
         href: "/services/software/custom-software-development",
       },
@@ -295,6 +316,7 @@ export const serviceCategories: ServiceCategory[] = [
           "Sales pipelines, customer records, finance, HR & operations modules, reports, user roles.",
         summary:
           "We create bespoke ERP and CRM solutions to streamline processes between departments, centralize business operations and manage customer relationships.",
+        short: "Centralize operations and manage customer relationships in one place.",
         icon: erpCrm,
         href: "/services/software/erp-crm-systems",
       },
@@ -304,6 +326,7 @@ export const serviceCategories: ServiceCategory[] = [
           "Point-of-sale apps, barcode scanning, stock tracking, multi-branch inventory, sales reports.",
         summary:
           "The POS and inventory management software streamlines business operations, enabling seamless transactions, inventory tracking, and sales management through a digital system.",
+        short: "Smooth sales, transactions, and inventory tracking in one system.",
         icon: posInventory,
         href: "/services/software/pos-inventory-software",
       },
@@ -313,6 +336,7 @@ export const serviceCategories: ServiceCategory[] = [
           "MVP to launch: multi-tenant setup, subscriptions & billing, admin panels, user onboarding.",
         summary:
           "We develop scalable Software as a Service (SaaS) applications that enable companies to offer digital products and services on cloud-based, easily accessible platforms.",
+        short: "Scalable cloud SaaS products your customers can reach anywhere.",
         icon: saasDevelopment,
         href: "/services/software/saas-development",
       },
@@ -322,6 +346,7 @@ export const serviceCategories: ServiceCategory[] = [
           "API integrations, data migration, legacy system upgrades, cloud moves, data checks.",
         summary:
           "Our software integration and migration services ensure seamless data transfer, link existing systems and support businesses to new platforms with minimal disruption.",
+        short: "Connect your systems and move data with minimal disruption.",
         icon: softwareIntegration,
         href: "/services/software/software-integration-migration",
       },
@@ -331,6 +356,7 @@ export const serviceCategories: ServiceCategory[] = [
           "Manual & automated testing, bug tracking, performance and security checks, release support.",
         summary:
           "Whether it's functional testing and performance testing, compatibility checks, or tracking bugs and providing continuous support, we help minimize technical problems and enhance the user experience.",
+        short: "Testing and ongoing support that keep your software bug-free.",
         icon: qaTesting,
         href: "/services/software/qa-testing",
       },
@@ -350,6 +376,7 @@ export const serviceCategories: ServiceCategory[] = [
           "Dashboards, customer portals, booking systems, installable web apps, offline support.",
         summary:
           "Ink Pixel Studios creates scalable web app development and Progressive Web Apps (PWAs) to assist businesses in providing a seamless digital experience across devices.",
+        short: "Scalable web apps and PWAs that work seamlessly across devices.",
         icon: webApplications,
         href: "/services/applications/web-applications",
       },
@@ -359,6 +386,7 @@ export const serviceCategories: ServiceCategory[] = [
           "Native iPhone & iPad apps, App Store submission, updates for new iOS versions.",
         summary:
           "We create robust and efficient iOS apps optimized for iPhone and iPad, featuring intuitive design, dependable performance, and integration with the Apple ecosystem.",
+        short: "Fast, intuitive apps for iPhone and iPad.",
         icon: iosApp,
         href: "/services/applications/ios-app-development",
       },
@@ -368,6 +396,7 @@ export const serviceCategories: ServiceCategory[] = [
           "One codebase for iOS & Android, native device features, shared logic, store releases.",
         summary:
           "We're experts in app development across multiple platforms, offering you apps that work on both iOS and Android with a shared codebase as much as possible.",
+        short: "One codebase, apps for both iOS and Android.",
         icon: crossPlatformApps,
         href: "/services/applications/cross-platform-apps",
       },
@@ -377,6 +406,7 @@ export const serviceCategories: ServiceCategory[] = [
           "Native Android apps, Google Play publishing, testing across devices and OS versions.",
         summary:
           "We create custom Android applications that are optimized for performance, usability and user-friendliness on Android devices that have the required compatibility.",
+        short: "Custom Android apps built for performance and usability.",
         icon: androidApp,
         href: "/services/applications/android-app-development",
       },
@@ -386,6 +416,7 @@ export const serviceCategories: ServiceCategory[] = [
           "User research, wireframes, app flows, interactive prototypes, final screens, design systems.",
         summary:
           "Our UI/UX design for mobile application is focused on intuitive navigation, clear layouts and user journeys to make the applications easier to use.",
+        short: "Intuitive app designs with clear layouts and user journeys.",
         icon: appUiUxDesign,
         href: "/services/applications/app-ui-ux-design",
       },
@@ -395,6 +426,7 @@ export const serviceCategories: ServiceCategory[] = [
           "OS updates, crash monitoring, performance tuning, new features, server scaling.",
         summary:
           "Our app scaling solutions can handle growing users, data growth, and changing business requirements without impacting the user experience as your business expands.",
+        short: "Keep your app fast and reliable as your users grow.",
         icon: appMaintenance,
         href: "/services/applications/app-maintenance",
       },
@@ -414,6 +446,7 @@ export const serviceCategories: ServiceCategory[] = [
           "Workflow mapping, automated approvals, data entry & reporting, connections between your tools.",
         summary:
           "We at Ink Pixel Studios aim to make business life easier with custom Business Process Automation (BPA) services that eliminate manual processes, enhance accuracy and boost productivity.",
+        short: "Automate manual work to boost accuracy and productivity.",
         icon: businessProcessAutomation,
         href: "/services/ai-automation/business-process-automation",
       },
@@ -423,6 +456,7 @@ export const serviceCategories: ServiceCategory[] = [
           "Website & WhatsApp chatbots, support assistants, lead capture, answers from your own content.",
         summary:
           "Use intelligent AI chatbots and virtual assistants to automate customer support, answer common questions, and give prompt assistance.",
+        short: "AI assistants that answer customers instantly, around the clock.",
         icon: aiChatbots,
         href: "/services/ai-automation/ai-chatbots",
       },
@@ -432,6 +466,7 @@ export const serviceCategories: ServiceCategory[] = [
           "AI-assisted copy & visuals, scheduled posting, personalized emails, campaign automation.",
         summary:
           "Find smart ways to create content, build campaigns and automate repetitive marketing with AI-based content and marketing automation tools.",
+        short: "AI tools that create content and automate your campaigns.",
         icon: aiMarketingAutomation,
         href: "/services/ai-automation/ai-marketing-automation",
       },
@@ -441,6 +476,7 @@ export const serviceCategories: ServiceCategory[] = [
           "Invoice & form data extraction, OCR, data cleaning, classification, automatic reports.",
         summary:
           "Minimize manual workload and process document handling, data extraction, classification and information processing with AI driven data solutions.",
+        short: "AI that extracts, sorts, and processes your documents and data.",
         icon: documentDataProcessing,
         href: "/services/ai-automation/document-data-processing",
       },
@@ -450,6 +486,7 @@ export const serviceCategories: ServiceCategory[] = [
           "Task-specific AI agents, LLM integrations, internal knowledge assistants, API connections.",
         summary:
           "Create intelligent custom AI agents which can complete specific tasks and communicate with other business tools and software.",
+        short: "AI agents that handle tasks and connect with your tools.",
         icon: aiAgents,
         href: "/services/ai-automation/ai-agents",
       },
@@ -459,6 +496,7 @@ export const serviceCategories: ServiceCategory[] = [
           "AI readiness review, use-case planning, tool selection, team workshops & training.",
         summary:
           "We offer AI Strategy Consulting, Automation Planning, Tool Selection, Employee Training, and guidance for integrating AI into existing operations.",
+        short: "AI strategy, tool selection, and team training to get you started.",
         icon: aiConsulting,
         href: "/services/ai-automation/ai-consulting",
       },

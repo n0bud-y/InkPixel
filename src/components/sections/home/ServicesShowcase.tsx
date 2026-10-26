@@ -30,7 +30,7 @@ export function ServicesShowcase() {
                 <br className="max-sm:hidden" /> Around Your Business
               </>
             }
-            description="From developing mobile apps, creating custom software solutions, advancing artificial intelligence, building cloud-based systems, designing blockchain-based architectures, or driving user experience, every solution we create brings our expertise in strategy, technology, and creativity to bear, addressing real business problems, enhancing user experiences, and enabling faster sustainable growth."
+            description="From mobile apps and custom software to AI and standout user experiences, every solution we build blends strategy, technology, and creativity to solve real business problems and drive faster, sustainable growth."
           />  
         </Reveal>
 

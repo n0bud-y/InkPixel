@@ -279,7 +279,7 @@ export const privacyPolicy: LegalDocument = {
 export const termsAndConditions: LegalDocument = {
   name: "Terms and Conditions",
   description: "The terms and conditions for using the Ink Pixel Studios website and services.",
-  path: "/terms",
+  path: "/terms-and-conditions",
   title: "Terms and *Conditions*",
   intro:
     "Welcome to Ink Pixel Studios. These Terms and Conditions govern your access to and use of our website, communications, and services.",

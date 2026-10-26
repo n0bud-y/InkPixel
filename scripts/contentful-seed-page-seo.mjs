@@ -136,7 +136,7 @@ const pages = [
   [
     "terms",
     "Terms and Conditions",
-    "/terms",
+    "/terms-and-conditions",
     "Terms and Conditions | Ink Pixel Studios",
     "The terms and conditions for using the Ink Pixel Studios website.",
   ],

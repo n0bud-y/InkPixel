@@ -71,6 +71,10 @@ function tabClass(indicatorReady: boolean) {
   ].join(" ");
 }
 
+// Each category tab also opens its core service page (/services/<category>): with a mouse,
+// hovering switches the panel and a click opens the page; on touch screens the first tap
+// switches and tapping the selected pill (with its arrow) opens it; with the keyboard, the arrow
+// keys switch and Enter opens it.
 export function ServiceTabs({ categories }: { categories: ServiceCategory[] }) {
   const root = useRef<HTMLDivElement>(null);
   const glass = useRef<HTMLDivElement>(null);
@@ -208,7 +212,13 @@ export function ServiceTabs({ categories }: { categories: ServiceCategory[] }) {
             className="-mx-5 flex gap-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none] sm:-mx-8 sm:px-8 lg:mx-0 lg:flex-col lg:gap-0 lg:overflow-visible lg:px-0 lg:pb-0"
           >
             {categories.map((category) => (
-              <Tab key={category.slug} value={category.slug} className={tabClass(indicatorReady)}>
+              <Tab
+                key={category.slug}
+                value={category.slug}
+                href={`/services/${category.slug}`}
+                selectOnHover
+                className={tabClass(indicatorReady)}
+              >
                 {/* Divider above each tab, hidden next to the active one. */}
                 <span
                   aria-hidden="true"
@@ -217,6 +227,19 @@ export function ServiceTabs({ categories }: { categories: ServiceCategory[] }) {
                 <span className="transition-transform duration-300 ease-out lg:group-data-[state=inactive]:group-hover:translate-x-1.5">
                   {category.label}
                 </span>
+                {/* Phones and tablets: the selected pill opens its page on a second tap. */}
+                <svg
+                  aria-hidden="true"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="-ml-2 hidden size-4 shrink-0 group-data-[state=active]:block lg:group-data-[state=active]:hidden"
+                >
+                  <path d="M5 12h14M13 6l6 6-6 6" />
+                </svg>
                 <DropIcon className="hidden h-[clamp(1rem,1.1vw,1.375rem)] w-auto shrink-0 transition-transform duration-300 lg:block group-data-[state=inactive]:text-light/50 group-data-[state=inactive]:*:fill-transparent group-data-[state=inactive]:*:stroke-current group-data-[state=inactive]:*:[stroke-width:0.7] lg:group-hover:scale-110" />
               </Tab>
             ))}
@@ -244,7 +267,7 @@ export function ServiceTabs({ categories }: { categories: ServiceCategory[] }) {
                         <FeatureItem
                           icon={service.icon}
                           title={service.title}
-                          description={service.summary}
+                          description={service.short}
                         />
                       </Link>
                     </li>

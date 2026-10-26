@@ -47,10 +47,13 @@ const nextConfig: NextConfig = {
     ];
   },
   // Old addresses. Service pages moved under their core service in October 2026
-  // (/services/web-development → /services/development/web-development).
+  // (/services/web-development → /services/development/web-development); the Terms page moved to
+  // /terms-and-conditions (26 Oct 2026); /privacy is a shortcut to the Privacy Policy.
   async redirects() {
     return [
       { source: "/services/web-development", destination: "/services/development/web-development", permanent: true },
+      { source: "/terms", destination: "/terms-and-conditions", permanent: true },
+      { source: "/privacy", destination: "/privacy-policy", permanent: true },
     ];
   },
 };
