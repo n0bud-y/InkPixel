@@ -1,12 +1,19 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // The live site runs on cPanel (Node.js app): `next build` also writes a self-contained server
+  // to .next/standalone (server.js and only the packages it needs), which is what gets uploaded.
+  output: "standalone",
+  // This folder is the project root (a package-lock.json in the user's home folder would
+  // otherwise be taken for it, and the standalone folder would nest the whole path).
+  outputFileTracingRoot: process.cwd(),
   // The site's sub-folder, when it doesn't sit at the root of its domain: "/projects/inkpixelstudio"
   // on the cPanel demo, set in that server's .env.local. Unset locally and on Vercel.
   basePath: process.env.BASE_PATH,
   // No "X-Powered-By: Next.js" header.
   poweredByHeader: false,
   turbopack: {
+    root: process.cwd(),
     rules: {
       // Videos in src/assets/videos/ are imported like images: the import is the file's URL
       // (fingerprinted under /_next/static/media, cached long-term, basePath included).
