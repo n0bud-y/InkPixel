@@ -1,4 +1,6 @@
+import Image from "next/image";
 import Link from "next/link";
+import logo from "@/assets/images/logo.png";
 import { Reveal } from "@/components/motion/Reveal";
 import { footerNav, siteConfig } from "@/lib/site";
 
@@ -52,9 +54,15 @@ export function Footer() {
           stagger={0.08}
           className="mt-[clamp(2.5rem,3.95vw,4.75rem)] grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-[minmax(0,516fr)_minmax(0,388fr)_minmax(0,387fr)_minmax(0,319fr)] lg:gap-x-0"
         >
-          <p data-reveal className={`max-w-[25em] text-[#b9aea9] sm:col-span-2 lg:col-span-1 lg:pt-[clamp(2.5rem,2.95vw,3.55rem)] lg:pr-8 ${bodyText}`}>
-            {siteConfig.tagline}
-          </p>
+          {/* The white logo (as in the header), level with the column titles, then the studio line. */}
+          <div data-reveal className="sm:col-span-2 lg:col-span-1 lg:pr-8">
+            <Link href="/" className="inline-block rounded-md">
+              <Image src={logo} alt={siteConfig.name} className="h-auto w-[140px] sm:w-[150px] xl:w-[168px]" />
+            </Link>
+            <p className={`mt-[clamp(1.25rem,1.6vw,1.9rem)] max-w-[25em] text-[#b9aea9] ${bodyText}`}>
+              {siteConfig.tagline}
+            </p>
+          </div>
           <LinkColumn title="Sitemap" links={footerNav.sitemap} />
           <LinkColumn title="Services" links={footerNav.services} />
           <div data-reveal>

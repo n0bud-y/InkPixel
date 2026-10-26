@@ -8,6 +8,7 @@ import goodfirms from "@/assets/images/services/featured/goodfirms.svg";
 import inc from "@/assets/images/services/featured/inc.svg";
 import topSoftwareCompanies from "@/assets/images/services/featured/top-software-companies.svg";
 import yec from "@/assets/images/services/featured/yec.svg";
+import { serviceCategories } from "@/content/services";
 
 export type FeaturedLogo = { name: string; logo: StaticImageData };
 
@@ -45,17 +46,10 @@ export const servicesPage = {
   capabilities: {
     // The title in two halves, left and right of the drop.
     title: { start: ["Take a Look", "at What"], end: ["We Can Do", "For You"] },
-    // Three rows of three, as in the design (its spelling of "Development" corrected).
-    items: [
-      "Web Design",
-      "Web Development",
-      "App Design",
-      "Branding Design",
-      "3D Modeling",
-      "Digital Marketing",
-      "Animation",
-      "Web App Design & Development",
-      "UI/UX",
-    ],
+    // Every service (services.ts), each linking to its page, in three rows of two core services
+    // (26 Oct 2026; was the design's nine labels, which weren't links).
+    items: serviceCategories.flatMap((category) =>
+      category.services.map((service) => ({ label: service.title, href: service.href })),
+    ),
   },
 };

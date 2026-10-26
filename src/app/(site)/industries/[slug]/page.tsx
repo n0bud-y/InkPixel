@@ -19,8 +19,9 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const { slug } = await props.params;
   const { name, description } = industryFor(slug);
-  // A Page SEO entry in Contentful for this address takes over, if editors add one.
-  return pageMetadataFromCms({ title: name, description, path: `/industries/${slug}` });
+  // A Page SEO entry in Contentful for this address takes over, if editors add one. Noindex while
+  // it is a placeholder (any slug answers here).
+  return pageMetadataFromCms({ title: name, description, path: `/industries/${slug}`, noIndex: true });
 }
 
 export default async function IndustryPage(props: PageProps<"/industries/[slug]">) {

@@ -10,6 +10,9 @@ import { contactCta, features, footerNav, mainNav } from "@/lib/site";
 // (dummy ones included, issue I12); every case study and blog post from Contentful, with the date it was last published
 // (case studies) or updated (posts); and the blog's categories. If Contentful is down, the rest is still listed. Industry
 // pages are added once they have content (P3-08).
+// Placeholder pages, left out (and noindex) until they are built: Industries (P3-08) and Technologies.
+const unbuilt = ["/industries", "/technologies"];
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let caseStudies: CaseStudySummary[] = [];
   let posts: PostSummary[] = [];
@@ -29,7 +32,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }
 
   return [
-    ...[...mainNav, contactCta, ...footerNav.legal].map(({ href }) => ({ url: absoluteUrl(href) })),
+    ...[...mainNav, contactCta, ...footerNav.legal]
+      .filter(({ href }) => !unbuilt.includes(href))
+      .map(({ href }) => ({ url: absoluteUrl(href) })),
     ...servicePages.flatMap(({ slug }) => {
       const place = servicePlace(slug);
       return place ? [{ url: absoluteUrl(place.path) }] : [];

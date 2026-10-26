@@ -5,7 +5,7 @@
 //
 // Per service page (by slug): the intro beside the photo, "Why choose us?" (a line and the five
 // steps), and the "Broaden …" list of other services. The document has no section for AI Content
-// & Marketing Automation, so that page keeps its placeholder copy. One step was untitled in the
+// & Marketing Automation, so that page's copy is developer-written (26 Oct 2026, for review). One step was untitled in the
 // document and is titled here: Email & WhatsApp Marketing's "Campaign Scheduling & Delivery".
 
 export type ServiceCopy = {
@@ -1922,6 +1922,64 @@ export const serviceCopy: Record<string, ServiceCopy> = {
         {
           title: "Implementation Review & Support",
           text: "Review progress, address issues, and make recommendations to enable continued AI adoption.",
+        },
+      ],
+    },
+    more: {
+      title:
+        "Broaden Your Businesses with Our Different AI Automation Services",
+      text: "Our AI software services enable automation of repetitive tasks, enhance customer interactions, and streamline daily operations for businesses. We at Ink Pixel Studios build custom, practical and scalable AI solutions, catered to your specific business objectives.",
+      items: [
+        {
+          title: "AI Chatbots & Virtual Assistants",
+          text: "Use intelligent AI chatbots and virtual assistants to automate customer support, answer common questions, and give prompt assistance.",
+        },
+        {
+          title: "AI Content and Marketing Automation",
+          text: "Find smart ways to create content, build campaigns and automate repetitive marketing with AI-based content and marketing automation tools.",
+        },
+        {
+          title: "Document & Data Processing",
+          text: "Minimize manual workload and process document handling, data extraction, classification and information processing with AI driven data solutions.",
+        },
+        {
+          title: "Custom AI Agent & Integration",
+          text: "Create intelligent custom AI agents which can complete specific tasks and communicate with other business tools and software.",
+        },
+      ],
+    },
+  },
+  // Developer-written (26 Oct 2026): the document has no section for this service. In the style
+  // of the other AI Automation pages; to be reviewed by the project head.
+  "ai-marketing-automation": {
+    intro: {
+      title: "AI Content & Marketing Automation Services",
+      text: [
+        "Ink Pixel Studios helps businesses create content faster, run smarter campaigns, and spend less time on repetitive marketing tasks with AI-powered content and marketing automation services. We set up AI-assisted copywriting and visuals, scheduled social media posting, personalized email journeys, and automated campaign workflows that fit the way your team already works. Every solution combines the right AI tools with your brand voice and your audience, so your marketing stays consistent and on time while your team focuses on strategy and creativity.",
+      ],
+    },
+    whyChooseUs: {
+      text: "We start by understanding your brand, your audience, and the marketing tasks that take up most of your team's time, before recommending any tools. What sets us apart is our practical approach: we automate what saves real time, keep a human review where your brand voice matters, and connect everything to the platforms you already use. From small teams to growing businesses, our AI marketing automation solutions help you publish more consistently, personalize at scale, and make better decisions from your campaign data.",
+      steps: [
+        {
+          title: "Marketing Assessment",
+          text: "We review your channels, content process, audience, and the repetitive tasks slowing your team down.",
+        },
+        {
+          title: "Strategy & Tool Selection",
+          text: "We define your automation goals and choose the right AI content and marketing tools for your business.",
+        },
+        {
+          title: "Content & Workflow Setup",
+          text: "We set up AI-assisted content creation, brand guidelines, and automated publishing and email workflows.",
+        },
+        {
+          title: "Integration & Testing",
+          text: "We connect the tools to your CRM, email, and social platforms, then test the quality, timing, and accuracy of every workflow.",
+        },
+        {
+          title: "Launch & Optimization",
+          text: "We launch your campaigns, track performance, and refine the content and automations based on results and feedback.",
         },
       ],
     },

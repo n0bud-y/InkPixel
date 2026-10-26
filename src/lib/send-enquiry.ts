@@ -25,7 +25,6 @@ const enquirySchema = z.object({
   phone: optional(40),
   company: optional(120),
   services: z.array(text(60)).max(10).optional(),
-  budget: optional(60),
   estimate: z.object({ name: text(120), answers: z.array(z.tuple([text(300), text(300)])).max(12) }).optional(),
   message: text(5000).min(1),
   page: optional(200),

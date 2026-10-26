@@ -39,7 +39,7 @@ const chip =
   "inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full border px-4 py-2 text-[clamp(0.875rem,0.9vw,1rem)] font-medium transition duration-200 peer-focus-visible:ring-4 peer-focus-visible:ring-crimson/25";
 
 // The Contact page's form: name, email, phone, company, the services (chips, several allowed),
-// a budget (chips, one), and the message. Submit sends it to the studio's inbox (sendEnquiry,
+// and the message (no budget field: removed 26 Oct 2026). Submit sends it to the studio's inbox (sendEnquiry,
 // emailed from the server), then clears the form and opens the thank-you popup
 // (ThankYouDialog). If it can't be sent (mail server
 // down, or too many messages), a box under the button offers the visitor's email app with
@@ -60,7 +60,6 @@ export function ProjectForm({
   estimators: Record<string, Estimator>;
 }) {
   const [chosen, setChosen] = useState<string[]>([]);
-  const [budget, setBudget] = useState("");
   const [estimate, setEstimate] = useState<{ name: string; answers: [string, string][] } | null>(null);
   const [errors, setErrors] = useState<Errors>({});
   const [sending, setSending] = useState(false);
@@ -124,7 +123,6 @@ export function ProjectForm({
       phone: value("phone") || undefined,
       company: value("company") || undefined,
       services: chosen.map((slug) => services.find((item) => item.slug === slug)?.label ?? form.notSure),
-      budget: budget || undefined,
       estimate: estimate ?? undefined,
       message: value("message"),
       page: window.location.pathname,
@@ -138,7 +136,6 @@ export function ProjectForm({
     if (result.ok) {
       formRef.current?.reset();
       setChosen([]);
-      setBudget("");
       setEstimate(null);
       setSender({ name: enquiry.name, email: enquiry.email });
     } else setFailed({ reason: result.reason === "busy" ? "busy" : "unavailable", ...enquiryEmail(enquiry) });
@@ -244,32 +241,6 @@ export function ProjectForm({
                     </span>
                   )}
                   {service.label}
-                  {on && <Tick />}
-                </span>
-              </label>
-            );
-          })}
-        </ChipGroup>
-
-        <ChipGroup legend={form.budget.label} hint={form.budget.hint}>
-          {form.budgets.map((range) => {
-            const on = budget === range;
-            return (
-              <label key={range} className="relative">
-                <input
-                  type="radio"
-                  name="budget"
-                  value={range}
-                  checked={on}
-                  onChange={() => setBudget(range)}
-                  // A second click on the chosen range clears it (the budget is optional).
-                  onClick={() => on && setBudget("")}
-                  className="peer sr-only"
-                />
-                <span
-                  className={`${chip} ${on ? "border-crimson bg-crimson/[0.06] text-crimson" : "border-primary/15 bg-white text-primary hover:border-crimson/40 hover:bg-crimson/[0.03]"}`}
-                >
-                  {range}
                   {on && <Tick />}
                 </span>
               </label>

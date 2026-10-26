@@ -4,12 +4,14 @@ import { PageSchema } from "@/components/seo/PageSchema";
 import { breadcrumbSchema, pageMetadataFromCms } from "@/lib/seo";
 
 // From the page's Page SEO entry in Contentful; this is the fallback (stand-in description, issue I9).
+// Noindex (and out of the sitemap) while it is a placeholder.
 export function generateMetadata(): Promise<Metadata> {
   return pageMetadataFromCms({
     title: "Industries",
     description:
       "How Ink Pixel Studios builds software and digital products for fintech, healthcare, real estate, logistics, and e-commerce businesses.",
     path: "/industries",
+    noIndex: true,
   });
 }
 

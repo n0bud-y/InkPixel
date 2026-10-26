@@ -211,7 +211,7 @@ const itemAliases: Record<string, string> = {
   ecommerce: "ecommercedevelopment",
   webapplications: "webapplicationspwas",
   contentmanagementsystem: "cmsdevelopment",
-  aicontentandmarketingautomation: "aicontentmarketingautomation",
+  aicontentandmarketingautomation: "marketingautomation",
   customaiagentintegration: "customaiagentsintegrations",
 };
 const plain = (title: string) => title.toLowerCase().replace(/[^a-z0-9]/g, "");

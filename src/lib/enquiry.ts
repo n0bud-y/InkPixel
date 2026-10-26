@@ -12,7 +12,6 @@ export type Enquiry = {
   company?: string;
   /** The services chosen, by name ("Not sure yet" included). */
   services?: string[];
-  budget?: string;
   /** Answers carried over from a service page's cost estimator: [question, answer]. */
   estimate?: { name: string; answers: [string, string][] };
   message: string;
@@ -39,7 +38,6 @@ export function enquiryEmail(enquiry: Enquiry) {
     [labels.phone, enquiry.phone],
     [labels.company, enquiry.company],
     [labels.services, enquiry.services?.join(", ")],
-    [labels.budget, enquiry.budget],
   ]
     .filter(([, value]) => value)
     .map(([label, value]) => `${label}: ${value}`);

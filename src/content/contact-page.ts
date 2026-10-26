@@ -2,7 +2,7 @@
 // Our Work and Insights heroes, the "Get in touch" card). The address, phone, email, and map are
 // the studio's details from src/lib/site.ts and src/content/about.ts.
 //
-// PLACEHOLDER (issue I14): the budget ranges and the "What happens next" steps are stand-ins;
+// PLACEHOLDER (issue I14): the "What happens next" steps are stand-ins;
 // the meta description is a stand-in too (issue I9).
 export const contactPage = {
   /** The page's name, e.g. in the browser tab and the breadcrumb. */
@@ -28,9 +28,6 @@ export const contactPage = {
     optional: "Optional",
     services: { label: "What can we help with?", hint: "Choose all that apply." },
     notSure: "Not sure yet",
-    budget: { label: "Estimated budget", hint: "Optional. Helps us suggest the right approach." },
-    // PLACEHOLDER: stand-in ranges; show only ranges the studio is happy to quote.
-    budgets: ["Under $5,000", "$5,000 – $15,000", "$15,000 – $50,000", "$50,000+", "Not sure yet"],
     errors: {
       name: "Please tell us your name.",
       email: "Please enter your email address.",
@@ -38,7 +35,7 @@ export const contactPage = {
       message: "Please tell us a little about your project.",
     },
     /** Labels for the details at the end of the email. */
-    emailLabels: { name: "Name", email: "Email", phone: "Phone", company: "Company", services: "Services", budget: "Budget" },
+    emailLabels: { name: "Name", email: "Email", phone: "Phone", company: "Company", services: "Services" },
     /** The box with a visitor's answers from a service page's cost estimator. */
     estimate: { title: "From your {name} estimate", remove: "Remove", note: "My answers from the cost estimator" },
     submit: "Send message",
