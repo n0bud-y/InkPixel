@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, type CSSProperties, type FormEvent, type ReactNode } from "react";
 import { ThankYouDialog, type Sender } from "@/components/ui/ThankYouDialog";
 import { contactPage } from "@/content/contact-page";
-import { enquiryEmail, type Enquiry } from "@/lib/enquiry";
+import type { Enquiry } from "@/lib/enquiry";
 import { sendEnquiry } from "@/lib/send-enquiry";
 import { siteConfig } from "@/lib/site";
 
@@ -41,10 +41,10 @@ const chip =
 // The Contact page's form: name, email, phone, company, the services (chips, several allowed),
 // and the message (no budget field: removed 26 Oct 2026). Submit sends it to the studio's inbox (sendEnquiry,
 // emailed from the server), then clears the form and opens the thank-you popup
-// (ThankYouDialog). If it can't be sent (mail server
-// down, or too many messages), a box under the button offers the visitor's email app with
-// everything written out, or "Copy message"; what they typed stays in the form. Without JavaScript
-// the browser opens the email app itself (a mailto: form, with its own required-field checks).
+// (ThankYouDialog). If it can't be sent (mail server down or not set up, or too many messages), a
+// short error line under the button asks them to try again; what they typed stays in the form.
+// Without JavaScript the browser opens the email app itself (a mailto: form, with its own
+// required-field checks).
 //
 // - Errors show under a field when it is left empty or wrong, and on Submit (which then moves
 //   focus to the first one); they clear as soon as the field is fixed.
@@ -64,8 +64,7 @@ export function ProjectForm({
   const [errors, setErrors] = useState<Errors>({});
   const [sending, setSending] = useState(false);
   const [sender, setSender] = useState<Sender | null>(null);
-  const [failed, setFailed] = useState<{ reason: "busy" | "unavailable"; subject: string; text: string } | null>(null);
-  const [copied, setCopied] = useState(false);
+  const [failed, setFailed] = useState<"busy" | "unavailable" | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
   // Our own error messages replace the browser's once JavaScript runs; read the estimator answers.
@@ -130,7 +129,6 @@ export function ProjectForm({
     };
     setSending(true);
     setFailed(null);
-    setCopied(false);
     const result = await sendEnquiry(enquiry).catch(() => ({ ok: false, reason: "unavailable" }) as const);
     setSending(false);
     if (result.ok) {
@@ -138,17 +136,7 @@ export function ProjectForm({
       setChosen([]);
       setEstimate(null);
       setSender({ name: enquiry.name, email: enquiry.email });
-    } else setFailed({ reason: result.reason === "busy" ? "busy" : "unavailable", ...enquiryEmail(enquiry) });
-  };
-
-  const copy = async () => {
-    if (!failed) return;
-    try {
-      await navigator.clipboard.writeText(`${failed.subject}\n\n${failed.text}`);
-      setCopied(true);
-    } catch {
-      setCopied(false);
-    }
+    } else setFailed(result.reason === "busy" ? "busy" : "unavailable");
   };
 
   return (
@@ -334,52 +322,21 @@ export function ProjectForm({
 
         <div aria-live="polite" className="empty:hidden sm:col-span-2">
           {failed && (
-            <div className="rounded-2xl border border-crimson/25 bg-crimson/[0.04] p-4 text-[clamp(0.875rem,0.9vw,1rem)] leading-[1.7] text-primary/85 sm:p-5">
-              <p>
-                {form.failed[failed.reason]}{" "}
-                <a
-                  href={`mailto:${siteConfig.email}`}
-                  className="font-medium text-crimson underline underline-offset-4"
-                >
-                  {siteConfig.email}
-                </a>
-                .
-              </p>
-              <div className="mt-4 flex flex-wrap items-center gap-3">
-                <a
-                  href={`mailto:${siteConfig.email}?subject=${encodeURIComponent(failed.subject)}&body=${encodeURIComponent(failed.text)}`}
-                  className="inline-flex h-11 items-center rounded-full bg-primary px-5 text-[14px] font-medium text-white transition hover:bg-crimson"
-                >
-                  {form.failed.open}
-                </a>
-                <button
-                  type="button"
-                  onClick={copy}
-                  className="inline-flex h-11 items-center gap-2 rounded-full border border-primary/15 bg-white px-5 text-[14px] font-medium text-primary transition hover:border-crimson/40 hover:text-crimson"
-                >
-                  <svg
-                    aria-hidden="true"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="size-4"
-                  >
-                    {copied ? (
-                      <path d="m5 12.5 4.5 4.5L19 7.5" />
-                    ) : (
-                      <>
-                        <rect x="8" y="8" width="12" height="12" rx="2" />
-                        <path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" />
-                      </>
-                    )}
-                  </svg>
-                  {copied ? form.failed.copied : form.failed.copy}
-                </button>
-              </div>
-            </div>
+            <p className="flex items-start gap-2 text-[clamp(0.875rem,0.9vw,1rem)] leading-[1.6] font-medium text-crimson">
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                className="mt-[0.2em] size-4 shrink-0"
+              >
+                <circle cx="12" cy="12" r="9" />
+                <path d="M12 7.5v5.5M12 16.5v.01" />
+              </svg>
+              {form.failed[failed]}
+            </p>
           )}
         </div>
       </form>

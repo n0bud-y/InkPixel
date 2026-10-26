@@ -4,7 +4,7 @@ import { useState, type FormEvent } from "react";
 import { Honeypot } from "@/components/sections/contact/ProjectForm";
 import { ThankYouDialog, type Sender } from "@/components/ui/ThankYouDialog";
 import { contactPage } from "@/content/contact-page";
-import { enquiryEmail, type Enquiry } from "@/lib/enquiry";
+import type { Enquiry } from "@/lib/enquiry";
 import { sendEnquiry } from "@/lib/send-enquiry";
 import { siteConfig } from "@/lib/site";
 
@@ -14,13 +14,13 @@ const field =
   "mt-1 w-full border-b border-primary/45 bg-transparent py-2 text-[clamp(0.9375rem,1vw,1.125rem)] text-primary outline-none transition-colors duration-300 focus:border-crimson";
 const label = "block text-[clamp(0.8125rem,0.85vw,1rem)] font-medium text-primary";
 
-type Status = { state: "idle" | "sending" } | { state: "failed"; reason: "busy" | "unavailable"; mailto: string };
+type Status = { state: "idle" | "sending" } | { state: "failed"; reason: "busy" | "unavailable" };
 
 // The "Get in touch" form (About and the service pages): name, email, and message. Submit sends
 // it to the studio's inbox (sendEnquiry, emailed from the server), then clears the form and opens
-// the thank-you popup (ThankYouDialog). If it can't be sent, a line under the button offers the
-// visitor's email app with the message written out (the Contact page's wording). Without
-// JavaScript the browser opens the email app itself (a mailto: form).
+// the thank-you popup (ThankYouDialog). If it can't be sent, a short error line under the button
+// asks them to try again (the Contact page's wording). Without JavaScript the browser opens the
+// email app itself (a mailto: form).
 export function ContactForm() {
   const [status, setStatus] = useState<Status>({ state: "idle" });
   const [sender, setSender] = useState<Sender | null>(null);
@@ -48,12 +48,7 @@ export function ContactForm() {
       setSender({ name: enquiry.name, email: enquiry.email });
       return;
     }
-    const { subject, text: body } = enquiryEmail(enquiry);
-    setStatus({
-      state: "failed",
-      reason: result.reason === "busy" ? "busy" : "unavailable",
-      mailto: `mailto:${siteConfig.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
-    });
+    setStatus({ state: "failed", reason: result.reason === "busy" ? "busy" : "unavailable" });
   };
 
   return (
@@ -94,19 +89,8 @@ export function ContactForm() {
               />
             )}
           </button>
-          <p aria-live="polite" className="mt-4 text-sm leading-relaxed text-primary/75">
-            {status.state === "failed" && (
-              <>
-                {text.failed[status.reason]}{" "}
-                <a href={`mailto:${siteConfig.email}`} className="text-crimson underline underline-offset-4">
-                  {siteConfig.email}
-                </a>
-                .{" "}
-                <a href={status.mailto} className="font-medium text-crimson underline underline-offset-4">
-                  {text.failed.open}
-                </a>
-              </>
-            )}
+          <p aria-live="polite" className="mt-4 text-sm leading-relaxed font-medium text-crimson empty:hidden">
+            {status.state === "failed" && text.failed[status.reason]}
           </p>
         </div>
       </form>

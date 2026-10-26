@@ -43,3 +43,6 @@ next-env.d.ts
 
 # design references (Figma exports) — kept locally, never committed
 /src/assets/design/
+
+# contact form backup log (src/lib/send-enquiry.ts)
+/data/

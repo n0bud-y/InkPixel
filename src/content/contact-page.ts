@@ -51,13 +51,10 @@ export const contactPage = {
       closeLabel: "Close",
       work: { label: "See our work", href: "/case-studies" },
     },
-    /** When it couldn't be sent: the visitor can send it from their own email app instead. */
+    /** The line under the button when the message couldn't be sent (both contact forms). */
     failed: {
-      unavailable: "Sorry, your message couldn't be sent just now. Please try again, or send it from your email app to",
-      busy: "You've sent several messages in a few minutes. Please wait a little, or send this one from your email app to",
-      open: "Open in my email app",
-      copy: "Copy message",
-      copied: "Copied",
+      unavailable: "Sorry, your message couldn't be sent just now. Please try again in a moment.",
+      busy: "You've sent several messages in a few minutes. Please wait a little, then try again.",
     },
   },
 

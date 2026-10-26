@@ -22,8 +22,7 @@ export type Enquiry = {
 };
 
 /** The email for an enquiry: its subject, and its text (the message, the estimator answers, then
- *  the details). Used for the email the site sends, and for the visitor's own email app when
- *  sending fails. */
+ *  the details), as the site sends it to the studio. */
 export function enquiryEmail(enquiry: Enquiry) {
   const named = (enquiry.services ?? []).filter((name) => name !== form.notSure);
   const subject =

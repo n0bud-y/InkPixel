@@ -1,5 +1,7 @@
 "use server";
 
+import { appendFile, mkdir } from "node:fs/promises";
+import path from "node:path";
 import { headers } from "next/headers";
 import nodemailer, { type Transporter } from "nodemailer";
 import * as z from "zod";
@@ -7,13 +9,21 @@ import { env } from "@/env";
 import { enquiryEmail, type Enquiry } from "@/lib/enquiry";
 import { siteConfig } from "@/lib/site";
 
-// The contact forms' server function: checks what was sent, then emails it to the studio
-// (info@inkpixelstudios.com, or CONTACT_TO) through the studio's own mailbox over SMTP, with the
-// visitor as Reply-To so the studio can answer straight from its inbox.
+// The contact forms' server function: checks what was sent, saves it to a backup log on the
+// server, and emails it to the studio (info@inkpixelstudios.com, or CONTACT_TO) with the visitor
+// as Reply-To, so the studio can answer straight from its inbox. The same flow as the studio's
+// PHP form handlers (PHP's mail()), so it needs no settings on cPanel hosting:
+// - Email: through the server's own mail program (sendmail, as PHP's mail() uses), from
+//   info@inkpixelstudios.com. If SMTP_HOST, SMTP_USER, and SMTP_PASSWORD are set, through that
+//   mailbox over SMTP instead.
+// - Backup: every enquiry is added to data/submissions.log in the app's folder (one JSON line
+//   each; not reachable from the web), whether or not the email goes out, so none is lost. A
+//   failed email is noted in the log too, and in the server's error log.
+// - The visitor sees "sent" (the thank-you popup) when the email went out or the enquiry was
+//   saved; only when both fail do they get the "try again" line.
 // - Fields are checked again here (types and lengths), whatever the browser did.
 // - Bots: a hidden "website" field that only bots fill in (they get "sent" and nothing is
-//   emailed), and at most 5 enquiries per visitor (IP address) per 10 minutes.
-// - Without the SMTP settings, or if sending fails, the form offers the visitor's email app.
+//   emailed or saved), and at most 5 enquiries per visitor (IP address) per 10 minutes.
 
 const text = (max: number) => z.string().trim().max(max);
 const optional = (max: number) => text(max).optional();
@@ -48,18 +58,36 @@ function tooMany(visitor: string) {
   return false;
 }
 
+// The backup log: data/submissions.log in the app's folder (the folder the server runs from),
+// or SUBMISSIONS_LOG.
+const logFile = env.SUBMISSIONS_LOG ?? path.join(process.cwd(), "data", "submissions.log");
+
+async function log(record: Record<string, unknown>) {
+  try {
+    await mkdir(path.dirname(logFile), { recursive: true });
+    await appendFile(logFile, `${JSON.stringify(record)}\n`, "utf8");
+    return true;
+  } catch (error) {
+    console.error(`Enquiry backup: could not write ${logFile}.`, error);
+    return false;
+  }
+}
+
+// SMTP when its settings are all there; otherwise the server's sendmail program.
 let transporter: Transporter | undefined;
 function mailer() {
   const { SMTP_HOST: host, SMTP_PORT: port, SMTP_USER: user, SMTP_PASSWORD: pass } = env;
-  if (!host || !user || !pass) return null;
-  transporter ??= nodemailer.createTransport({
-    host,
-    port,
-    // Port 465 uses TLS from the start; 587 upgrades with STARTTLS.
-    secure: port === 465,
-    auth: { user, pass },
-  });
-  return { transport: transporter, user };
+  const smtp = Boolean(host && user && pass);
+  transporter ??= smtp
+    ? nodemailer.createTransport({
+        host,
+        port,
+        // Port 465 uses TLS from the start; 587 upgrades with STARTTLS.
+        secure: port === 465,
+        auth: { user, pass },
+      })
+    : nodemailer.createTransport({ sendmail: true, newline: "unix", path: env.SENDMAIL_PATH });
+  return { transport: transporter, from: smtp && user ? user : siteConfig.email };
 }
 
 export async function sendEnquiry(input: Enquiry): Promise<EnquiryResult> {
@@ -75,25 +103,26 @@ export async function sendEnquiry(input: Enquiry): Promise<EnquiryResult> {
   const visitor = requestHeaders.get("x-forwarded-for")?.split(",").at(-1)?.trim() || requestHeaders.get("x-real-ip");
   if (visitor && tooMany(visitor)) return { ok: false, reason: "busy" };
 
-  const smtp = mailer();
-  if (!smtp) {
-    console.error("Enquiry not sent: SMTP_HOST, SMTP_USER, and SMTP_PASSWORD are not all set.");
-    return { ok: false, reason: "unavailable" };
-  }
+  const time = new Date().toISOString();
+  const logged = await log({ time, ...enquiry, website: undefined, ip: visitor ?? "" });
 
   const { subject, text: body } = enquiryEmail(enquiry);
   const page = enquiry.page ? `${siteConfig.url}${enquiry.page}` : siteConfig.url;
+  const { transport, from } = mailer();
+  let sent = false;
   try {
-    await smtp.transport.sendMail({
-      from: { name: `${siteConfig.name} website`, address: smtp.user },
+    await transport.sendMail({
+      from: { name: `${siteConfig.name} website`, address: from },
       to: env.CONTACT_TO ?? siteConfig.email,
       replyTo: { name: enquiry.name, address: enquiry.email },
       subject,
       text: `${body}\n\n—\nSent from the contact form on ${page}`,
     });
-    return { ok: true };
+    sent = true;
   } catch (error) {
-    console.error("Enquiry not sent: the mail server refused it.", error);
-    return { ok: false, reason: "unavailable" };
+    console.error("Enquiry email not sent (it is in the backup log if that was written).", error);
+    if (logged) await log({ time: new Date().toISOString(), note: `email not sent for the enquiry at ${time}` });
   }
+
+  return sent || logged ? { ok: true } : { ok: false, reason: "unavailable" };
 }
