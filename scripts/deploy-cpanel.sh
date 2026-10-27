@@ -36,8 +36,10 @@ if [ -z "${SKIP_PULL:-}" ]; then
   git pull --ff-only
 fi
 
+# --include=dev: the build tools (Tailwind, TypeScript) are devDependencies, and cPanel's Node.js
+# environment sets NODE_ENV=production, which would leave them out.
 echo "→ Installing packages"
-npm install --no-audit --no-fund
+npm install --include=dev --no-audit --no-fund
 
 # Webpack, not Turbopack: the server's Linux is too old for Turbopack's native build tools
 # (GLIBC_2.29 not found), and Next.js then only offers Webpack.
