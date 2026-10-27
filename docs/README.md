@@ -387,6 +387,7 @@ Newest first. Every new fact, decision, or change to the project is recorded her
 
 | Date | Update | Source |
 |---|---|---|
+| 27 Oct 2026 | **Deploy script fix** (project head: pull ran but the site didn't change). The post-merge hook ran, but `deploy-cpanel.sh` stopped at once: cPanel's Node.js `activate` reads an unset variable (`CL_VIRTUAL_ENV`) and the script's strict mode (`set -u`) made that fatal. `activate` now runs with that check off | Project head |
 | 27 Oct 2026 | **Zip files ignored by git** (`*.zip` in `.gitignore`). A commit of `.next.zip` (423 MB) was refused by GitHub (100 MB per file); the commit was undone, the file kept on disk | Project head |
 | 27 Oct 2026 | **FAQ structured data on About and Contact too** (project head: "why faqs schema missing"). Home already had it; About and Contact show the same FAQ section, so they now carry the same FAQPage (each with its own `@id`). Service pages left out on purpose, to keep the same questions off 50+ pages. Google shows FAQ rich results only for government and health sites, so this helps understanding, not the look of search results | Project head |
 | 27 Oct 2026 | **Legal pages full width** (project head). Privacy Policy, Terms and Conditions, Refund Policy: the "On this page" column is wider (20rem, was 15rem) and the text now fills the site container instead of a centred 46rem column | Project head |

@@ -18,8 +18,11 @@ if [ -z "${VIRTUAL_ENV:-}" ]; then
     echo "Could not find this app's Node.js environment. Run the 'source .../activate' command shown in Setup Node.js App, then run this again." >&2
     exit 1
   fi
+  # cPanel's activate script reads variables that may be unset (CL_VIRTUAL_ENV), so not under set -u.
+  set +u
   # shellcheck disable=SC1090
   source "$activate"
+  set -u
 fi
 
 if [ ! -f .env.production ]; then
