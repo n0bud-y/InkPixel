@@ -347,6 +347,7 @@ Newest first.
 
 | Date | Update |
 |---|---|
+| 27 Oct 2026 | Server build: `deploy-cpanel.sh` runs `npx next build --webpack` (cPanel glibc < 2.29: no native SWC, WASM only, Turbopack refuses). `next.config.ts` `webpack()` adds `scripts/webpack-video-loader.cjs` for `*.mp4` (emits `static/media/<name>.<hash8>.mp4`, server build with `../..` prefix like next-image-loader; Next's bundled webpack ignores `generator.outputPath`). Checked locally: webpack build, standalone server 200 on /, /about, /products, /privacy-policy and the video URL; Turbopack build still passes |
 | 27 Oct 2026 | `deploy-cpanel.sh`: `set +u` around `source "$activate"` (CloudLinux nodevenv activate line 78: `CL_VIRTUAL_ENV: unbound variable`, which aborted the hook's run) |
 | 27 Oct 2026 | `.gitignore`: `*.zip`. Local commit 5a9f5c0 (only `.next.zip`, rejected by GitHub GH001) undone with `git reset --soft HEAD~1`; file left untracked |
 | 27 Oct 2026 | FAQ schema: `faqSchema(items, path = "/")`, `@id` `<path>#faq`; added to `/about` and `/contact` PageSchema (home unchanged; service pages not). Live check before: home has FAQPage (7 questions) |

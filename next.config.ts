@@ -24,6 +24,17 @@ const nextConfig: NextConfig = {
       "*.mp4": { type: "asset" },
     },
   },
+  // The same rule for Webpack builds (`next build --webpack`): the cPanel server's Linux is too old
+  // for Turbopack (scripts/deploy-cpanel.sh). Each build writes the files into .next/static/media:
+  // the server build from its own output folder, as Next.js's image loader does.
+  webpack(config, { isServer, dev, nextRuntime }) {
+    const prefix = !isServer ? "" : dev || nextRuntime === "edge" ? ".." : "../..";
+    config.module.rules.push({
+      test: /\.mp4$/,
+      use: { loader: `${process.cwd()}/scripts/webpack-video-loader.cjs`, options: { prefix, basePath: process.env.BASE_PATH ?? "" } },
+    });
+    return config;
+  },
   images: {
     // Case-study and blog images come from Contentful's image server, from our space only.
     remotePatterns: [
