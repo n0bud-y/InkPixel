@@ -50,7 +50,7 @@ export function LegalPage({ document }: { document: LegalDocument }) {
       </section>
 
       <div className="bg-white">
-        <div className="container-site grid grid-cols-[minmax(0,1fr)] gap-8 py-[clamp(3rem,5vw,6rem)] lg:grid-cols-[minmax(0,15rem)_minmax(0,46rem)] lg:justify-center lg:gap-[clamp(3rem,5vw,6rem)]">
+        <div className="container-site grid grid-cols-[minmax(0,1fr)] gap-8 py-[clamp(3rem,5vw,6rem)] lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] lg:gap-[clamp(3rem,5vw,6rem)]">
           <TableOfContents headings={headings} label={legalLabels.toc} />
           <div className="text-[clamp(1rem,1.05vw,1.1875rem)] leading-[1.85] text-primary/85">
             {document.sections.map((section, index) => (

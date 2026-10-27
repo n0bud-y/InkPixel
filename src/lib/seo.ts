@@ -25,8 +25,9 @@ import { siteConfig } from "@/lib/site";
 
 /** Search engines may index the site (robots.txt allows crawling, no noindex tag) unless
  *  `BLOCK_INDEXING=true` is set, e.g. on a test copy such as the old cPanel demo (26 Oct 2026,
- *  project head: indexing on by default, so the live site needs no setting). robots.ts uses the
- *  same rule. */
+ *  project head: indexing on by default, so the live site needs no setting). Read at build time
+ *  only (next.config.ts `env`), so the server's own environment can't change it. robots.ts uses
+ *  the same rule. */
 export const indexable = process.env.BLOCK_INDEXING !== "true";
 
 /** A path on the site as a full URL on the live site. */
@@ -237,11 +238,12 @@ export const coreServicesList = (name: string) =>
     serviceCategories.map(({ label, slug }) => ({ name: label, path: `/services/${slug}` })),
   );
 
-// The FAQ, as shown on the home page (one FAQPage for the site, on the home page only).
-export function faqSchema(items: { question: string; answer: string[] }[]): FAQPage {
+// The FAQ, as shown in the FAQ section of the page at `path`: home, About, and Contact (project
+// head, 27 Oct 2026; not the service pages, to keep the same questions off 50+ pages).
+export function faqSchema(items: { question: string; answer: string[] }[], path = "/"): FAQPage {
   return {
     "@type": "FAQPage",
-    "@id": absoluteUrl("/#faq"),
+    "@id": absoluteUrl(`${path}#faq`),
     mainEntity: items.map(({ question, answer }) => ({
       "@type": "Question",
       name: question,

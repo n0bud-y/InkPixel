@@ -6,9 +6,10 @@ import type { Estimator, ServiceChoice } from "@/components/sections/contact/Pro
 import { Faq } from "@/components/sections/home/Faq";
 import { PageSchema } from "@/components/seo/PageSchema";
 import { contactPage } from "@/content/contact-page";
+import { faqs } from "@/content/faq";
 import { servicePages, servicePlace } from "@/content/service-pages";
 import { serviceCategories } from "@/content/services";
-import { breadcrumbSchema, pageMetadataFromCms } from "@/lib/seo";
+import { breadcrumbSchema, faqSchema, pageMetadataFromCms } from "@/lib/seo";
 
 // From the page's Page SEO entry in Contentful; the content file's name and description otherwise.
 export function generateMetadata(): Promise<Metadata> {
@@ -41,7 +42,7 @@ export default function ContactPage() {
       <PageSchema
         path="/contact"
         page={{ type: "ContactPage", title: contactPage.name, description: contactPage.description }}
-        items={[breadcrumbSchema([{ name: contactPage.name, path: "/contact" }])]}
+        items={[breadcrumbSchema([{ name: contactPage.name, path: "/contact" }]), faqSchema(faqs, "/contact")]}
       />
       <ContactHero />
       <ContactSection services={services} estimators={estimators} />

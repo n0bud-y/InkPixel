@@ -27,7 +27,7 @@ export function generateMetadata(): Promise<Metadata> {
 }
 
 // Structured data: the studio and the website, the page, the core services, and the FAQ (as shown
-// in the FAQ section; the site's only FAQPage), plus any schema pasted into the home page's Page
+// in the FAQ section; About and Contact have it too), plus any schema pasted into the home page's Page
 // SEO entry.
 export default function HomePage() {
   return (

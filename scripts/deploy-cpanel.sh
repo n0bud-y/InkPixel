@@ -4,6 +4,7 @@
 # static files and public/ out of it), and restarts the app.
 #
 # Usage, in cPanel → Terminal:   bash ~/<application root>/scripts/deploy-cpanel.sh
+# or just `git pull`, once the server runs it after each pull (git config core.hooksPath .githooks).
 # One-time setup (docs/README.md → Deploying): .env.production with the Contentful keys in the
 # application root, and the app's startup file set to .next/standalone/server.js.
 set -euo pipefail
@@ -26,8 +27,11 @@ if [ ! -f .env.production ]; then
   exit 1
 fi
 
-echo "→ Pulling the latest code"
-git pull --ff-only
+# SKIP_PULL=1: called by the post-merge hook (.githooks/), right after a `git pull`.
+if [ -z "${SKIP_PULL:-}" ]; then
+  echo "→ Pulling the latest code"
+  git pull --ff-only
+fi
 
 echo "→ Installing packages"
 npm install --no-audit --no-fund

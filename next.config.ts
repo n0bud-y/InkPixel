@@ -10,6 +10,10 @@ const nextConfig: NextConfig = {
   // The site's sub-folder, when it doesn't sit at the root of its domain: "/projects/inkpixelstudio"
   // on the cPanel demo, set in that server's .env.local. Unset locally and on Vercel.
   basePath: process.env.BASE_PATH,
+  // Whether search engines are blocked (src/lib/seo.ts `indexable`) is fixed at build time: pages
+  // refreshed on the server later can't pick up a different setting from the server's environment
+  // (a leftover BLOCK_INDEXING=true there put noindex on the live site, 27 Oct 2026).
+  env: { BLOCK_INDEXING: process.env.BLOCK_INDEXING ?? "" },
   // No "X-Powered-By: Next.js" header.
   poweredByHeader: false,
   turbopack: {

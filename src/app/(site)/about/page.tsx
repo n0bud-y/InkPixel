@@ -10,7 +10,8 @@ import { Faq } from "@/components/sections/home/Faq";
 import { Industries } from "@/components/sections/home/Industries";
 import { Insights } from "@/components/sections/home/Insights";
 import { PageSchema } from "@/components/seo/PageSchema";
-import { breadcrumbSchema, pageMetadataFromCms } from "@/lib/seo";
+import { faqs } from "@/content/faq";
+import { breadcrumbSchema, faqSchema, pageMetadataFromCms } from "@/lib/seo";
 import { features } from "@/lib/site";
 
 // From the page's Page SEO entry in Contentful; this is the fallback (the structured data's too).
@@ -33,7 +34,7 @@ export default function AboutPage() {
       <PageSchema
         path={seo.path}
         page={{ type: "AboutPage", title: seo.title, description: seo.description }}
-        items={[breadcrumbSchema([{ name: "About", path: seo.path }])]}
+        items={[breadcrumbSchema([{ name: "About", path: seo.path }]), faqSchema(faqs, seo.path)]}
       />
       <AboutHero />
       <TrustedBy />
