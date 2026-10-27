@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Runs after every `git pull` on the cPanel server (once `git config core.hooksPath .githooks` is
+# set there): builds and restarts the live site with scripts/deploy-cpanel.sh, which skips its own
+# pull, as this one just happened.
+SKIP_PULL=1 exec bash "$(git rev-parse --show-toplevel)/scripts/deploy-cpanel.sh"
