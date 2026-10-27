@@ -46,3 +46,6 @@ next-env.d.ts
 
 # contact form backup log (src/lib/send-enquiry.ts)
 /data/
+
+# build zips (uploads to the server); too big for GitHub (100 MB limit)
+*.zip

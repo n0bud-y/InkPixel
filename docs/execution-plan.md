@@ -347,6 +347,7 @@ Newest first.
 
 | Date | Update |
 |---|---|
+| 27 Oct 2026 | `.gitignore`: `*.zip`. Local commit 5a9f5c0 (only `.next.zip`, rejected by GitHub GH001) undone with `git reset --soft HEAD~1`; file left untracked |
 | 27 Oct 2026 | FAQ schema: `faqSchema(items, path = "/")`, `@id` `<path>#faq`; added to `/about` and `/contact` PageSchema (home unchanged; service pages not). Live check before: home has FAQPage (7 questions) |
 | 27 Oct 2026 | `LegalPage`: grid `lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)]` (was 15rem + 46rem, centred) |
 | 27 Oct 2026 | Deploy on pull: `.githooks/post-merge` (`SKIP_PULL=1 exec bash scripts/deploy-cpanel.sh`); `deploy-cpanel.sh` skips its `git pull` when `SKIP_PULL` is set; `.gitattributes` keeps `.githooks/*` on LF; hook staged executable (`git update-index --chmod=+x`). README Deploying: pull is the deploy, one-time `git config core.hooksPath .githooks` |
