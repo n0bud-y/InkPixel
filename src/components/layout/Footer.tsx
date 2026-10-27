@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import logo from "@/assets/images/logo.png";
 import { Reveal } from "@/components/motion/Reveal";
+import { SocialLinks } from "@/components/sections/about/ContactDetails";
 import { footerNav, siteConfig } from "@/lib/site";
 
 // Footer text colours from the design: warm greys, not tints of the page's light colour.
@@ -29,7 +30,8 @@ function LinkColumn({ title, links }: { title: string; links: readonly { href: s
 }
 
 // "Let's make something great.": big closing line, then the studio line, sitemap, services
-// and contact columns, and the copyright row. Sizes follow the 1920px design frame.
+// and contact columns (email, address, social icons), and the copyright row. Sizes follow the
+// 1920px design frame.
 // Phones: one column; tablets: two; desktop: four.
 export function Footer() {
   return (
@@ -76,6 +78,8 @@ export function Footer() {
             <address className={`mt-6 max-w-[16em] text-[#b9aea9] not-italic ${bodyText}`}>
               {siteConfig.address}
             </address>
+            {/* The studio's social profiles (siteConfig.socialProfiles), as in the contact cards. */}
+            <SocialLinks tone="onDark" className="mt-6" />
           </div>
         </Reveal>
 

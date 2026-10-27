@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, type MouseEvent, type ReactNode } from "react";
 import { Button } from "@/components/ui/Button";
 import { industries } from "@/content/industries";
+import { serviceCategories } from "@/content/services";
 import { technologyMenu } from "@/content/technology-menu";
 import { contactCta, mainNav } from "@/lib/site";
 import { useHeaderLight } from "./header-tone";
@@ -84,10 +85,16 @@ export function MobileNav({ logo }: { logo: ReactNode }) {
             <ul>
               {mainNav.map((item, index) => {
                 const active = isActive(pathname, item.href);
-                if (item.href === "/industries" || item.href === "/technologies") {
+                if (item.href === "/services" || item.href === "/industries" || item.href === "/technologies") {
                   return (
                     <ExpandableItem key={item.href} label={item.label} number={index + 1} active={active}>
-                      {item.href === "/industries" ? <IndustriesList label={item.label} /> : <TechnologiesList />}
+                      {item.href === "/services" ? (
+                        <ServicesList label={item.label} />
+                      ) : item.href === "/industries" ? (
+                        <IndustriesList label={item.label} />
+                      ) : (
+                        <TechnologiesList />
+                      )}
                     </ExpandableItem>
                   );
                 }
@@ -126,7 +133,7 @@ export function MobileNav({ logo }: { logo: ReactNode }) {
   );
 }
 
-// A menu item that is not a link (Industries, Technologies): a tap opens its content under it.
+// A menu item that opens its content under it on a tap (Services, Industries, Technologies).
 // <details>, so it works without JavaScript.
 function ExpandableItem({
   label,
@@ -167,6 +174,84 @@ function ExpandableItem({
         <div className="pt-1 pb-6">{children}</div>
       </details>
     </li>
+  );
+}
+
+// Services: "All services" (the Services page), then the core services (src/content/services.ts).
+// A core service's name opens its page; the rest of its row opens its services (icon on the brand
+// gradient and name, each a link to its page) and a link to the core service's page.
+function ServicesList({ label }: { label: string }) {
+  return (
+    <div className="flex flex-col gap-2">
+      <Link
+        href="/services"
+        className="flex items-center justify-between rounded-xl bg-brand-gradient px-4 py-3 text-[15px] font-medium text-white shadow-[0_10px_24px_-12px_rgb(201_29_76_/_0.8)]"
+      >
+        All services
+        <Arrow />
+      </Link>
+      <ul aria-label={label} className="flex flex-col gap-2">
+        {serviceCategories.map((category) => (
+          <li key={category.slug} className="rounded-xl bg-white/[0.04] ring-1 ring-white/[0.06]">
+            <details className="group/core">
+              {/* The name is a link to the core service's page (a link inside <summary> opens the
+                  page instead of toggling); the rest of the row opens and closes the list. */}
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-4 py-3 text-[16px] font-medium text-light/90 group-open/core:text-white [&::-webkit-details-marker]:hidden">
+                <Link
+                  href={category.href ?? `/services/${category.slug}`}
+                  className="-my-1 rounded-md py-1 underline-offset-4 transition-colors hover:text-white hover:underline"
+                >
+                  {category.label}
+                </Link>
+                <span className="flex items-center gap-3 text-[12px] font-normal text-light/45">
+                  {category.services.length}
+                  <svg
+                    viewBox="0 0 12 12"
+                    fill="none"
+                    aria-hidden="true"
+                    className="size-3 transition-transform duration-200 group-open/core:rotate-180"
+                  >
+                    <path d="M2.5 4.5 6 8l3.5-3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </span>
+              </summary>
+              <ul aria-label={`${category.label} services`} className="grid gap-0.5 px-2 pb-3">
+                {category.services.map((service) => (
+                  <li key={service.href}>
+                    <Link
+                      href={service.href}
+                      className="flex items-center gap-3 rounded-lg px-2 py-2 text-[14px] leading-snug text-light/85 transition-colors hover:bg-white/[0.06] hover:text-white"
+                    >
+                      <span className="grid size-8 shrink-0 place-items-center rounded-full bg-brand-gradient">
+                        <Image src={service.icon} alt="" width={48} height={48} className="size-1/2" />
+                      </span>
+                      {service.title}
+                    </Link>
+                  </li>
+                ))}
+                <li>
+                  <Link
+                    href={category.href ?? `/services/${category.slug}`}
+                    className="mt-1 flex items-center gap-2 rounded-lg px-2 py-2 text-[14px] font-medium text-coral transition-colors hover:text-white"
+                  >
+                    View all {category.label} services
+                    <Arrow />
+                  </Link>
+                </li>
+              </ul>
+            </details>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function Arrow() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="size-4 shrink-0">
+      <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   );
 }
 

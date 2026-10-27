@@ -27,7 +27,7 @@ export function NavLinks() {
       {mainNav.map((item) => {
         const active = isActive(pathname, item.href);
         const className = [
-          "inline-flex rounded-full px-3 py-2 text-[13px] leading-none font-medium transition-colors duration-200 xl:px-3.5 2xl:px-4 2xl:py-2.5 2xl:text-sm",
+          "inline-flex rounded-full px-2.5 py-2 text-[13px] leading-none font-medium whitespace-nowrap transition-colors duration-200 xl:px-3.5 2xl:px-4 2xl:py-2.5 2xl:text-sm",
           light
             ? active
               ? "bg-brand-gradient text-white shadow-[0_8px_20px_-10px_rgb(201_29_76_/_0.6)]"

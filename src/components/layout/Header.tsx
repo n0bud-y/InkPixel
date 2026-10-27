@@ -26,7 +26,7 @@ const logoLink = (src: StaticImageData) => (
 export function Header() {
   return (
     <HeaderShell logoOnDark={logoLink(logo)} logoOnLight={logoLink(blackLogo)}>
-      <div className="hidden items-center gap-6 lg:flex xl:gap-16 2xl:gap-24">
+      <div className="hidden items-center gap-4 lg:flex xl:gap-16 2xl:gap-24">
         <nav aria-label="Main">
           <NavLinks />
         </nav>

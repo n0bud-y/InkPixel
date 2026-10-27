@@ -54,6 +54,8 @@ const nextConfig: NextConfig = {
       { source: "/services/web-development", destination: "/services/development/web-development", permanent: true },
       { source: "/terms", destination: "/terms-and-conditions", permanent: true },
       { source: "/privacy", destination: "/privacy-policy", permanent: true },
+      // Terminal Gateway CRM is a product, not a case study (26 Oct 2026).
+      { source: "/case-studies/crm-terminal-gateway", destination: "/products/terminal-gateway-crm", permanent: true },
     ];
   },
 };

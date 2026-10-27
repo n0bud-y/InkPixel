@@ -141,6 +141,13 @@ const pages = [
     "The terms and conditions for using the Ink Pixel Studios website.",
   ],
   [
+    "products",
+    "Products",
+    "/products",
+    "Ink Pixel Studios | Products",
+    "Software products built by Ink Pixel Studios, starting with Terminal Gateway CRM: an all-in-one workspace for customers, sales, projects, and files.",
+  ],
+  [
     "refund-policy",
     "Refund Policy",
     "/refund-policy",

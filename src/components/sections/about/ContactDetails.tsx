@@ -132,23 +132,38 @@ export function OfficeMap({ className }: { className: string }) {
   );
 }
 
+// How the social links look: `onBrand` on the gradient contact cards (white tints), `onDark` on
+// navy (the footer): a glass outline that fills with the brand gradient on hover (faded in with a
+// layer, as gradients can't transition), lifts, and glows like the site's buttons.
+const socialTones = {
+  onBrand: {
+    link: "grid size-9 place-items-center rounded-full bg-white/15 transition-colors duration-300 hover:bg-white/30",
+    icon: "size-[1.15rem]",
+  },
+  onDark: {
+    link: [
+      "group relative isolate grid size-11 place-items-center overflow-hidden rounded-full border border-white/12 bg-white/[0.04] text-light/80",
+      "transition duration-300 ease-out hover:-translate-y-0.5 hover:border-transparent hover:text-white hover:shadow-[0_12px_28px_-10px_rgb(250_97_67_/_0.75)]",
+      "before:absolute before:inset-0 before:-z-10 before:bg-brand-gradient before:opacity-0 before:transition-opacity before:duration-300 hover:before:opacity-100",
+      "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-coral",
+    ].join(" "),
+    icon: "size-[1.15rem] transition-transform duration-300 group-hover:scale-110",
+  },
+};
+
 // The social links, once siteConfig has any.
-export function SocialLinks({ className }: { className: string }) {
+export function SocialLinks({ className, tone = "onBrand" }: { className: string; tone?: keyof typeof socialTones }) {
   if (siteConfig.socialProfiles.length === 0) return null;
+  const style = socialTones[tone];
   return (
     <ul aria-label="Social media" className={`flex gap-3 ${className}`}>
       {siteConfig.socialProfiles.map((url) => {
         const { name, icon } = socialOf(url);
         return (
           <li key={url}>
-            <a
-              href={url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="grid size-9 place-items-center rounded-full bg-white/15 transition-colors duration-300 hover:bg-white/30"
-            >
+            <a href={url} target="_blank" rel="noopener noreferrer" className={style.link}>
               <span className="sr-only">{name} (opens in a new tab)</span>
-              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="size-[1.15rem]">
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={style.icon}>
                 {icon}
               </svg>
             </a>

@@ -8,10 +8,22 @@ import { ProjectCard } from "@/components/ui/ProjectCard";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { getCaseStudies, type CaseStudySummary } from "@/contentful/queries/case-studies";
 
+// The slider's order (project head, 26 Oct 2026): these first, these last (by address), and any
+// other case study in between, newest first.
+const firstSlides = ["/case-studies/gulbaan"];
+const lastSlides = ["/case-studies/cathy-obryans-books"];
+
+function slideOrder(href: string) {
+  if (firstSlides.includes(href)) return firstSlides.indexOf(href) - firstSlides.length;
+  if (lastSlides.includes(href)) return 1 + lastSlides.indexOf(href);
+  return 0;
+}
+
 // "Ideas Engineered Into Impact": capabilities intro + every published case study from
-// Contentful, newest first. Desktop (motion allowed): the section locks while the cards arrive
-// one over another (StackPin), with a counter and a progress bar on the left; phones, tablets,
-// and reduced motion: a sideways-scrolling row. If Contentful is down, only the intro shows.
+// Contentful, in the order above. Desktop (motion allowed): the section locks while the cards
+// arrive one over another (StackPin), with a counter and a progress bar on the left; phones,
+// tablets, and reduced motion: a sideways-scrolling row. If Contentful is down, only the intro
+// shows.
 export async function FeaturedWork() {
   let caseStudies: CaseStudySummary[] = [];
   try {
@@ -19,7 +31,10 @@ export async function FeaturedWork() {
   } catch (error) {
     console.error("Home page: could not load the case studies.", error);
   }
-  const projects = caseStudies.map(({ title, excerpt, href, image }) => ({ name: title, summary: excerpt, href, image }));
+  // A stable sort, so the ones in between keep Contentful's newest-first order.
+  const projects = [...caseStudies]
+    .sort((a, b) => slideOrder(a.href) - slideOrder(b.href))
+    .map(({ title, excerpt, href, image }) => ({ name: title, summary: excerpt, href, image }));
 
   return (
     <StackPin

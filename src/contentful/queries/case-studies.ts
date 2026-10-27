@@ -184,7 +184,7 @@ export type AssetData = {
 
 type ItemData = { title: string | null; text: string | null } | null;
 
-type SectionData =
+export type SectionData =
   | {
       __typename: "CaseStudySection";
       sys: { id: string };
@@ -326,6 +326,125 @@ export const IMAGE_FIELDS = /* GraphQL */ `
   }
 `;
 
+// The fields of every section block (case studies and products share them; products since 26 Oct
+// 2026), inside a query's `sectionsCollection { items { ... } }`.
+export const SECTION_FIELDS = /* GraphQL */ `
+    __typename
+    ... on CaseStudySection {
+      sys {
+        id
+      }
+      eyebrow
+      title
+      layout
+      body {
+        json
+      }
+      image {
+        ...ImageFields
+      }
+      factsCollection(limit: 6) {
+        items {
+          title
+          text
+        }
+      }
+      highlight {
+        title
+        text
+      }
+    }
+    ... on CaseStudyTechStack {
+      sys {
+        id
+      }
+      title
+      layout
+      groupsCollection(limit: 6) {
+        items {
+          label
+          technologies
+        }
+      }
+    }
+    ... on CaseStudyFeatureGrid {
+      sys {
+        id
+      }
+      title
+      intro
+      items
+    }
+    ... on CaseStudyShowcase {
+      sys {
+        id
+      }
+      image {
+        ...ImageFields
+      }
+    }
+    ... on CaseStudyCards {
+      sys {
+        id
+      }
+      eyebrow
+      title
+      intro
+      layout
+      image {
+        ...ImageFields
+      }
+      itemsCollection(limit: 9) {
+        items {
+          title
+          text
+        }
+      }
+    }
+    ... on CaseStudyGallery {
+      sys {
+        id
+      }
+      title
+      intro
+      imagesCollection(limit: 12) {
+        items {
+          ...ImageFields
+        }
+      }
+    }
+    ... on CaseStudyTestimonials {
+      sys {
+        id
+      }
+      title
+      subtitle
+      testimonialsCollection(limit: 6) {
+        items {
+          quote
+          name
+          role
+          company
+          photo {
+            ...ImageFields
+          }
+        }
+      }
+    }
+    ... on CaseStudyCallToAction {
+      sys {
+        id
+      }
+      title
+      text
+      buttonLabel
+      buttonLink
+      image {
+        ...ImageFields
+      }
+    }
+`;
+
 const CASE_STUDY = /* GraphQL */ `
   query CaseStudy($slug: String!) {
     caseStudyCollection(where: { slug: $slug }, limit: 1) {
@@ -356,120 +475,7 @@ const CASE_STUDY = /* GraphQL */ `
         }
         sectionsCollection(limit: 20) {
           items {
-            __typename
-            ... on CaseStudySection {
-              sys {
-                id
-              }
-              eyebrow
-              title
-              layout
-              body {
-                json
-              }
-              image {
-                ...ImageFields
-              }
-              factsCollection(limit: 6) {
-                items {
-                  title
-                  text
-                }
-              }
-              highlight {
-                title
-                text
-              }
-            }
-            ... on CaseStudyTechStack {
-              sys {
-                id
-              }
-              title
-              layout
-              groupsCollection(limit: 6) {
-                items {
-                  label
-                  technologies
-                }
-              }
-            }
-            ... on CaseStudyFeatureGrid {
-              sys {
-                id
-              }
-              title
-              intro
-              items
-            }
-            ... on CaseStudyShowcase {
-              sys {
-                id
-              }
-              image {
-                ...ImageFields
-              }
-            }
-            ... on CaseStudyCards {
-              sys {
-                id
-              }
-              eyebrow
-              title
-              intro
-              layout
-              image {
-                ...ImageFields
-              }
-              itemsCollection(limit: 9) {
-                items {
-                  title
-                  text
-                }
-              }
-            }
-            ... on CaseStudyGallery {
-              sys {
-                id
-              }
-              title
-              intro
-              imagesCollection(limit: 12) {
-                items {
-                  ...ImageFields
-                }
-              }
-            }
-            ... on CaseStudyTestimonials {
-              sys {
-                id
-              }
-              title
-              subtitle
-              testimonialsCollection(limit: 6) {
-                items {
-                  quote
-                  name
-                  role
-                  company
-                  photo {
-                    ...ImageFields
-                  }
-                }
-              }
-            }
-            ... on CaseStudyCallToAction {
-              sys {
-                id
-              }
-              title
-              text
-              buttonLabel
-              buttonLink
-              image {
-                ...ImageFields
-              }
-            }
+            ${SECTION_FIELDS}
           }
         }
         seo {
@@ -557,7 +563,7 @@ const cardsLayouts: Record<string, CaseStudyCardsLayout> = {
   "Numbered steps": "steps",
 };
 
-const heroLayouts: Record<string, CaseStudyHeroLayout> = { Centered: "centered", Light: "light" };
+export const heroLayouts: Record<string, CaseStudyHeroLayout> = { Centered: "centered", Light: "light" };
 
 export function toImage(asset: AssetData): ContentfulImage | null {
   if (!asset?.url || !asset.width || !asset.height) return null;
@@ -574,12 +580,12 @@ export function toImage(asset: AssetData): ContentfulImage | null {
 const toItems = (items: ItemData[] | undefined): CaseStudyItem[] =>
   (items ?? []).flatMap((item) => (item?.title ? [{ title: item.title, text: item.text }] : []));
 
-const toButton = (label: string | null, href: string | null): CaseStudyButton | null =>
+export const toButton = (label: string | null, href: string | null): CaseStudyButton | null =>
   label && href ? { label, href } : null;
 
 // Hero layers are all or nothing: with one missing (e.g. not published), the picture would
 // have a hole, so the single hero image is shown instead.
-function toLayers(assets: AssetData[]): ContentfulImage[] {
+export function toLayers(assets: AssetData[]): ContentfulImage[] {
   const layers = assets.map(toImage);
   return layers.every((layer): layer is ContentfulImage => layer !== null) ? layers : [];
 }
@@ -603,7 +609,7 @@ async function caseStudyQuery<T>(query: string, options: Parameters<typeof conte
   }
 }
 
-function toSection(item: SectionData | null): CaseStudySectionData[] {
+export function toSection(item: SectionData | null): CaseStudySectionData[] {
   switch (item?.__typename) {
     case "CaseStudySection": {
       const image = toImage(item.image);

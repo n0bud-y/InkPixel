@@ -51,6 +51,7 @@ export const mainNav = [
   { href: "/industries", label: "Industries" },
   { href: "/technologies", label: "Technologies" },
   { href: "/blog", label: "Insights" },
+  { href: "/products", label: "Products" },
   { href: "/case-studies", label: "Our Work" },
 ].filter(({ href }) => features.blog || href !== "/blog");
 
@@ -63,6 +64,7 @@ export const footerNav = {
     { href: "/", label: "Home" },
     { href: "/about", label: "About" },
     { href: "/services", label: "Services" },
+    { href: "/products", label: "Products" },
     { href: "/case-studies", label: "Work" },
     { href: "/contact", label: "Contact" },
   ],

@@ -1,14 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { CallToActionSection } from "@/components/case-studies/CallToActionSection";
-import { CardsSection } from "@/components/case-studies/CardsSection";
 import { CaseStudyHero } from "@/components/case-studies/CaseStudyHero";
-import { CaseStudySection } from "@/components/case-studies/CaseStudySection";
-import { FeatureGridSection } from "@/components/case-studies/FeatureGridSection";
-import { GallerySection } from "@/components/case-studies/GallerySection";
-import { ShowcaseSection } from "@/components/case-studies/ShowcaseSection";
-import { TechStackSection } from "@/components/case-studies/TechStackSection";
-import { TestimonialsSection } from "@/components/case-studies/TestimonialsSection";
+import { PageSections } from "@/components/case-studies/PageSections";
 import { ContactCta } from "@/components/sections/home/ContactCta";
 import { PageSchema } from "@/components/seo/PageSchema";
 import { getCaseStudies, getCaseStudy, type CaseStudy } from "@/contentful/queries/case-studies";
@@ -47,8 +40,8 @@ export async function generateMetadata(props: PageProps<"/case-studies/[slug]">)
   });
 }
 
-// A case study from Contentful: the hero, its sections in order (alternating navy and white,
-// starting with navy), then the closing call to action.
+// A case study from Contentful: the hero, its sections in order (PageSections: alternating navy
+// and white, starting with navy), then the closing call to action.
 export default async function CaseStudyPage(props: PageProps<"/case-studies/[slug]">) {
   const { slug } = await props.params;
   const caseStudy = await getCaseStudy(slug);
@@ -86,38 +79,11 @@ export default async function CaseStudyPage(props: PageProps<"/case-studies/[slu
         layers={caseStudy.heroLayers}
         client={caseStudy.client}
       />
-      {caseStudy.sections.map((section, index) => {
-        const tone = index % 2 === 0 ? "dark" : "light";
-        switch (section.type) {
-          case "textImage":
-            return (
-              <CaseStudySection
-                key={section.id}
-                tone={tone}
-                largerImage={
-                  (slug === "crm-terminal-gateway" && section.title === "The Challenge") ||
-                  (slug === "gulbaan" && section.title === "Insights from Client")
-                }
-                removePadding={slug === "gulbaan" && section.title === "Insights from Client"}
-                {...section}
-              />
-            );
-          case "techStack":
-            return <TechStackSection key={section.id} tone={tone} {...section} />;
-          case "featureGrid":
-            return <FeatureGridSection key={section.id} tone={tone} {...section} />;
-          case "showcase":
-            return <ShowcaseSection key={section.id} tone={tone} image={section.image} />;
-          case "cards":
-            return <CardsSection key={section.id} tone={tone} {...section} />;
-          case "gallery":
-            return <GallerySection key={section.id} tone={tone} {...section} />;
-          case "testimonials":
-            return <TestimonialsSection key={section.id} tone={tone} {...section} />;
-          case "callToAction":
-            return <CallToActionSection key={section.id} tone={tone} {...section} />;
-        }
-      })}
+      <PageSections
+        sections={caseStudy.sections}
+        largerImage={slug === "gulbaan" ? ["Insights from Client"] : []}
+        removePadding={slug === "gulbaan" ? ["Insights from Client"] : []}
+      />
       <ContactCta />
     </>
   );

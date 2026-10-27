@@ -250,6 +250,34 @@ export function faqSchema(items: { question: string; answer: string[] }[]): FAQP
   };
 }
 
+// One of the studio's products (/products/<slug>), as a web application made and published by
+// the studio.
+export function productSchema({
+  name,
+  description,
+  path,
+  image,
+}: {
+  name: string;
+  description: string;
+  path: string;
+  image: string;
+}): Thing {
+  const url = absoluteUrl(path);
+  return {
+    "@type": "SoftwareApplication",
+    "@id": `${url}#product`,
+    name,
+    description,
+    url,
+    image,
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "Web",
+    author: { "@id": organizationId },
+    publisher: { "@id": organizationId },
+  } as Thing;
+}
+
 // A case study, as an article by the studio about a client's project.
 export function caseStudySchema(caseStudy: {
   title: string;
