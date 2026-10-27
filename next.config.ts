@@ -35,6 +35,12 @@ const nextConfig: NextConfig = {
     });
     return config;
   },
+  experimental: {
+    // How many processes build the pages: one per CPU by default. The cPanel server has many CPUs
+    // but caps the processes an account may start (spawn EAGAIN), so its build sets
+    // NEXT_BUILD_CPUS=1 (scripts/deploy-cpanel.sh). Unset elsewhere.
+    cpus: Number(process.env.NEXT_BUILD_CPUS) || undefined,
+  },
   images: {
     // Case-study and blog images come from Contentful's image server, from our space only.
     remotePatterns: [

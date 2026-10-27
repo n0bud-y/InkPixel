@@ -42,9 +42,10 @@ echo "→ Installing packages"
 npm install --include=dev --no-audit --no-fund
 
 # Webpack, not Turbopack: the server's Linux is too old for Turbopack's native build tools
-# (GLIBC_2.29 not found), and Next.js then only offers Webpack.
+# (GLIBC_2.29 not found), and Next.js then only offers Webpack. One build process at a time: the
+# hosting caps how many processes an account may start (spawn EAGAIN), see next.config.ts.
 echo "→ Building"
-npx next build --webpack
+NEXT_BUILD_CPUS=1 npx next build --webpack
 
 echo "→ Completing the server folder (static files and public/)"
 cp -r .next/static .next/standalone/.next/
