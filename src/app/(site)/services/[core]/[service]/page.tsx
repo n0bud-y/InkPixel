@@ -58,14 +58,15 @@ export default async function ServicePage(props: PageProps<"/services/[core]/[se
     <>
       <PageSchema
         path={path}
+        page={{ type: "WebPage", title: page.name, description: page.description }}
         items={[
-          // The core service is a step once it has its own page (Branding so far).
+          // Home › Services › the core service › the service.
           breadcrumbSchema([
             { name: "Services", path: "/services" },
             ...(category.href ? [{ name: category.label, path: category.href }] : []),
             { name: page.name, path },
           ]),
-          serviceSchema({ name: page.name, description: page.description, path }),
+          serviceSchema({ name: page.name, description: page.description, path, parentPath: `/services/${category.slug}` }),
         ]}
       />
       {Scene ? (

@@ -8,9 +8,9 @@ export const siteConfig = {
    *  on every deployment (previews and the demo point to the live site). */
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://inkpixelstudios.com",
   email: "info@inkpixelstudios.com",
-  /** The phone number from the old site's About page (a US number), confirmed for the site on
-   *  15 Oct 2026: as shown, and for tel: links. */
-  phone: { display: "+1 818-422-9253", tel: "+18184229253" },
+  /** The studio's phone (26 Oct 2026, from the project head; was the old site's US number): as
+   *  shown, for tel: links, and as written in the structured data. */
+  phone: { display: "+92 370 3440141", tel: "+923703440141", schema: "+92-370-3440141" },
   /** Short line about the studio (footer). */
   tagline: "A digital studio building software, brands and experiences from Karachi for the world.",
   address: "Office 308, 3rd Floor, Anum Empire, Shahra-e-Faisal, Jinnah Housing Society Karachi, 74200",

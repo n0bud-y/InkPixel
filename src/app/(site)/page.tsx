@@ -10,25 +10,33 @@ import { ServicesShowcase } from "@/components/sections/home/ServicesShowcase";
 import { Stats } from "@/components/sections/home/Stats";
 import { Testimonials } from "@/components/sections/home/Testimonials";
 import { PageSchema } from "@/components/seo/PageSchema";
-import { pageMetadataFromCms } from "@/lib/seo";
+import { faqs } from "@/content/faq";
+import { coreServicesList, faqSchema, pageMetadataFromCms } from "@/lib/seo";
 import { features, siteConfig } from "@/lib/site";
 
-// From the home page's Page SEO entry in Contentful; this is the fallback.
+// From the home page's Page SEO entry in Contentful; this is the fallback (the structured
+// data's too). Stand-in title, issue I9.
+const seo = {
+  title: { absolute: "Ink Pixel Studios | Software & Digital Studio in Karachi" },
+  description: siteConfig.description,
+  path: "/",
+};
+
 export function generateMetadata(): Promise<Metadata> {
-  return pageMetadataFromCms({
-    // Stand-in, issue I9.
-    title: { absolute: "Ink Pixel Studios | Software & Digital Studio in Karachi" },
-    description: siteConfig.description,
-    path: "/",
-  });
+  return pageMetadataFromCms(seo);
 }
 
-// Structured data: the studio and the website, plus any schema pasted into the home page's Page
+// Structured data: the studio and the website, the page, the core services, and the FAQ (as shown
+// in the FAQ section; the site's only FAQPage), plus any schema pasted into the home page's Page
 // SEO entry.
 export default function HomePage() {
   return (
     <>
-      <PageSchema path="/" />
+      <PageSchema
+        path={seo.path}
+        page={{ type: "WebPage", title: seo.title, description: seo.description }}
+        items={[coreServicesList("Services"), faqSchema(faqs)]}
+      />
       <Hero />
       <Stats />
       <ServicesShowcase />

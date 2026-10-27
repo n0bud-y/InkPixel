@@ -10,17 +10,19 @@ import { Faq } from "@/components/sections/home/Faq";
 import { Industries } from "@/components/sections/home/Industries";
 import { Insights } from "@/components/sections/home/Insights";
 import { PageSchema } from "@/components/seo/PageSchema";
-import { breadcrumbSchema, officeSchema, pageMetadataFromCms } from "@/lib/seo";
+import { breadcrumbSchema, pageMetadataFromCms } from "@/lib/seo";
 import { features } from "@/lib/site";
 
-// From the page's Page SEO entry in Contentful; this is the fallback.
+// From the page's Page SEO entry in Contentful; this is the fallback (the structured data's too).
+const seo = {
+  title: "About",
+  description:
+    "Ink Pixel Studios is a software and digital solutions company in Karachi, Pakistan: the people, the values, and the way we work.",
+  path: "/about",
+};
+
 export function generateMetadata(): Promise<Metadata> {
-  return pageMetadataFromCms({
-    title: "About",
-    description:
-      "Ink Pixel Studios is a software and digital solutions company in Karachi, Pakistan: the people, the values, and the way we work.",
-    path: "/about",
-  });
+  return pageMetadataFromCms(seo);
 }
 
 // About: static content in src/content/about.ts. Industries, Insights, and the FAQ are the
@@ -28,7 +30,11 @@ export function generateMetadata(): Promise<Metadata> {
 export default function AboutPage() {
   return (
     <>
-      <PageSchema path="/about" items={[breadcrumbSchema([{ name: "About", path: "/about" }]), officeSchema()]} />
+      <PageSchema
+        path={seo.path}
+        page={{ type: "AboutPage", title: seo.title, description: seo.description }}
+        items={[breadcrumbSchema([{ name: "About", path: seo.path }])]}
+      />
       <AboutHero />
       <TrustedBy />
       <WhoWeAre />

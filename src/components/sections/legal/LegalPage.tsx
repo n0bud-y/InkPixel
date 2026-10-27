@@ -20,7 +20,11 @@ export function LegalPage({ document }: { document: LegalDocument }) {
 
   return (
     <>
-      <PageSchema path={document.path} items={[breadcrumbSchema([{ name: document.name, path: document.path }])]} />
+      <PageSchema
+        path={document.path}
+        page={{ type: "WebPage", title: document.name, description: document.description }}
+        items={[breadcrumbSchema([{ name: document.name, path: document.path }])]}
+      />
 
       <section aria-labelledby="legal-title" className="relative isolate overflow-hidden bg-primary">
         <div aria-hidden="true" className="absolute inset-0 -z-10 bg-grid [mask-image:linear-gradient(to_bottom,#000,transparent_60rem)]" />

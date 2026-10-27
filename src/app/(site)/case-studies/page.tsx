@@ -23,7 +23,11 @@ export default async function CaseStudiesPage() {
 
   return (
     <>
-      <PageSchema path="/case-studies" items={[breadcrumbSchema([{ name: caseStudiesPage.name, path: "/case-studies" }])]} />
+      <PageSchema
+        path="/case-studies"
+        page={{ type: "CollectionPage", title: caseStudiesPage.name, description: caseStudiesPage.description }}
+        items={[breadcrumbSchema([{ name: caseStudiesPage.name, path: "/case-studies" }])]}
+      />
       <WorkListing caseStudies={caseStudies} />
       <ContactCta />
     </>

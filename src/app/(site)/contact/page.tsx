@@ -8,7 +8,7 @@ import { PageSchema } from "@/components/seo/PageSchema";
 import { contactPage } from "@/content/contact-page";
 import { servicePages, servicePlace } from "@/content/service-pages";
 import { serviceCategories } from "@/content/services";
-import { breadcrumbSchema, officeSchema, pageMetadataFromCms } from "@/lib/seo";
+import { breadcrumbSchema, pageMetadataFromCms } from "@/lib/seo";
 
 // From the page's Page SEO entry in Contentful; the content file's name and description otherwise.
 export function generateMetadata(): Promise<Metadata> {
@@ -38,7 +38,11 @@ const services: ServiceChoice[] = serviceCategories.map(({ slug, label, services
 export default function ContactPage() {
   return (
     <>
-      <PageSchema path="/contact" items={[breadcrumbSchema([{ name: contactPage.name, path: "/contact" }]), officeSchema()]} />
+      <PageSchema
+        path="/contact"
+        page={{ type: "ContactPage", title: contactPage.name, description: contactPage.description }}
+        items={[breadcrumbSchema([{ name: contactPage.name, path: "/contact" }])]}
+      />
       <ContactHero />
       <ContactSection services={services} estimators={estimators} />
       <NextSteps />

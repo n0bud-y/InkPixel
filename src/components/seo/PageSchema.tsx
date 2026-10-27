@@ -1,68 +1,39 @@
 import type { Thing } from "schema-dts";
 import { getPageSeo } from "@/contentful/queries/page-seo";
-import { pageSchemas, sitewideSchemas } from "@/content/seo-schemas";
-import { customSchema, mergeSchema, siteSchema } from "@/lib/seo";
+import { customSchema, mergeSchema, siteSchema, webPageSchema, type PageType } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
 import { JsonLd } from "./JsonLd";
 
-const sourceSiteUrl = "https://inkpixelstudios.com";
-const siteUrl = siteConfig.url.replace(/\/+$/, "");
+/** The page itself, for its WebPage schema: its kind, and the title and description its metadata
+ *  falls back to (a title is shown as "<title> | Ink Pixel Studios" unless it is `absolute`). */
+export type PageInfo = { type: PageType; title: string | { absolute: string }; description: string };
 
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-  typeof value === "object" && value !== null && !Array.isArray(value);
-
-function rebaseSchema(value: unknown): unknown {
-  if (typeof value === "string") return value.replaceAll(sourceSiteUrl, siteUrl);
-  if (Array.isArray(value)) return value.map(rebaseSchema);
-  if (!isRecord(value)) return value;
-  return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, rebaseSchema(item)]));
-}
-
-function mergeValues(existing: unknown, supplied: unknown): unknown {
-  if (Array.isArray(supplied)) {
-    if (supplied.length === 0) return existing;
-    if (Array.isArray(existing)) {
-      return supplied.map((item, index) => mergeValues(existing[index], item));
-    }
-    if (isRecord(existing)) return supplied.map((item) => mergeValues(existing, item));
-    return supplied;
-  }
-  if (Array.isArray(existing) && isRecord(supplied)) {
-    return existing.map((item) => mergeValues(item, supplied));
-  }
-  if (isRecord(existing) && isRecord(supplied)) {
-    return {
-      ...existing,
-      ...Object.fromEntries(
-        Object.entries(supplied).map(([key, value]) => [
-          key,
-          key in existing ? mergeValues(existing[key], value) : value,
-        ]),
-      ),
-    };
-  }
-  return supplied;
-}
-
-function mergeById(automatic: Thing[], supplied: Thing[]): Thing[] {
-  const merged = [...automatic];
-  for (const item of supplied) {
-    const id = isRecord(item) && typeof item["@id"] === "string" ? item["@id"] : undefined;
-    const index = id ? merged.findIndex((entry) => isRecord(entry) && entry["@id"] === id) : -1;
-    if (index === -1) merged.push(item);
-    else merged[index] = mergeValues(merged[index], item) as Thing;
-  }
-  return merged;
-}
-
-// Handoff schema merges with the app's automatic schema; Contentful can still replace schemas
-// of the same @type. Sitewide entities merge by @id to keep distinct location entities intact.
-export async function PageSchema({ path, items = [], custom }: { path: string; items?: Thing[]; custom?: unknown }) {
-  const pasted = custom !== undefined ? custom : (await getPageSeo(path))?.jsonLd;
-  const automatic = [...siteSchema(), ...items];
-  const suppliedSitewide = customSchema(rebaseSchema(sitewideSchemas), path);
-  const suppliedPage = customSchema(rebaseSchema(pageSchemas[path] ?? []), path);
-  const withPageSchemas = mergeSchema(automatic, suppliedPage);
-  const withSitewideSchemas = mergeById(withPageSchemas, suppliedSitewide);
-  return <JsonLd items={mergeSchema(withSitewideSchemas, customSchema(pasted, path))} />;
+// A page's structured data: the studio and the website (on every page), the page itself (`page`:
+// a WebPage, AboutPage, CollectionPage, or ContactPage, named and described as in its <head>), the
+// page's own automatic schema (`items`), and the schema editors pasted in Contentful, which
+// replaces automatic schema of the same @type. The title, description, and pasted schema come from
+// the page's Page SEO entry (found by `path`) when it has one; for case studies and blog posts,
+// pasted schema comes from their own SEO entry (`custom`).
+export async function PageSchema({
+  path,
+  page,
+  items = [],
+  custom,
+}: {
+  path: string;
+  page?: PageInfo;
+  items?: Thing[];
+  custom?: unknown;
+}) {
+  const entry = await getPageSeo(path);
+  const pasted = custom !== undefined ? custom : entry?.jsonLd;
+  const pageNode = page
+    ? webPageSchema({
+        type: page.type,
+        path,
+        name: entry?.title ?? (typeof page.title === "string" ? `${page.title} | ${siteConfig.name}` : page.title.absolute),
+        description: entry?.description ?? page.description,
+      })
+    : null;
+  return <JsonLd items={mergeSchema([...siteSchema(), ...(pageNode ? [pageNode] : []), ...items], customSchema(pasted, path))} />;
 }

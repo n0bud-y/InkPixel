@@ -9,7 +9,7 @@ import { ServiceProjects } from "@/components/sections/services/ServiceProjects"
 import { PageSchema } from "@/components/seo/PageSchema";
 import { corePages, getCorePage } from "@/content/core-pages";
 import { withShowcaseIcons } from "@/content/showcase-icons";
-import { breadcrumbSchema, pageMetadataFromCms, serviceSchema } from "@/lib/seo";
+import { breadcrumbSchema, itemListSchema, pageMetadataFromCms, serviceSchema } from "@/lib/seo";
 
 // One page per core service in src/content/services.ts; any other address is a 404.
 export const dynamicParams = false;
@@ -41,12 +41,17 @@ export default async function CoreServicePage(props: PageProps<"/services/[core]
     <>
       <PageSchema
         path={path}
+        page={{ type: "CollectionPage", title: content.name, description: content.description }}
         items={[
           breadcrumbSchema([
             { name: "Services", path: "/services" },
             { name: content.name, path },
           ]),
           serviceSchema({ name: content.name, description: content.description, path }),
+          itemListSchema(
+            `${content.name} services`,
+            found.category.services.map(({ title, href }) => ({ name: title, path: href })),
+          ),
         ]}
       />
       <CoreHero slug={core} label={found.category.label} hero={content.hero} />

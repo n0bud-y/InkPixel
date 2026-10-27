@@ -8,8 +8,9 @@ import type {
   Article,
   BlogPosting,
   BreadcrumbList,
+  FAQPage,
+  ItemList,
   Organization,
-  ProfessionalService,
   Service,
   Thing,
   WebSite,
@@ -19,12 +20,14 @@ import type {
 import logo from "@/assets/images/brand-drop.webp";
 import type { ContentfulImage } from "@/contentful/queries/case-studies";
 import { getPageSeo } from "@/contentful/queries/page-seo";
+import { serviceCategories } from "@/content/services";
 import { siteConfig } from "@/lib/site";
 
-/** Only the live site may be indexed: on cPanel, the server with `ALLOW_INDEXING=true` (set at
- *  build time, as the pages are built ahead); on Vercel, the production deployment. Local dev,
- *  previews, and the cPanel demo are noindex. robots.ts uses the same rule. */
-export const indexable = process.env.ALLOW_INDEXING === "true" || process.env.VERCEL_ENV === "production";
+/** Search engines may index the site (robots.txt allows crawling, no noindex tag) unless
+ *  `BLOCK_INDEXING=true` is set, e.g. on a test copy such as the old cPanel demo (26 Oct 2026,
+ *  project head: indexing on by default, so the live site needs no setting). robots.ts uses the
+ *  same rule. */
+export const indexable = process.env.BLOCK_INDEXING !== "true";
 
 /** A path on the site as a full URL on the live site. */
 export const absoluteUrl = (path: string) => new URL(path, siteConfig.url).toString();
@@ -113,26 +116,36 @@ const postalAddress = {
   addressCountry: siteConfig.office.addressCountry,
 } as const;
 
-// The studio and the website: on every page (root layout).
+// The studio and the website: on every page (PageSchema). The studio is both an Organization and
+// a ProfessionalService (a business with an office), with its Karachi office's address and
+// position, what it works on (the core services), and its social profiles.
 export function siteSchema(): Thing[] {
-  const organization: Organization = {
-    "@type": "Organization",
+  const organization = {
+    "@type": ["Organization", "ProfessionalService"],
     "@id": organizationId,
     name: siteConfig.name,
     url: absoluteUrl("/"),
-    logo: absoluteUrl(logo.src),
+    logo: { "@type": "ImageObject", url: absoluteUrl(logo.src) },
+    image: absoluteUrl(defaultShareImage.url),
     description: siteConfig.description,
     email: siteConfig.email,
-    telephone: siteConfig.phone.display,
+    telephone: siteConfig.phone.schema,
     address: postalAddress,
-    contactPoint: {
-      "@type": "ContactPoint",
-      contactType: "sales",
-      email: siteConfig.email,
-      telephone: siteConfig.phone.display,
-    },
+    geo: { "@type": "GeoCoordinates", latitude: siteConfig.office.latitude, longitude: siteConfig.office.longitude },
+    areaServed: "Worldwide",
+    knowsAbout: serviceCategories.map(({ label }) => label),
+    contactPoint: [
+      {
+        "@type": "ContactPoint",
+        contactType: "sales",
+        email: siteConfig.email,
+        telephone: siteConfig.phone.schema,
+        availableLanguage: ["English"],
+        areaServed: "Worldwide",
+      },
+    ],
     ...(siteConfig.socialProfiles.length > 0 && { sameAs: siteConfig.socialProfiles }),
-  };
+  } as unknown as Organization;
   const website: WebSite = {
     "@type": "WebSite",
     "@id": absoluteUrl("/#website"),
@@ -157,31 +170,83 @@ export function breadcrumbSchema(trail: { name: string; path: string }[]): Bread
   };
 }
 
-// The Karachi office, with its address and position (About and Contact).
-export function officeSchema(): ProfessionalService {
+/** The kinds of page (schema.org) the site has. */
+export type PageType = "WebPage" | "AboutPage" | "CollectionPage" | "ContactPage";
+
+// A page, as a WebPage (or one of its kinds) of the website, about and published by the studio.
+export function webPageSchema({ type, name, description, path }: { type: PageType; name: string; description: string; path: string }): Thing {
+  const url = absoluteUrl(path);
   return {
-    "@type": "ProfessionalService",
-    "@id": absoluteUrl("/#office-karachi"),
-    name: siteConfig.name,
-    url: absoluteUrl("/"),
-    image: absoluteUrl(logo.src),
-    email: siteConfig.email,
-    telephone: siteConfig.phone.display,
-    address: postalAddress,
-    geo: { "@type": "GeoCoordinates", latitude: siteConfig.office.latitude, longitude: siteConfig.office.longitude },
-    parentOrganization: { "@id": organizationId },
-  };
+    "@type": type,
+    "@id": `${url}#webpage`,
+    url,
+    name,
+    description,
+    inLanguage: "en",
+    isPartOf: { "@id": absoluteUrl("/#website") },
+    about: { "@id": organizationId },
+    publisher: { "@id": organizationId },
+  } as Thing;
 }
 
-// A service page's service, provided by the studio.
-export function serviceSchema({ name, description, path }: { name: string; description: string; path: string }): Service {
+// A core service or a service, provided by the studio worldwide; a service is related to its core
+// service (`parentPath`).
+export function serviceSchema({
+  name,
+  description,
+  path,
+  parentPath,
+}: {
+  name: string;
+  description: string;
+  path: string;
+  parentPath?: string;
+}): Service {
+  const url = absoluteUrl(path);
   return {
     "@type": "Service",
+    "@id": `${url}#service`,
+    url,
     name,
     serviceType: name,
     description,
-    url: absoluteUrl(path),
     provider: { "@id": organizationId },
+    areaServed: "Worldwide",
+    ...(parentPath && { isRelatedTo: { "@id": `${absoluteUrl(parentPath)}#service` } }),
+  } as Service;
+}
+
+// A list of pages, e.g. the core services (home, Services) or a core service's services.
+export function itemListSchema(name: string, items: { name: string; path: string }[]): ItemList {
+  return {
+    "@type": "ItemList",
+    name,
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      url: absoluteUrl(item.path),
+    })),
+  };
+}
+
+// The core services, as a list (home and Services).
+export const coreServicesList = (name: string) =>
+  itemListSchema(
+    name,
+    serviceCategories.map(({ label, slug }) => ({ name: label, path: `/services/${slug}` })),
+  );
+
+// The FAQ, as shown on the home page (one FAQPage for the site, on the home page only).
+export function faqSchema(items: { question: string; answer: string[] }[]): FAQPage {
+  return {
+    "@type": "FAQPage",
+    "@id": absoluteUrl("/#faq"),
+    mainEntity: items.map(({ question, answer }) => ({
+      "@type": "Question",
+      name: question,
+      acceptedAnswer: { "@type": "Answer", text: answer.join(" ") },
+    })),
   };
 }
 
