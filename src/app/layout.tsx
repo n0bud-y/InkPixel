@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, Inter, JetBrains_Mono } from "next/font/google";
+import Script from "next/script";
 import { defaultShareImage, indexable } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
 import "./globals.css";
@@ -42,6 +43,8 @@ export const metadata: Metadata = {
   },
   twitter: { card: "summary_large_image" },
   robots: indexable ? undefined : { index: false, follow: false },
+  // Google Search Console ownership check (<meta name="google-site-verification">). Keep it.
+  verification: { google: "XUHo0WC4b6qqG-0kf1b3Y5KIkcbXP1FMwUHkVnealgY" },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -50,6 +53,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${bricolage.variable} ${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
+      <head>
+        {/* Google tag (gtag.js): Google Analytics */}
+        <Script src="https://www.googletagmanager.com/gtag/js?id=G-N33JLE8FFM" strategy="afterInteractive" />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-N33JLE8FFM');`}
+        </Script>
+      </head>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
