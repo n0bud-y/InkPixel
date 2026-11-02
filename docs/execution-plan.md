@@ -347,6 +347,8 @@ Newest first.
 
 | Date | Update |
 |---|---|
+| 2 Nov 2026 | `src/app/favicon.ico` replaced (Next.js default → brand mark; PNG data, 4.3 KB). `npm run build` passes |
+| 2 Nov 2026 | Root layout: gtag via two `next/script` (`afterInteractive`) in `<head>`; `metadata.verification.google`; `public/googlecec62e4ff607cb59.html` (commits c661ce2, 98e11e9) |
 | 27 Oct 2026 | `next.config.ts` `experimental.cpus = Number(NEXT_BUILD_CPUS) \|\| undefined`; `deploy-cpanel.sh` builds with `NEXT_BUILD_CPUS=1` (LVE process cap: jest-worker spawn EAGAIN after compile + TypeScript). Checked locally: 1 worker, 76/76 pages |
 | 27 Oct 2026 | `deploy-cpanel.sh`: `npm install --include=dev` (nodevenv NODE_ENV=production omitted devDependencies; webpack build failed on `@tailwindcss/postcss`) |
 | 27 Oct 2026 | Server build: `deploy-cpanel.sh` runs `npx next build --webpack` (cPanel glibc < 2.29: no native SWC, WASM only, Turbopack refuses). `next.config.ts` `webpack()` adds `scripts/webpack-video-loader.cjs` for `*.mp4` (emits `static/media/<name>.<hash8>.mp4`, server build with `../..` prefix like next-image-loader; Next's bundled webpack ignores `generator.outputPath`). Checked locally: webpack build, standalone server 200 on /, /about, /products, /privacy-policy and the video URL; Turbopack build still passes |
