@@ -49,7 +49,7 @@ export type Link = { label: string; href: string };
 export type IconItem = { title: string; text: string; icon: StaticImageData };
 
 export type EstimatorQuestion = {
-  /** The query parameter the answer is sent as (to /contact). */
+  /** Stable identifier used to collect and submit this answer with the estimate. */
   id: string;
   question: string;
   options: string[];

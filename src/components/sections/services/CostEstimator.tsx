@@ -37,7 +37,7 @@ export function CostEstimator({ page }: { page: ServicePage }) {
             />
           </div>
           <div data-reveal>
-            <EstimatorQuiz service={page.slug} questions={estimator.questions} />
+            <EstimatorQuiz serviceName={page.name} questions={estimator.questions} />
           </div>
         </Reveal>
       </div>
