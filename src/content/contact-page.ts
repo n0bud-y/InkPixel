@@ -19,8 +19,8 @@ export const contactPage = {
     title: "Tell us about your project",
     intro: "Fields marked * are required. It takes about a minute.",
     fields: {
-      name: { label: "Your name", placeholder: "Jane Smith" },
-      email: { label: "Email", placeholder: "jane@company.com" },
+      name: { label: "Your name", placeholder: "Name" },
+      email: { label: "Email", placeholder: "you@example.com" },
       phone: { label: "Phone", placeholder: "+92 300 1234567" },
       company: { label: "Company", placeholder: "Company or brand" },
       message: { label: "Your message", placeholder: "What are you building, and what do you need from us?" },

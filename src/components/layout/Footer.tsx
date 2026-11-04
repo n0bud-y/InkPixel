@@ -75,6 +75,12 @@ export function Footer() {
             >
               {siteConfig.email}
             </a>
+            <a
+              href={`tel:${siteConfig.phone.tel}`}
+              className={`mt-3 block ${linkText} ${linkClass}`}
+            >
+              0370 3440141
+            </a>
             <address className={`mt-6 max-w-[16em] text-[#b9aea9] not-italic ${bodyText}`}>
               {siteConfig.address}
             </address>

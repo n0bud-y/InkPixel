@@ -44,6 +44,15 @@ const socialIcons: Record<string, { name: string; icon: ReactNode }> = {
       </>
     ),
   },
+  "tiktok.com": {
+    name: "TikTok",
+    icon: (
+      <>
+        <path d="M14 4v10.25a3.75 3.75 0 1 1-3-3.67" />
+        <path d="M14 4c.6 3 2.2 4.6 5 4.9" />
+      </>
+    ),
+  },
 };
 const globe = (
   <>
