@@ -6,8 +6,9 @@ import { team } from "@/content/about";
 import { TeamCarousel } from "./TeamCarousel";
 
 // "Meet The People Behind Ink Pixel Studios": the team's portrait cards (the pink backdrop is
-// part of each photo) in an auto-sliding row with dots (TeamCarousel). Four cards per view on
-// desktop; on phones and tablets one card and part of the next.
+// part of each photo) in an auto-sliding row with arrows, dots, and swiping or mouse dragging
+// (TeamCarousel). Four cards per view on desktop; on phones and tablets one card and part of the
+// next.
 export function Team() {
   return (
     <section aria-labelledby="team-title" className="bg-white">
@@ -37,6 +38,7 @@ export function Team() {
                   src={member.photo}
                   alt={`${member.name}, ${member.role}`}
                   sizes="(min-width: 1024px) 21vw, 70vw"
+                  draggable={false}
                   className="h-auto w-full"
                 />
                 <p className="mt-[clamp(0.75rem,1vw,1.25rem)] font-display text-[clamp(1.0625rem,1.2vw,1.4375rem)] leading-tight font-semibold text-primary">
