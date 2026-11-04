@@ -9,11 +9,10 @@ const pill =
 
 // "Empowering Your Business with Next-Gen Digital Solutions": the title and intro, then one row
 // per service category (src/content/services.ts): the photo, alternating sides, then the title,
-// description, and services as pills linking to their pages. The first service is highlighted,
-// as in the design. The round arrow on the photo leads to the category's own page (Branding so
-// far), labelled for screen readers; otherwise to the first service's page, hidden from screen
-// readers and the keyboard, which already have that pill. Phones and tablets: the
-// photo above the text.
+// description, and services as pills linking to their pages (gradient on hover only). The round
+// arrow on the photo leads to the category's own page (Branding so far), labelled for screen
+// readers; otherwise to the first service's page, hidden from screen readers and the keyboard,
+// which already have that pill. Phones and tablets: the photo above the text.
 export function ServiceCategories() {
   const { categories } = servicesPage;
 
@@ -83,16 +82,9 @@ export function ServiceCategories() {
                     aria-label={`${category.label} services`}
                     className="mt-[clamp(1.25rem,1.6vw,2rem)] flex flex-wrap gap-x-[clamp(0.75rem,1.8vw,2.2rem)] gap-y-[clamp(0.75rem,1.9vw,2.3rem)]"
                   >
-                    {category.services.map((service, serviceIndex) => (
+                    {category.services.map((service) => (
                       <li key={service.href}>
-                        <Link
-                          href={service.href}
-                          className={`${pill} ${
-                            serviceIndex === 0
-                              ? "bg-brand-gradient shadow-[0_10px_30px_-10px_rgb(201_29_76_/_0.8)] hover:brightness-110"
-                              : "bg-white/25 hover:bg-brand-gradient"
-                          }`}
-                        >
+                        <Link href={service.href} className={`${pill} bg-white/25 hover:bg-brand-gradient`}>
                           {service.title}
                         </Link>
                       </li>
