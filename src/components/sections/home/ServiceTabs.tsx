@@ -152,17 +152,17 @@ export function ServiceTabs({ categories }: { categories: ServiceCategory[] }) {
         return;
       }
       const motion = window.matchMedia(MOTION_OK).matches;
-      const duration = motion ? 0.6 : 0;
+      const duration = motion ? 0.25 : 0;
 
       const target = measure();
       if (target && currentStops.current) {
         const stops = { a: currentStops.current[0], b: currentStops.current[1] };
-        gsap.to(indicator.current, { y: target.y, duration, ease: "power3.inOut", overwrite: true });
+        gsap.to(indicator.current, { y: target.y, duration, ease: "power3.out", overwrite: true });
         gsap.to(stops, {
           a: target.stops[0],
           b: target.stops[1],
           duration,
-          ease: "power3.inOut",
+          ease: "power3.out",
           overwrite: true,
           onUpdate: () => {
             currentStops.current = [stops.a, stops.b];
@@ -177,7 +177,7 @@ export function ServiceTabs({ categories }: { categories: ServiceCategory[] }) {
       gsap.fromTo(
         shown.querySelectorAll("[data-item]"),
         { y: 24, autoAlpha: 0 },
-        { y: 0, autoAlpha: 1, duration: 0.55, ease: "power3.out", stagger: 0.06, overwrite: true },
+        { y: 0, autoAlpha: 1, duration: 0.25, ease: "power3.out", stagger: 0.02, overwrite: true },
       );
       gsap.fromTo(
         shown.querySelectorAll("[data-item] img"),
