@@ -113,6 +113,8 @@ export type BrandColour = { name: string; hex: string };
 export type CaseStudyBrandBoardSection = SectionHeadingData & {
   type: "brandBoard";
   id: string;
+  /** "board": heading beside the board. "wide": heading above, logo beside tall colour stripes. */
+  layout: "board" | "wide";
   logo: ContentfulImage | null;
   colours: BrandColour[];
   typefaces: string[];
@@ -121,9 +123,12 @@ export type CaseStudyBrandBoardSection = SectionHeadingData & {
 
 export type SocialPlatform = "Facebook" | "Instagram" | "LinkedIn" | "TikTok" | "YouTube";
 
+export type SocialFeedLayout = "grid" | "phones" | "spotlight" | "carousel" | "collage";
+
 export type CaseStudySocialFeedSection = SectionHeadingData & {
   type: "socialFeed";
   id: string;
+  layout: SocialFeedLayout;
   accountName: string | null;
   avatar: ContentfulImage | null;
   platforms: SocialPlatform[];
@@ -133,6 +138,8 @@ export type CaseStudySocialFeedSection = SectionHeadingData & {
 export type CaseStudyFunnelSection = SectionHeadingData & {
   type: "funnel";
   id: string;
+  /** "funnel": narrowing bands beside the heading. "journey": stages left to right on a line. */
+  layout: "funnel" | "journey";
   stages: CaseStudyItem[];
 };
 
@@ -159,8 +166,10 @@ export type CaseStudySectionData =
 
 /** "split": logo, heading, and text beside the image, on white. "centered": white heading on
  *  the brand gradient with an arch, image below. "light": eyebrow, heading, text, and button
- *  centred on cream, image below. */
-export type CaseStudyHeroLayout = "split" | "centered" | "light";
+ *  centred on cream, image below. "dark": like split, on navy with a glow, with the eyebrow and
+ *  button. "editorial": a very large heading on white, the text and button beside it, the image
+ *  across the page below. */
+export type CaseStudyHeroLayout = "split" | "centered" | "light" | "dark" | "editorial";
 
 export type CaseStudy = {
   title: string;
@@ -301,6 +310,7 @@ export type SectionData =
     }
   | (HeadingData & {
       __typename: "CaseStudyBrandBoard";
+      layout: string | null;
       logo: AssetData;
       colours: (string | null)[] | null;
       typefaces: (string | null)[] | null;
@@ -308,12 +318,13 @@ export type SectionData =
     })
   | (HeadingData & {
       __typename: "CaseStudySocialFeed";
+      layout: string | null;
       accountName: string | null;
       avatar: AssetData;
       platforms: (string | null)[] | null;
       postsCollection: { items: AssetData[] } | null;
     })
-  | (HeadingData & { __typename: "CaseStudyFunnel"; stagesCollection: { items: ItemData[] } | null })
+  | (HeadingData & { __typename: "CaseStudyFunnel"; layout: string | null; stagesCollection: { items: ItemData[] } | null })
   | (HeadingData & { __typename: "CaseStudyResults"; metricsCollection: { items: ItemData[] } | null });
 
 type HeadingData = { sys: { id: string }; eyebrow: string | null; title: string | null; intro: string | null };
@@ -516,6 +527,7 @@ const MARKETING_SECTION_FIELDS = /* GraphQL */ `
       eyebrow
       title
       intro
+      layout
       logo {
         ...ImageFields
       }
@@ -530,6 +542,7 @@ const MARKETING_SECTION_FIELDS = /* GraphQL */ `
       eyebrow
       title
       intro
+      layout
       accountName
       avatar {
         ...ImageFields
@@ -548,6 +561,7 @@ const MARKETING_SECTION_FIELDS = /* GraphQL */ `
       eyebrow
       title
       intro
+      layout
       stagesCollection(limit: 6) {
         items {
           title
@@ -690,7 +704,19 @@ const cardsLayouts: Record<string, CaseStudyCardsLayout> = {
   "Numbered steps": "steps",
 };
 
-export const heroLayouts: Record<string, CaseStudyHeroLayout> = { Centered: "centered", Light: "light" };
+export const heroLayouts: Record<string, CaseStudyHeroLayout> = {
+  Centered: "centered",
+  Light: "light",
+  Dark: "dark",
+  Editorial: "editorial",
+};
+
+const socialFeedLayouts: Record<string, SocialFeedLayout> = {
+  Phones: "phones",
+  Spotlight: "spotlight",
+  Carousel: "carousel",
+  Collage: "collage",
+};
 
 export function toImage(asset: AssetData): ContentfulImage | null {
   if (!asset?.url || !asset.width || !asset.height) return null;
@@ -836,6 +862,7 @@ export function toSection(item: SectionData | null): CaseStudySectionData[] {
         {
           type: "brandBoard",
           ...toHeading(item, item.title),
+          layout: item.layout === "Wide" ? "wide" : "board",
           logo: toImage(item.logo),
           colours,
           typefaces: (item.typefaces ?? []).filter((typeface): typeface is string => Boolean(typeface?.trim())),
@@ -850,6 +877,7 @@ export function toSection(item: SectionData | null): CaseStudySectionData[] {
         {
           type: "socialFeed",
           ...toHeading(item, item.title),
+          layout: (item.layout && socialFeedLayouts[item.layout]) || "grid",
           accountName: item.accountName,
           avatar: toImage(item.avatar),
           platforms: (item.platforms ?? []).filter(isSocialPlatform),
@@ -860,7 +888,9 @@ export function toSection(item: SectionData | null): CaseStudySectionData[] {
     case "CaseStudyFunnel": {
       const stages = toItems(item.stagesCollection?.items);
       if (!item.title || !stages.length) return [];
-      return [{ type: "funnel", ...toHeading(item, item.title), stages }];
+      return [
+        { type: "funnel", ...toHeading(item, item.title), layout: item.layout === "Journey" ? "journey" : "funnel", stages },
+      ];
     }
     case "CaseStudyResults": {
       // Hidden until it has a published metric.

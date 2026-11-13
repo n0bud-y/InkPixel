@@ -997,9 +997,110 @@ const designedPostAlts = {
   ],
 };
 
+// Each page's own layout (13 Nov 2026, second round, so the five don't look alike): hero, section
+// order, and the layout of each section. Keys are the case studies' `key`s.
+const pagePlans = {
+  pak: {
+    services: ["branding", "marketing", "development"],
+    excerpt:
+      "Branding, social media, and lead-generation campaigns for a Karachi vehicle armoring company, and a new website for Pak Armoury, an arms and ammunition store.",
+    cardPoints: ["Brand identity & social media", "Lead-generation campaigns", "Pak Armoury website"],
+    engagement: "Branding · Social · Campaigns · Lead Gen · Web",
+    servicesProvided: `${servicesProvided}, Website Development`,
+    overviewLayout: "Image right",
+    brandLayout: "Board",
+    feedLayout: "Phones",
+    funnelLayout: "Funnel",
+    approach: {
+      layout: "Timeline beside text",
+      image: ["pak-armoring/profile.webp", "Pak Armoring's social media profile on a phone, with reels beside it"],
+    },
+    order: ["overview", "brand", "website", "website-pages", "social", "funnel", "approach", "cta"],
+  },
+  gw: {
+    hero: { heroLayout: "Centered" },
+    overviewLayout: "Image left",
+    brandCards: {
+      layout: "Around image",
+      image: ["gw-towers/phone.webp", "A G&W Towers post on a phone: Elevated Living, Redefined"],
+      extraItem: ["Campaign Creative", "Ad designs for feed, stories, and lead forms in the same premium style."],
+    },
+    feedLayout: "Spotlight",
+    feedPosts: 5,
+    funnelLayout: "Journey",
+    order: ["delivered", "overview", "social", "funnel", "brand", "cta"],
+  },
+  ng: {
+    hero: { heroLayout: "Light", heroEyebrow: "Design · Build · Grow", heroButtonLabel: "Book a Consultation", heroButtonLink: "/contact" },
+    overviewLayout: "Image below",
+    brandCards: { layout: "Icon grid" },
+    feedLayout: "Carousel",
+    funnelLayout: "Funnel",
+    approach: { layout: "Numbered steps" },
+    order: ["overview", "brand", "social", "approach", "funnel", "cta"],
+  },
+  aawaz: {
+    hero: { heroLayout: "Dark", heroEyebrow: "Admissions Campaigns", heroButtonLabel: "Start Your Project", heroButtonLink: "/contact" },
+    overviewLayout: "Image right",
+    // The timeline's image is the project card image (already uploaded).
+    brandCards: { layout: "Timeline beside text", image: "card" },
+    feedLayout: "Grid",
+    funnelLayout: "Journey",
+    order: ["overview", "board", "social", "funnel", "brand", "cta"],
+  },
+  staz: {
+    hero: { heroLayout: "Editorial", heroEyebrow: "Constructing Dreams", heroButtonLabel: "Start Your Project", heroButtonLink: "/contact" },
+    overviewLayout: "Image left",
+    brandLayout: "Wide",
+    feedLayout: "Collage",
+    funnelLayout: "Funnel",
+    approach: { layout: "Numbered steps" },
+    order: ["brand", "overview", "social", "approach", "funnel", "cta"],
+  },
+};
+
+// JSON with object keys sorted, so equal values compare equal whatever order Contentful returns.
+const stable = (value) =>
+  JSON.stringify(value, (_, inner) =>
+    inner && typeof inner === "object" && !Array.isArray(inner)
+      ? Object.fromEntries(Object.entries(inner).sort(([a], [b]) => a.localeCompare(b)))
+      : inner,
+  );
+
+// Creates the entry if it doesn't exist; otherwise brings the given fields up to date and
+// republishes it, but only while it is still as this script published it (published once, no
+// draft changes), so an editor's work in Contentful is never overwritten.
+async function ensure(id, contentType, fields) {
+  const entry = await cma(`/entries/${id}`);
+  if (!entry) return upsert(id, contentType, fields);
+  const changed = Object.keys(fields).filter(
+    (key) => fields[key] !== undefined && stable(entry.fields[key]?.[locale]) !== stable(fields[key]),
+  );
+  if (!changed.length) {
+    console.log(`  up to date, skipped: ${id}`);
+    return;
+  }
+  if ((entry.sys.publishedCounter ?? 0) > 1 || entry.sys.version > (entry.sys.publishedVersion ?? 0) + 1) {
+    console.warn(`  edited in Contentful, skipped: ${id} (would change ${changed.join(", ")})`);
+    return;
+  }
+  const updated = await cma(`/entries/${id}`, {
+    method: "PUT",
+    headers: { "X-Contentful-Version": String(entry.sys.version) },
+    body: { fields: { ...entry.fields, ...localized(Object.fromEntries(changed.map((key) => [key, fields[key]]))) } },
+  });
+  await cma(`/entries/${id}/published`, {
+    method: "PUT",
+    headers: { "X-Contentful-Version": String(updated.sys.version) },
+  });
+  console.log(`  updated and published: ${id} (${changed.join(", ")})`);
+}
+
 for (const study of marketingCaseStudies) {
   const { key, slug, client } = study;
+  const plan = pagePlans[key];
   const id = (name) => `${key}-${name}`;
+  const asset = (name) => link(id(name), "Asset");
 
   // Images.
   await upsertAsset(id("img-hero"), `${slug}/hero.webp`, "image/webp", study.heroAlt);
@@ -1019,7 +1120,7 @@ for (const study of marketingCaseStudies) {
   if (client.logo) {
     await upsertAsset(id("logo"), client.logo[0], "image/webp", client.logo[1]);
     Object.assign(clientFields, {
-      logo: link(id("logo"), "Asset"),
+      logo: asset("logo"),
       logoApproved: true,
       logoApproval: "Shown on the About page; approved by the project head on 13 Nov 2026",
     });
@@ -1031,101 +1132,168 @@ for (const study of marketingCaseStudies) {
     ["Industry", study.overview.industry],
     ["Location", "Karachi, Pakistan"],
     ["Channels", study.overview.channels],
-    ["Engagement", engagement],
+    ["Engagement", plan.engagement ?? engagement],
   ];
-  for (const [index, [title, text]] of facts.entries()) await upsert(id(`fact-${index + 1}`), "caseStudyItem", { title, text });
-  await upsert(id("services"), "caseStudyItem", { title: "Services Provided", text: servicesProvided });
-  await upsert(id("overview"), "caseStudySection", {
+  for (const [index, [title, text]] of facts.entries()) await ensure(id(`fact-${index + 1}`), "caseStudyItem", { title, text });
+  await ensure(id("services"), "caseStudyItem", { title: "Services Provided", text: plan.servicesProvided ?? servicesProvided });
+  await ensure(id("overview"), "caseStudySection", {
     eyebrow: "Overview",
     title: `About *${client.name}*`,
     body: richText(...study.overview.paragraphs),
-    image: link(id("img-overview"), "Asset"),
-    layout: "Image right",
+    image: asset("img-overview"),
+    layout: plan.overviewLayout,
     facts: facts.map((_, index) => link(id(`fact-${index + 1}`))),
     highlight: link(id("services")),
   });
 
   // Brand identity: a brand board with the real logo and its colours, or cards.
   if (study.brandBoard) {
-    await upsert(id("brand"), "caseStudyBrandBoard", {
+    await ensure(id("brand"), "caseStudyBrandBoard", {
       eyebrow: "Brand Identity",
       ...study.brandBoard,
-      logo: link(id("logo"), "Asset"),
+      layout: plan.brandLayout,
+      logo: asset("logo"),
     });
   } else {
-    const { title, intro, items } = study.brandCards;
+    const { title, intro } = study.brandCards;
+    const items = plan.brandCards.extraItem ? [...study.brandCards.items, plan.brandCards.extraItem] : study.brandCards.items;
     for (const [index, [itemTitle, text]] of items.entries()) {
-      await upsert(id(`brand-${index + 1}`), "caseStudyItem", { title: itemTitle, text });
+      await ensure(id(`brand-${index + 1}`), "caseStudyItem", { title: itemTitle, text });
     }
-    await upsert(id("brand"), "caseStudyCards", {
+    let image;
+    if (plan.brandCards.image === "card") image = asset("img-card");
+    else if (plan.brandCards.image) {
+      await upsertAsset(id("img-brand"), plan.brandCards.image[0], "image/webp", plan.brandCards.image[1]);
+      image = asset("img-brand");
+    }
+    await ensure(id("brand"), "caseStudyCards", {
       eyebrow: "Brand Identity",
       title,
       intro,
-      layout: "Icon grid",
+      layout: plan.brandCards.layout,
+      image,
       items: items.map((_, index) => link(id(`brand-${index + 1}`))),
     });
   }
 
   // Social feed.
   let avatar;
-  if (study.social.avatar === "logo") avatar = link(id("logo"), "Asset");
+  if (study.social.avatar === "logo") avatar = asset("logo");
   else if (study.social.avatar) {
     await upsertAsset(id("avatar"), study.social.avatar[0], "image/webp", study.social.avatar[1]);
-    avatar = link(id("avatar"), "Asset");
+    avatar = asset("avatar");
   }
-  await upsert(id("social"), "caseStudySocialFeed", {
+  await ensure(id("social"), "caseStudySocialFeed", {
     eyebrow: "Social Media Marketing",
     title: study.social.title,
     intro: study.social.intro,
+    layout: plan.feedLayout,
     accountName: client.name,
     avatar,
     platforms: ["Facebook", "Instagram"],
-    posts: postAlts.map((_, index) => link(id(`img-post-${index + 1}`), "Asset")),
+    posts: postAlts.slice(0, plan.feedPosts ?? postAlts.length).map((_, index) => asset(`img-post-${index + 1}`)),
   });
 
   // Funnel.
   for (const [index, [title, text]] of study.funnel.stages.entries()) {
-    await upsert(id(`stage-${index + 1}`), "caseStudyItem", { title, text });
+    await ensure(id(`stage-${index + 1}`), "caseStudyItem", { title, text });
   }
-  await upsert(id("funnel"), "caseStudyFunnel", {
+  await ensure(id("funnel"), "caseStudyFunnel", {
     eyebrow: "Campaigns & Lead Generation",
     title: study.funnel.title,
     intro: study.funnel.intro,
+    layout: plan.funnelLayout,
     stages: study.funnel.stages.map((_, index) => link(id(`stage-${index + 1}`))),
   });
 
-  // Approach steps.
-  for (const [index, [title, text]] of study.steps.entries()) await upsert(id(`step-${index + 1}`), "caseStudyItem", { title, text });
-  await upsert(id("approach"), "caseStudyCards", {
+  // Approach steps (only on the pages whose plan has them; the others keep the entries unused).
+  for (const [index, [title, text]] of study.steps.entries()) await ensure(id(`step-${index + 1}`), "caseStudyItem", { title, text });
+  let approachImage;
+  if (plan.approach?.image) {
+    await upsertAsset(id("img-approach"), plan.approach.image[0], "image/webp", plan.approach.image[1]);
+    approachImage = asset("img-approach");
+  }
+  await ensure(id("approach"), "caseStudyCards", {
     eyebrow: "Our Approach",
     title: `How We Worked With *${client.name}*`,
     intro: "Branding, social media, campaigns, and lead generation, planned together so each one strengthens the others.",
-    layout: "Numbered steps",
+    layout: plan.approach?.layout ?? "Numbered steps",
+    image: approachImage,
     items: study.steps.map((_, index) => link(id(`step-${index + 1}`))),
   });
 
+  // Page-specific sections.
+  if (key === "pak") {
+    // The website for Pak Armoury (pakarmoury.com), screenshots taken 13 Nov 2026.
+    await upsertAsset(id("img-website"), "pak-armoring/website.webp", "image/webp", "The Pak Armoury website: the Pistols and About pages, and the home page on a phone");
+    await upsertAsset(id("img-website-pages"), "pak-armoring/website-pages.webp", "image/webp", "Pak Armoury website pages: About, Home, and Pistols");
+    await ensure(id("website-fact-1"), "caseStudyItem", { title: "Website", text: "pakarmoury.com" });
+    await ensure(id("website-fact-2"), "caseStudyItem", { title: "Pages", text: "Home, About, Products, Contact" });
+    await ensure(id("website"), "caseStudySection", {
+      eyebrow: "Website Development",
+      title: "A Website for *Pak Armoury*",
+      body: richText(
+        "We also designed and built the website for Pak Armoury, an arms and ammunition store in Karachi with a tradition going back to 1950. The site presents the store's history and its full range clearly, on every screen.",
+        titledBullets([
+          ["Product catalogue", "Pistols, revolvers, shotguns, rifles, air guns, and ammunition, each with its own page."],
+          ["The store's story", "An About page that tells the store's history since 1950."],
+          ["Easy contact", "The phone number in the header of every page, and a contact page."],
+          ["Mobile-friendly", "Pages that adapt to phones, tablets, and desktops."],
+        ]),
+      ),
+      image: asset("img-website"),
+      layout: "Image left",
+      facts: [link(id("website-fact-1")), link(id("website-fact-2"))],
+    });
+    await ensure(id("website-pages"), "caseStudyShowcase", { name: "Pak Armoury website pages", image: asset("img-website-pages") });
+  }
+  if (key === "gw") {
+    await ensure(id("delivered"), "caseStudyFeatureGrid", {
+      title: "What We Delivered for *G&W Towers*",
+      intro: "Brand look, content, campaigns, and lead capture, set up to work as one system.",
+      items: [
+        "A premium visual identity for social media, built around navy, champagne gold, and a classic serif.",
+        "A monthly content calendar of lifestyle posts, project updates, and invitations to visit.",
+        "Post and story designs for Facebook and Instagram in one consistent style.",
+        "Construction-update posts that show the project moving forward.",
+        "Lead-generation ads with built-in forms for interested buyers.",
+        "A simple hand-off so every lead reaches the sales team for a call back.",
+      ],
+    });
+  }
+  if (key === "aawaz") {
+    await upsertAsset(
+      id("img-board"),
+      "aawaz-institute/campaign-board.webp",
+      "image/webp",
+      "Aawaz Institute admissions campaign: a story on a phone, a sponsored post, and the counselling lead form",
+    );
+    await ensure(id("board"), "caseStudyShowcase", { name: "Aawaz admissions campaign", image: asset("img-board") });
+  }
+
   // Call to action.
-  await upsert(id("cta"), "caseStudyCallToAction", {
+  await ensure(id("cta"), "caseStudyCallToAction", {
     title: study.cta.title,
     text: study.cta.text,
     buttonLabel: "Start Your Project",
     buttonLink: "/contact",
   });
 
-  await upsert(`case-study-${slug}`, "caseStudy", {
+  await ensure(`case-study-${slug}`, "caseStudy", {
     title: study.title,
     slug,
     client: link(client.id),
-    excerpt: study.excerpt,
+    excerpt: plan.excerpt ?? study.excerpt,
     cardHighlight: study.cardHighlight,
-    cardPoints: ["Brand identity & social media", "Paid campaigns", "Lead generation"],
-    cardImage: link(id("img-card"), "Asset"),
+    cardPoints: plan.cardPoints ?? ["Brand identity & social media", "Paid campaigns", "Lead generation"],
+    cardImage: asset("img-card"),
     heroHeading: study.heroHeading,
     heroText: study.heroText,
-    heroImage: link(id("img-hero"), "Asset"),
-    sections: ["overview", "brand", "social", "funnel", "approach", "cta"].map((name) => link(id(name))),
+    heroImage: asset("img-hero"),
+    ...plan.hero,
+    sections: plan.order.map((name) => link(id(name))),
     industries: study.industries,
-    services,
+    services: plan.services ?? services,
     region: "Pakistan",
   });
 }

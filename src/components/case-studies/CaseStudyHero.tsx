@@ -26,6 +26,10 @@ export function CaseStudyHero(props: HeroProps) {
       return <CenteredHero {...props} />;
     case "light":
       return <LightHero {...props} />;
+    case "dark":
+      return <DarkHero {...props} />;
+    case "editorial":
+      return <EditorialHero {...props} />;
     default:
       return <SplitHero {...props} />;
   }
@@ -206,6 +210,125 @@ function LightHero({ eyebrow, heading, text, button, image, layers }: HeroProps)
         </div>
         <div className="mt-[clamp(1.5rem,2vw,2.5rem)] flex justify-center">
           <HeroVisual image={image} layers={layers} sizes="(min-width: 1024px) 55vw, 100vw" />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// The client's logo (once approved) on a white chip, so logos drawn for light backgrounds read
+// on navy too.
+function LogoChip({ client }: Pick<HeroProps, "client">) {
+  if (!client?.logo) return null;
+  return (
+    <span className="mb-[clamp(1.25rem,1.6vw,2rem)] inline-flex rounded-2xl bg-white px-4 py-3 shadow-[0_18px_40px_-20px_rgb(0_0_0_/_0.6)]">
+      <Image
+        src={client.logo.url}
+        width={client.logo.width}
+        height={client.logo.height}
+        alt={client.logo.alt || client.name}
+        unoptimized={client.logo.isSvg}
+        loading="eager"
+        className="h-[clamp(2.75rem,3.6vw,4.25rem)] w-auto"
+      />
+    </span>
+  );
+}
+
+// On navy with the faint grid and a crimson glow behind the image: the logo, eyebrow, white
+// heading (accent words in the gradient), text, and button on the left, the image on the right.
+function DarkHero({ eyebrow, heading, text, button, image, layers, client }: HeroProps) {
+  return (
+    <section aria-labelledby="case-study-title" className="relative isolate overflow-hidden bg-primary">
+      <div aria-hidden="true" className="absolute inset-0 -z-10 bg-grid [mask-image:linear-gradient(to_bottom,#000,transparent_85%)]" />
+      <div
+        aria-hidden="true"
+        className="absolute top-1/2 right-[-10%] -z-10 size-[min(64rem,120vw)] -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgb(201_29_76_/_0.4),transparent)]"
+      />
+      <div className="container-site grid grid-cols-[minmax(0,1fr)] items-center gap-10 pt-32 pb-[clamp(4rem,5.85vw,7rem)] sm:pt-36 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:gap-[clamp(2rem,4vw,6rem)] lg:pt-40 2xl:pt-48">
+        <div className="motion-safe:animate-rise">
+          <LogoChip client={client} />
+          {eyebrow && (
+            <div className="mb-[clamp(1rem,1.3vw,1.5rem)]">
+              <Eyebrow>{eyebrow}</Eyebrow>
+            </div>
+          )}
+          <h1
+            id="case-study-title"
+            className="max-w-[16em] font-display text-[clamp(2.25rem,3.6vw,4.5rem)] leading-[1.06] font-bold tracking-[-0.02em] text-white"
+          >
+            {withAccent(heading)}
+          </h1>
+          {text && (
+            <p className="mt-6 max-w-[36em] text-[clamp(0.9375rem,1.05vw,1.25rem)] leading-[1.9] text-light/80">{text}</p>
+          )}
+          {button && (
+            <div className="mt-[clamp(1.75rem,2.2vw,2.75rem)]">
+              <Magnetic>
+                <Button href={button.href} icon>
+                  {button.label}
+                </Button>
+              </Magnetic>
+            </div>
+          )}
+        </div>
+        <div className="flex justify-center lg:justify-end">
+          <HeroVisual image={image} layers={layers} sizes="(min-width: 1024px) 50vw, 100vw" />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// On white with the faint navy grid: the eyebrow and a very large heading across the page, then
+// the text (and logo) beside the button, a thin rule, and the image across the page below on a
+// soft brand glow.
+function EditorialHero({ eyebrow, heading, text, button, image, layers, client }: HeroProps) {
+  return (
+    <section aria-labelledby="case-study-title" className="relative isolate overflow-hidden bg-white bg-grid-light">
+      <div className="container-site pt-32 sm:pt-36 lg:pt-40 2xl:pt-48">
+        <div className="motion-safe:animate-rise">
+          {eyebrow && <Eyebrow tone="brand">{eyebrow}</Eyebrow>}
+          <h1
+            id="case-study-title"
+            className="mt-[clamp(1.25rem,1.8vw,2.25rem)] max-w-[14em] font-display text-[clamp(2.75rem,6.6vw,8.25rem)] leading-[0.98] font-bold tracking-[-0.035em] text-primary"
+          >
+            {withAccent(heading)}
+          </h1>
+          <div className="mt-[clamp(2rem,3vw,3.5rem)] flex flex-col gap-8 border-t border-primary/10 pt-[clamp(1.5rem,2vw,2.5rem)] lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
+              {client?.logo && (
+                <Image
+                  src={client.logo.url}
+                  width={client.logo.width}
+                  height={client.logo.height}
+                  alt={client.logo.alt || client.name}
+                  unoptimized={client.logo.isSvg}
+                  loading="eager"
+                  className="h-[clamp(3rem,4vw,4.75rem)] w-auto shrink-0 self-start sm:self-center"
+                />
+              )}
+              {text && (
+                <p className="max-w-[44em] text-[clamp(0.9375rem,1.05vw,1.25rem)] leading-[1.9] text-primary/80">{text}</p>
+              )}
+            </div>
+            {button && (
+              <div className="shrink-0">
+                <Magnetic>
+                  <Button href={button.href} variant="primary-reverse" icon>
+                    {button.label}
+                  </Button>
+                </Magnetic>
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="relative mt-[clamp(2rem,3vw,3.5rem)] flex justify-center">
+          <div
+            aria-hidden="true"
+            className="absolute top-1/2 left-1/2 -z-10 h-[80%] w-[70%] -translate-1/2 rounded-full bg-[radial-gradient(closest-side,rgb(250_97_67_/_0.22),transparent)]"
+          />
+          <HeroVisual image={image} layers={layers} sizes="(min-width: 1024px) 70vw, 100vw" />
         </div>
       </div>
     </section>

@@ -15,16 +15,67 @@ function clip(widthsList: number[], index: number) {
   return `polygon(0 0, 100% 0, ${100 - inset}% 100%, ${inset}% 100%)`;
 }
 
-// A campaign or lead-generation funnel: the heading on the left, the stages on the right as
-// bands narrowing from coral (top) to crimson (bottom), each with its number, title, and text.
-export function FunnelSection({
-  id,
-  tone,
-  eyebrow,
-  title,
-  intro,
-  stages,
-}: Omit<CaseStudyFunnelSection, "type"> & { tone: SectionTone }) {
+type FunnelProps = Omit<CaseStudyFunnelSection, "type"> & { tone: SectionTone };
+
+// A campaign or lead-generation funnel, as narrowing bands (Funnel) or a line of stages (Journey).
+export function FunnelSection(props: FunnelProps) {
+  return props.layout === "journey" ? <JourneyStages {...props} /> : <FunnelBands {...props} />;
+}
+
+// The heading above; the stages left to right on a gradient line, each a numbered point with its
+// title and text under it (top to bottom beside the line on phones and tablets).
+function JourneyStages({ id, tone, eyebrow, title, intro, stages }: FunnelProps) {
+  const headingId = `section-${id}-title`;
+  const dark = tone === "dark";
+
+  return (
+    <CaseStudySectionFrame headingId={headingId} tone={tone}>
+      <Reveal>
+        <CaseStudyHeading id={headingId} tone={tone} eyebrow={eyebrow} title={title} intro={intro} centered />
+      </Reveal>
+      <Reveal y={30} delay={0.1} stagger={0.15}>
+        <ol
+          className="relative mt-[clamp(2.75rem,4vw,5rem)] grid gap-[clamp(1.75rem,2vw,2.5rem)] lg:[grid-template-columns:repeat(var(--stages),minmax(0,1fr))] lg:gap-[clamp(1rem,1.6vw,2rem)]"
+          style={{ "--stages": stages.length } as CSSProperties}
+        >
+          <span
+            aria-hidden="true"
+            className="absolute top-2 bottom-2 left-[1.6rem] w-0.5 bg-[linear-gradient(to_bottom,#fa6143,#c91d4c)] lg:top-[1.6rem] lg:right-[calc(50%/var(--stages))] lg:bottom-auto lg:left-[calc(50%/var(--stages))] lg:h-0.5 lg:w-auto lg:bg-[linear-gradient(to_right,#fa6143,#c91d4c)]"
+          />
+          {stages.map((stage, index) => (
+            <li key={index} data-reveal className="relative flex gap-5 lg:flex-col lg:items-center lg:text-center">
+              <span
+                className={[
+                  "flex size-[3.2rem] shrink-0 items-center justify-center rounded-full bg-brand-gradient-reverse font-mono text-sm font-medium text-white ring-8",
+                  dark ? "ring-primary" : "ring-white",
+                ].join(" ")}
+              >
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              <div
+                className={[
+                  "flex-1 rounded-[1.25rem] p-[clamp(1.25rem,1.5vw,1.75rem)] lg:mt-6 lg:w-full",
+                  dark ? "bg-white/[0.05] ring-1 ring-white/10" : "bg-white ring-1 ring-primary/10 shadow-[0_24px_50px_-34px_rgb(21_25_54_/_0.4)]",
+                ].join(" ")}
+              >
+                <p className={`font-display text-[clamp(1.125rem,1.35vw,1.5rem)] leading-tight font-semibold ${dark ? "text-white" : "text-primary"}`}>
+                  {stage.title}
+                </p>
+                {stage.text && (
+                  <p className={`mt-2 text-[clamp(0.875rem,0.95vw,1.0625rem)] leading-[1.7] ${dark ? "text-light/75" : "text-primary/75"}`}>{stage.text}</p>
+                )}
+              </div>
+            </li>
+          ))}
+        </ol>
+      </Reveal>
+    </CaseStudySectionFrame>
+  );
+}
+
+// The heading on the left, the stages on the right as bands narrowing from coral (top) to
+// crimson (bottom), each with its number, title, and text.
+function FunnelBands({ id, tone, eyebrow, title, intro, stages }: FunnelProps) {
   const headingId = `section-${id}-title`;
   const desktop = widths(stages.length, 44);
   const phone = widths(stages.length, 18);
