@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, type MouseEvent, type ReactNode } from "react";
+import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from "react";
 import { Button } from "@/components/ui/Button";
 import { industries } from "@/content/industries";
 import { serviceCategories } from "@/content/services";
@@ -87,7 +87,13 @@ export function MobileNav({ logo }: { logo: ReactNode }) {
                 const active = isActive(pathname, item.href);
                 if (item.href === "/services" || item.href === "/industries" || item.href === "/technologies") {
                   return (
-                    <ExpandableItem key={item.href} label={item.label} number={index + 1} active={active}>
+                    <ExpandableItem
+                      key={item.href}
+                      label={item.label}
+                      number={index + 1}
+                      active={active}
+                      lazy={item.href !== "/services"}
+                    >
                       {item.href === "/services" ? (
                         <ServicesList label={item.label} />
                       ) : item.href === "/industries" ? (
@@ -134,21 +140,27 @@ export function MobileNav({ logo }: { logo: ReactNode }) {
 }
 
 // A menu item that opens its content under it on a tap (Services, Industries, Technologies).
-// <details>, so it works without JavaScript.
+// <details>, so it works without JavaScript. `lazy` content (Industries, Technologies: display
+// only, no links) is built the first time it opens, so its icons and logos aren't loaded, and
+// its elements aren't on the page, until someone wants them.
 function ExpandableItem({
   label,
   number,
   active,
+  lazy = false,
   children,
 }: {
   label: string;
   number: number;
   active: boolean;
+  lazy?: boolean;
   children: ReactNode;
 }) {
+  const [opened, setOpened] = useState(!lazy);
+
   return (
     <li className="border-b border-white/[0.07]">
-      <details className="group/expand">
+      <details className="group/expand" onToggle={(event) => event.currentTarget.open && setOpened(true)}>
         <summary
           className={[
             "flex cursor-pointer list-none items-baseline justify-between py-4 font-display text-[1.75rem] leading-tight font-medium tracking-[-0.02em] transition-colors [&::-webkit-details-marker]:hidden",
@@ -171,7 +183,7 @@ function ExpandableItem({
           </span>
         </summary>
 
-        <div className="pt-1 pb-6">{children}</div>
+        <div className="pt-1 pb-6">{opened && children}</div>
       </details>
     </li>
   );

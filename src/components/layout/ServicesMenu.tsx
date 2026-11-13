@@ -13,6 +13,7 @@ import {
   type PointerEvent,
 } from "react";
 import { Button, DropIcon } from "@/components/ui/Button";
+import { HoverPrefetchLink } from "@/components/ui/HoverPrefetchLink";
 import { serviceCategories, type ServiceCategory } from "@/content/services";
 import { useHoverMenu } from "./useHoverMenu";
 
@@ -178,7 +179,7 @@ export function ServicesMenu({
                   const href = pageOf(item);
                   return (
                     <li key={item.slug}>
-                      <Link
+                      <HoverPrefetchLink
                         id={tabId(index)}
                         href={href}
                         aria-current={pathname === href ? "page" : undefined}
@@ -208,7 +209,7 @@ export function ServicesMenu({
                         >
                           <path d="M4.5 2.5 8 6l-3.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
-                      </Link>
+                      </HoverPrefetchLink>
                     </li>
                   );
                 })}
@@ -219,7 +220,7 @@ export function ServicesMenu({
                 <div className="flex items-start justify-between gap-6 px-2">
                   <p className={`max-w-[36em] text-[14px] leading-relaxed 2xl:text-[15px] ${tone.muted}`}>{category.description}</p>
                   {category.href && (
-                    <Link
+                    <HoverPrefetchLink
                       href={category.href}
                       className={`group inline-flex shrink-0 items-center gap-1.5 text-[14px] font-medium transition-colors 2xl:text-[15px] ${tone.link}`}
                     >
@@ -227,7 +228,7 @@ export function ServicesMenu({
                       <span aria-hidden="true" className="transition-transform duration-200 group-hover:translate-x-0.5">
                         →
                       </span>
-                    </Link>
+                    </HoverPrefetchLink>
                   )}
                 </div>
 
@@ -236,7 +237,7 @@ export function ServicesMenu({
                     const current = pathname === service.href;
                     return (
                       <li key={service.href}>
-                        <Link
+                        <HoverPrefetchLink
                           href={service.href}
                           aria-current={current ? "page" : undefined}
                           className={`group flex items-start gap-3.5 rounded-2xl p-3 transition-colors duration-200 2xl:gap-4 2xl:p-3.5 ${tone.item}`}
@@ -258,7 +259,7 @@ export function ServicesMenu({
                               {service.description}
                             </span>
                           </span>
-                        </Link>
+                        </HoverPrefetchLink>
                       </li>
                     );
                   })}
@@ -268,10 +269,10 @@ export function ServicesMenu({
 
             {/* All services, and a call. */}
             <div className={`flex items-center justify-between gap-6 border-t px-6 py-4 2xl:px-8 2xl:py-5 ${tone.line} ${tone.bar}`}>
-              <Link href="/services" className={`group inline-flex items-center gap-2 text-[15px] font-medium transition-colors ${tone.link}`}>
+              <HoverPrefetchLink href="/services" className={`group inline-flex items-center gap-2 text-[15px] font-medium transition-colors ${tone.link}`}>
                 View all services
                 <DropIcon gradient className="h-[1.1em] w-auto transition-transform duration-200 group-hover:translate-x-0.5" />
-              </Link>
+              </HoverPrefetchLink>
               <div className="flex items-center gap-4">
                 <span className={`text-[15px] ${tone.muted}`}>Not sure where to start?</span>
                 <Button href="/contact" size="sm" icon>

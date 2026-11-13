@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, type ReactNode } from "react";
+import { useId, useState, type PointerEvent, type ReactNode } from "react";
 import { Button } from "@/components/ui/Button";
 import { useHoverMenu } from "./useHoverMenu";
 
@@ -28,9 +28,21 @@ export function MegaMenu({
 }) {
   const { open, toggle, button, closeOnLinkClick, rootProps } = useHoverMenu();
   const panelId = useId();
+  // The panel's content (display only, no links) is built the first time the menu is wanted:
+  // when the mouse reaches it (during the short open delay), it gets focus, or it opens. Until
+  // then its icons and logos aren't loaded and its elements aren't on the page.
+  const [ready, setReady] = useState(false);
+  if (open && !ready) setReady(true);
 
   return (
-    <div {...rootProps}>
+    <div
+      {...rootProps}
+      onPointerEnter={(event: PointerEvent) => {
+        setReady(true);
+        rootProps.onPointerEnter(event);
+      }}
+      onFocus={() => setReady(true)}
+    >
       <button
         ref={button}
         type="button"
@@ -62,7 +74,7 @@ export function MegaMenu({
       >
         <div className="container-site">
           <div className="pointer-events-auto max-h-[calc(100dvh-7.5rem)] scrollbar-brand overflow-y-auto overscroll-contain rounded-3xl border border-primary/10 bg-white text-primary shadow-[0_40px_80px_-32px_rgb(21_25_54_/_0.35)] 2xl:max-h-[calc(100dvh-9.5rem)]">
-            {children}
+            {ready && children}
 
             <div className="flex items-center justify-end gap-4 border-t border-primary/10 bg-primary/[0.025] px-6 py-4 2xl:px-8 2xl:py-5">
               <span className="text-[15px] text-primary/60">{callout}</span>
