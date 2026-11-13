@@ -104,6 +104,45 @@ export type CaseStudyCallToActionSection = {
   image: ContentfulImage | null;
 };
 
+/** A section's eyebrow, title, and intro (the marketing sections, 0011). */
+type SectionHeadingData = { eyebrow: string | null; title: string; intro: string | null };
+
+/** A brand colour from "Name #RRGGBB". */
+export type BrandColour = { name: string; hex: string };
+
+export type CaseStudyBrandBoardSection = SectionHeadingData & {
+  type: "brandBoard";
+  id: string;
+  logo: ContentfulImage | null;
+  colours: BrandColour[];
+  typefaces: string[];
+  tagline: string | null;
+};
+
+export type SocialPlatform = "Facebook" | "Instagram" | "LinkedIn" | "TikTok" | "YouTube";
+
+export type CaseStudySocialFeedSection = SectionHeadingData & {
+  type: "socialFeed";
+  id: string;
+  accountName: string | null;
+  avatar: ContentfulImage | null;
+  platforms: SocialPlatform[];
+  posts: ContentfulImage[];
+};
+
+export type CaseStudyFunnelSection = SectionHeadingData & {
+  type: "funnel";
+  id: string;
+  stages: CaseStudyItem[];
+};
+
+export type CaseStudyResultsSection = SectionHeadingData & {
+  type: "results";
+  id: string;
+  /** Title = the number (e.g. +150%), text = its label. */
+  metrics: CaseStudyItem[];
+};
+
 export type CaseStudySectionData =
   | CaseStudyTextImageSection
   | CaseStudyTechStackSection
@@ -112,7 +151,11 @@ export type CaseStudySectionData =
   | CaseStudyCardsSection
   | CaseStudyGallerySection
   | CaseStudyTestimonialsSection
-  | CaseStudyCallToActionSection;
+  | CaseStudyCallToActionSection
+  | CaseStudyBrandBoardSection
+  | CaseStudySocialFeedSection
+  | CaseStudyFunnelSection
+  | CaseStudyResultsSection;
 
 /** "split": logo, heading, and text beside the image, on white. "centered": white heading on
  *  the brand gradient with an arch, image below. "light": eyebrow, heading, text, and button
@@ -255,7 +298,25 @@ export type SectionData =
       buttonLabel: string | null;
       buttonLink: string | null;
       image: AssetData;
-    };
+    }
+  | (HeadingData & {
+      __typename: "CaseStudyBrandBoard";
+      logo: AssetData;
+      colours: (string | null)[] | null;
+      typefaces: (string | null)[] | null;
+      tagline: string | null;
+    })
+  | (HeadingData & {
+      __typename: "CaseStudySocialFeed";
+      accountName: string | null;
+      avatar: AssetData;
+      platforms: (string | null)[] | null;
+      postsCollection: { items: AssetData[] } | null;
+    })
+  | (HeadingData & { __typename: "CaseStudyFunnel"; stagesCollection: { items: ItemData[] } | null })
+  | (HeadingData & { __typename: "CaseStudyResults"; metricsCollection: { items: ItemData[] } | null });
+
+type HeadingData = { sys: { id: string }; eyebrow: string | null; title: string | null; intro: string | null };
 
 type CaseStudyData = {
   caseStudyCollection: {
@@ -445,6 +506,71 @@ export const SECTION_FIELDS = /* GraphQL */ `
     }
 `;
 
+// The marketing sections (0011), allowed on case studies only: a product's query can't ask for
+// them (GraphQL rejects fragments for types its sections can't hold).
+const MARKETING_SECTION_FIELDS = /* GraphQL */ `
+    ... on CaseStudyBrandBoard {
+      sys {
+        id
+      }
+      eyebrow
+      title
+      intro
+      logo {
+        ...ImageFields
+      }
+      colours
+      typefaces
+      tagline
+    }
+    ... on CaseStudySocialFeed {
+      sys {
+        id
+      }
+      eyebrow
+      title
+      intro
+      accountName
+      avatar {
+        ...ImageFields
+      }
+      platforms
+      postsCollection(limit: 12) {
+        items {
+          ...ImageFields
+        }
+      }
+    }
+    ... on CaseStudyFunnel {
+      sys {
+        id
+      }
+      eyebrow
+      title
+      intro
+      stagesCollection(limit: 6) {
+        items {
+          title
+          text
+        }
+      }
+    }
+    ... on CaseStudyResults {
+      sys {
+        id
+      }
+      eyebrow
+      title
+      intro
+      metricsCollection(limit: 6) {
+        items {
+          title
+          text
+        }
+      }
+    }
+`;
+
 const CASE_STUDY = /* GraphQL */ `
   query CaseStudy($slug: String!) {
     caseStudyCollection(where: { slug: $slug }, limit: 1) {
@@ -476,6 +602,7 @@ const CASE_STUDY = /* GraphQL */ `
         sectionsCollection(limit: 20) {
           items {
             ${SECTION_FIELDS}
+            ${MARKETING_SECTION_FIELDS}
           }
         }
         seo {
@@ -699,10 +826,63 @@ export function toSection(item: SectionData | null): CaseStudySectionData[] {
         },
       ];
     }
+    case "CaseStudyBrandBoard": {
+      const colours = (item.colours ?? []).flatMap((value) => {
+        const match = value?.match(/^(.+) (#[0-9a-f]{6})$/i);
+        return match ? [{ name: match[1].trim(), hex: match[2] }] : [];
+      });
+      if (!item.title || !colours.length) return [];
+      return [
+        {
+          type: "brandBoard",
+          ...toHeading(item, item.title),
+          logo: toImage(item.logo),
+          colours,
+          typefaces: (item.typefaces ?? []).filter((typeface): typeface is string => Boolean(typeface?.trim())),
+          tagline: item.tagline,
+        },
+      ];
+    }
+    case "CaseStudySocialFeed": {
+      const posts = (item.postsCollection?.items ?? []).flatMap((asset) => toImage(asset) ?? []);
+      if (!item.title || !posts.length) return [];
+      return [
+        {
+          type: "socialFeed",
+          ...toHeading(item, item.title),
+          accountName: item.accountName,
+          avatar: toImage(item.avatar),
+          platforms: (item.platforms ?? []).filter(isSocialPlatform),
+          posts,
+        },
+      ];
+    }
+    case "CaseStudyFunnel": {
+      const stages = toItems(item.stagesCollection?.items);
+      if (!item.title || !stages.length) return [];
+      return [{ type: "funnel", ...toHeading(item, item.title), stages }];
+    }
+    case "CaseStudyResults": {
+      // Hidden until it has a published metric.
+      const metrics = toItems(item.metricsCollection?.items);
+      if (!item.title || !metrics.length) return [];
+      return [{ type: "results", ...toHeading(item, item.title), metrics }];
+    }
     default:
       return [];
   }
 }
+
+const socialPlatforms: SocialPlatform[] = ["Facebook", "Instagram", "LinkedIn", "TikTok", "YouTube"];
+const isSocialPlatform = (value: string | null): value is SocialPlatform =>
+  socialPlatforms.includes(value as SocialPlatform);
+
+const toHeading = (item: HeadingData, title: string) => ({
+  id: item.sys.id,
+  eyebrow: item.eyebrow,
+  title,
+  intro: item.intro,
+});
 
 // One published case study, or null if there is none with this slug. Incomplete sections
 // (e.g. a linked image that is not published) are skipped rather than shown half-empty.

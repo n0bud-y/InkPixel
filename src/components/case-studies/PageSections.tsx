@@ -1,9 +1,13 @@
+import { BrandBoardSection } from "@/components/case-studies/BrandBoardSection";
 import { CallToActionSection } from "@/components/case-studies/CallToActionSection";
 import { CardsSection } from "@/components/case-studies/CardsSection";
 import { CaseStudySection } from "@/components/case-studies/CaseStudySection";
 import { FeatureGridSection } from "@/components/case-studies/FeatureGridSection";
+import { FunnelSection } from "@/components/case-studies/FunnelSection";
 import { GallerySection } from "@/components/case-studies/GallerySection";
+import { ResultsSection } from "@/components/case-studies/ResultsSection";
 import { ShowcaseSection } from "@/components/case-studies/ShowcaseSection";
+import { SocialFeedSection } from "@/components/case-studies/SocialFeedSection";
 import { TechStackSection } from "@/components/case-studies/TechStackSection";
 import { TestimonialsSection } from "@/components/case-studies/TestimonialsSection";
 import type { CaseStudySectionData } from "@/contentful/queries/case-studies";
@@ -47,6 +51,14 @@ export function PageSections({
         return <TestimonialsSection key={section.id} tone={tone} {...section} />;
       case "callToAction":
         return <CallToActionSection key={section.id} tone={tone} {...section} />;
+      case "brandBoard":
+        return <BrandBoardSection key={section.id} tone={tone} {...section} />;
+      case "socialFeed":
+        return <SocialFeedSection key={section.id} tone={tone} {...section} />;
+      case "funnel":
+        return <FunnelSection key={section.id} tone={tone} {...section} />;
+      case "results":
+        return <ResultsSection key={section.id} tone={tone} {...section} />;
     }
   });
 }

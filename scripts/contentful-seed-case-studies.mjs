@@ -6,9 +6,14 @@
 //   document's too (the design's had come from another agency's case study).
 // - Cathy O’Bryan’s Books (from application-Cathy-O’Bryan’s-Books.svg). The design's copy,
 //   except the parts copied from other projects (see that section below).
+// - Five marketing case studies (13 Nov 2026, no designs): Pak Armoring, G&W Towers, NG Interiors &
+//   Constructions, Aawaz Institute of Media Sciences, Star Azizi Builders. Developer-written copy
+//   (no results, numbers, or quotes); stand-in social graphics except Pak Armoring's, which come
+//   from its website (issue I18).
 // Replace the placeholder text in Contentful before launch.
 // Usage: npm run contentful:seed-case-studies
-// (needs the model: migrations 0002 to 0005, and 0009 for the card images)
+// (needs the model: migrations 0002 to 0005, 0009 for the card images, 0011 for the marketing
+// sections)
 // Everything has a fixed id, so running it again skips what already exists.
 import { readFile } from "node:fs/promises";
 
@@ -637,5 +642,492 @@ await upsert("case-study-cathy-obryans-books", "caseStudy", {
 });
 // Spaces seeded before the card images (0009, 22 Oct 2026) get them added here.
 await addMissingFields("case-study-cathy-obryans-books", cathyCard);
+
+// Marketing case studies (branding, social media, campaigns, lead generation), added 13 Nov 2026
+// without designs. Each page: overview, brand identity (a brand board where the real logo is
+// available, otherwise cards), social feed, funnel, approach steps, call to action. The copy
+// describes the work only: no results, numbers, or quotes until the client supplies and approves
+// them (add a "Case study: results" section then). Images in contentful/seed/<slug>/: Pak
+// Armoring's posts, logo, and photo come from pakarmoring.com and Star Azizi's logo from the About
+// page; every other graphic is a stand-in designed in the site's style (issue I18).
+
+const services = ["branding", "marketing"];
+const servicesProvided = "Branding, Social Media Marketing, Paid Campaigns, Lead Generation";
+const engagement = "Branding · Social · Campaigns · Lead Gen";
+const reviewStep = [
+  "Review & Refine",
+  "Campaigns are reviewed regularly, with budget moved to the ads and audiences that bring the best enquiries.",
+];
+
+const marketingCaseStudies = [
+  {
+    key: "pak",
+    slug: "pak-armoring",
+    title: "Pak Armoring",
+    client: {
+      id: "client-pak-armoring",
+      name: "Pak Armoring",
+      website: "https://www.pakarmoring.com",
+      logo: ["pak-armoring/logo.webp", "Pak Armoring"],
+    },
+    excerpt:
+      "Branding, social media, and lead-generation campaigns for a Karachi company that armors cars, SUVs, pickups, and vans for civilian and official use.",
+    cardHighlight: "A consistent, trusted brand for a vehicle armoring specialist",
+    heroHeading: "Building Trust Online for *Pak Armoring*",
+    heroText:
+      "Pak Armoring (Pvt) Ltd has armored vehicles in Pakistan since 2012. We brought its brand, social media, and advertising together, so people looking for a protected vehicle find a company they can trust and can reach it in a few taps.",
+    heroAlt: "Pak Armoring's social media: an armored Toyota Hilux reel on a phone, more reels, and a lead form",
+    overview: {
+      image: ["pak-armoring/glass-test.webp", "Bulletproof glass after a ballistic test, with three stopped rounds"],
+      paragraphs: [
+        "Pak Armoring builds armored and bulletproof versions of cars, SUVs, pickups, vans, and buses for individuals, companies, and law-enforcement agencies. Its work is technical and its customers are careful: they want proof of quality before they ever make a call.",
+        "Our job was to turn that proof into content. We gave the brand one consistent look across its channels, showed the workshop's real builds on social media, and ran campaigns that turn interest into enquiries the sales team can follow up.",
+      ],
+      industry: "Vehicle Armoring & Security",
+      channels: "Facebook, Instagram, Website",
+    },
+    brandBoard: {
+      title: "A Brand Built on *Protection*",
+      intro:
+        "The shield, the eagle, and the green and gold palette carry Pak Armoring's promise of strength and reliability. We kept them consistent on every post, ad, and page, so the brand is recognised at a glance.",
+      colours: ["Armor Green #243024", "Deep Forest #182418", "Shield Gold #E8922A", "Ribbon Amber #FCB43C"],
+      tagline: "One Team One Goal Saving Lives",
+    },
+    social: {
+      title: "Real Builds, *Real Stories*",
+      intro:
+        "Short videos straight from the workshop: finished vehicles, interiors, and armoring in progress. Real work, edited for the feed, gives people the confidence to get in touch.",
+      avatar: "logo",
+      posts: [
+        "Reel: an armored pickup in the workshop yard",
+        "Reel: a van interior with leather captain seats and a starlit ceiling",
+        "Reel: an armored Toyota Hilux with a roof turret",
+        "Reel: Toyota Fortuner now fully armored, on the road",
+        "Reel: close-up of an armored vehicle's roof turret",
+        "Reel: the underside of an armored vehicle in the workshop",
+      ],
+    },
+    funnel: {
+      title: "From First View to *Qualified Lead*",
+      intro:
+        "An armored vehicle is a considered purchase, so the campaigns move people step by step: first seeing the work, then trusting it, then asking for a quote.",
+      stages: [
+        ["Awareness", "Video ads show finished builds to people who need a protected vehicle."],
+        ["Consideration", "Retargeting shares interiors, testing, and build details with people who watched."],
+        ["Enquiry", "Lead forms and direct messages make asking for a quote quick and private."],
+        ["Follow-up", "Each enquiry reaches the sales team with the vehicle and details the customer asked about."],
+      ],
+    },
+    steps: [
+      ["Brand Audit", "We reviewed the logo, colours, and content across every channel to decide what to keep and what to fix."],
+      ["Content Planning", "A monthly plan built around real builds, vehicle types, and the questions customers ask most."],
+      ["Production", "Workshop footage edited into short reels and posts in the brand's look."],
+      ["Campaign Setup", "Audiences, ads, and lead forms set up for the people most likely to buy."],
+      reviewStep,
+    ],
+    cta: {
+      title: "Need a Brand People *Trust*? Let’s Talk.",
+      text: "We plan, design, and run branding, social media, and lead-generation campaigns for companies that sell considered, high-value services.",
+    },
+  },
+  {
+    key: "gw",
+    slug: "gw-towers",
+    industries: ["real-estate"],
+    title: "G&W Towers",
+    client: { id: "client-gw-towers", name: "G&W Towers", website: "https://www.facebook.com/gwtower" },
+    excerpt: "Branding, social media, and lead-generation campaigns for G&W Towers, a property development in Karachi.",
+    cardHighlight: "From a first scroll to a booked site visit",
+    heroHeading: "Marketing a Skyline Address for *G&W Towers*",
+    heroText:
+      "G&W Towers is a property development in Karachi. We built its look for social media and ran campaigns that take interested buyers from a first scroll to a booked site visit.",
+    heroAlt: "G&W Towers social media posts on a phone and cards, with a lead form",
+    overview: {
+      paragraphs: [
+        "Property is bought on trust and on feeling. People want to picture themselves living in a place long before they visit it, and to know the project is real and moving forward.",
+        "We gave G&W Towers a premium, consistent look across its social channels, told the project's story through regular updates, and ran lead-generation campaigns that put serious buyers in touch with the sales team.",
+      ],
+      industry: "Real Estate",
+      channels: "Facebook, Instagram",
+    },
+    brandCards: {
+      title: "A *Premium* Look, Post After Post",
+      intro:
+        "Navy, champagne gold, and a classic serif give the project a calm, upmarket voice that stays the same on every post and ad.",
+      items: [
+        ["Visual Language", "A palette and type style made for premium property, used on every post, story, and ad."],
+        ["Content Pillars", "Lifestyle, project updates, and invitations to visit: three themes that keep the feed balanced."],
+        ["Tone of Voice", "Confident and warm, written for families choosing their next home."],
+      ],
+    },
+    social: {
+      title: "A Feed That *Sells the View*",
+      intro:
+        "Lifestyle posts, construction updates, and clear calls to book a visit, designed to stop the scroll and start a conversation.",
+    },
+    funnel: {
+      title: "From Scroll to *Site Visit*",
+      intro: "Each stage of the campaign has one job, so interest builds into a visit, not just a like.",
+      stages: [
+        ["Reach", "Lifestyle ads put the project in front of people looking for a new home in Karachi."],
+        ["Engage", "Construction updates and floor-plan posts keep interested buyers coming back."],
+        ["Capture", "Lead forms collect names and numbers from people ready to talk."],
+        ["Visit", "The sales team calls each lead and books a site visit."],
+      ],
+    },
+    steps: [
+      ["Discovery", "We learned who the project is for and what buyers ask before they visit."],
+      ["Brand Look", "A premium visual system for posts, stories, and ads."],
+      ["Content Calendar", "Lifestyle, progress, and invitation posts planned month by month."],
+      ["Campaign Setup", "Lead-generation ads and forms aimed at likely buyers."],
+      reviewStep,
+    ],
+    cta: {
+      title: "Selling Property? Let’s Fill Your *Site Visits*.",
+      text: "From brand look to lead forms, we plan and run marketing that turns interest in your project into conversations.",
+    },
+  },
+  {
+    key: "ng",
+    slug: "ng-interiors-constructions",
+    industries: ["real-estate"],
+    title: "NG Interiors & Constructions",
+    client: {
+      id: "client-ng-interiors",
+      name: "NG Interiors & Constructions",
+      website: "https://www.facebook.com/nailagulistanofficial",
+    },
+    excerpt:
+      "Branding, social media, and lead-generation campaigns for NG Interiors & Constructions, an interior design and construction company in Karachi.",
+    cardHighlight: "Turning admirers of the work into consultation requests",
+    heroHeading: "A Warmer Brand for *NG Interiors & Constructions*",
+    heroText:
+      "NG Interiors & Constructions designs and builds homes and spaces in Karachi. We shaped a warm, consistent brand for its social media and ran campaigns that turn admirers of its work into consultation requests.",
+    heroAlt: "NG Interiors social media posts on a phone and cards, with a lead form",
+    overview: {
+      paragraphs: [
+        "Interior design is a visual business: people decide whether they like a studio by scrolling through its work. A feed that looks scattered makes even beautiful projects look ordinary.",
+        "We gave NG Interiors & Constructions one calm, warm look across its channels, planned content around ideas, process, and finished spaces, and ran campaigns that invite people to book a consultation.",
+      ],
+      industry: "Interiors & Construction",
+      channels: "Facebook, Instagram",
+    },
+    brandCards: {
+      title: "Warm, Calm, and *Unmistakably NG*",
+      intro: "Earthy terracotta, soft sand, and an elegant serif give the brand the same feeling as the spaces it creates.",
+      items: [
+        ["Visual Language", "Warm neutrals and elegant type that let the work stand out."],
+        ["Content Pillars", "Design ideas, behind-the-scenes process, and finished spaces."],
+        ["Tone of Voice", "Friendly and expert, like advice from a designer you trust."],
+      ],
+    },
+    social: {
+      title: "A Feed That Feels Like *Home*",
+      intro:
+        "Design tips, process, and invitations to book a consultation, arranged into a feed that looks as considered as the spaces themselves.",
+    },
+    funnel: {
+      title: "From Inspiration to *Consultation*",
+      intro: "Homeowners take time to choose a designer, so the campaigns stay with them from the first idea to the first meeting.",
+      stages: [
+        ["Inspire", "Design ideas and finished spaces reach homeowners planning a change."],
+        ["Educate", "Process and tips posts show how a project runs from concept to completion."],
+        ["Capture", "Consultation forms collect details about each space."],
+        ["Consult", "The team follows up and books a design consultation."],
+      ],
+    },
+    steps: [
+      ["Discovery", "We learned which projects and clients NG Interiors wants more of."],
+      ["Brand Look", "A warm visual system for posts, stories, and ads."],
+      ["Content Calendar", "Ideas, process, and finished-space posts planned month by month."],
+      ["Campaign Setup", "Consultation ads and forms aimed at homeowners planning a project."],
+      reviewStep,
+    ],
+    cta: {
+      title: "Your Work Is Beautiful. Let’s Make Your *Feed* Match.",
+      text: "We design social content and run campaigns that help design and build studios win the projects they want.",
+    },
+  },
+  {
+    key: "aawaz",
+    slug: "aawaz-institute",
+    title: "Aawaz Institute of Media Sciences",
+    client: {
+      id: "client-aawaz-institute",
+      name: "Aawaz Institute of Media Sciences",
+      website: "https://www.facebook.com/aawazprofessional",
+    },
+    excerpt:
+      "Branding, social media, and admissions campaigns for Aawaz Institute of Media Sciences, a media training institute in Karachi.",
+    cardHighlight: "Turning curious followers into enrolment enquiries",
+    heroHeading: "Giving *Aawaz Institute* a Louder Voice",
+    heroText:
+      "Aawaz Institute of Media Sciences trains people for careers in media. We built a bold brand for its social channels and ran admissions campaigns that turn curious followers into enrolment enquiries.",
+    heroAlt: "Aawaz Institute social media posts on a phone and cards, with a lead form",
+    overview: {
+      paragraphs: [
+        "Choosing a course is a big decision for students and their families. They want to see the studio, the teachers, and what students learn before they enquire.",
+        "We gave Aawaz Institute a bold, energetic look across its channels, planned content around courses and studio life, and ran campaigns timed around admissions, with simple forms for students to ask for details.",
+      ],
+      industry: "Media Education",
+      channels: "Facebook, Instagram",
+    },
+    brandCards: {
+      title: "Bold, Bright, and *On Air*",
+      intro: "Deep plum, sunny yellow, and a heavy headline font give the institute the energy of a live studio.",
+      items: [
+        ["Visual Language", "Strong colours and big type that stand out in a busy feed."],
+        ["Content Pillars", "Courses, workshops, studio life, and admissions."],
+        ["Tone of Voice", "Encouraging and direct, written for students taking their first step into media."],
+      ],
+    },
+    social: {
+      title: "Content That *Speaks Up*",
+      intro: "Course highlights, workshop announcements, and admissions calls, made to be noticed by students scrolling between classes.",
+    },
+    funnel: {
+      title: "From Follower to *Student*",
+      intro: "Admissions campaigns guide students from first hearing about the institute to talking with the admissions team.",
+      stages: [
+        ["Discover", "Admissions ads reach students interested in media careers."],
+        ["Explore", "Course and workshop posts show what students will learn and do."],
+        ["Enquire", "Lead forms and free counselling sessions make the next step easy."],
+        ["Enrol", "The admissions team follows up with every enquiry."],
+      ],
+    },
+    steps: [
+      ["Discovery", "We learned what students and parents ask before choosing a media course."],
+      ["Brand Look", "A bold visual system for posts, stories, and ads."],
+      ["Content Calendar", "Course, workshop, and studio posts planned around the admissions calendar."],
+      ["Campaign Setup", "Admissions ads and enquiry forms aimed at prospective students."],
+      reviewStep,
+    ],
+    cta: {
+      title: "Filling Your Next *Intake*? Let’s Talk.",
+      text: "We plan and run social media and admissions campaigns for schools, institutes, and training centres.",
+    },
+  },
+  {
+    key: "staz",
+    slug: "star-azizi-builders",
+    industries: ["real-estate"],
+    title: "Star Azizi Builders",
+    client: {
+      id: "client-star-azizi-builders",
+      name: "Star Azizi Builders",
+      website: "https://www.facebook.com/StarAziziBuilders",
+      logo: ["star-azizi-builders/logo.webp", "Star Azizi Builders Pvt. Ltd, Constructing Dreams"],
+    },
+    excerpt: "Branding, social media, and lead-generation campaigns for Star Azizi Builders, a construction company in Karachi.",
+    cardHighlight: "Bringing the promise of “Constructing Dreams” to social media",
+    heroHeading: "*Constructing Dreams*, One Campaign at a Time",
+    heroText:
+      "Star Azizi Builders (Pvt) Ltd builds homes and spaces in Karachi under the promise “Constructing Dreams”. We brought that promise to its social media and ran campaigns that connect the company with people ready to buy.",
+    heroAlt: "Star Azizi Builders social media posts on a phone and cards, with a lead form",
+    overview: {
+      paragraphs: [
+        "A builder's reputation rests on trust: buyers want to see quality, progress, and a team they can talk to.",
+        "We built on Star Azizi's gold triangle mark and its promise, “Constructing Dreams”, to give every post and ad the same look, shared regular site progress, and ran lead-generation campaigns that invite buyers to visit.",
+      ],
+      industry: "Construction & Real Estate",
+      channels: "Facebook, Instagram",
+    },
+    brandBoard: {
+      title: "Gold, Trust, and *Constructing Dreams*",
+      intro:
+        "The gold triangle and the line “Constructing Dreams” are the heart of the brand. We built the social look around them, so every post feels like it comes from the same trusted builder.",
+      colours: ["Bronze #6C5424", "Star Gold #B49048", "Champagne #D8C078", "Charcoal #2E2B26"],
+      tagline: "Constructing Dreams",
+    },
+    social: {
+      title: "Progress You Can *See*",
+      intro: "Site progress, trust-building messages, and invitations to visit, all in the brand's gold and charcoal.",
+      avatar: ["star-azizi-builders/avatar.webp", "Star Azizi Builders mark"],
+    },
+    funnel: {
+      title: "Building *Buyer Confidence*",
+      intro: "Buyers commit only when they trust the builder, so the campaigns show the work before they ask for a visit.",
+      stages: [
+        ["Awareness", "Brand and project ads reach people looking to buy in Karachi."],
+        ["Trust", "Site progress and quality posts show the work behind every project."],
+        ["Enquiry", "Lead forms make it easy to ask about projects and visits."],
+        ["Visit", "The sales team calls back and invites buyers to the site office."],
+      ],
+    },
+    steps: [
+      ["Discovery", "We learned what buyers want to know about a builder before they enquire."],
+      ["Brand Look", "A social look built on the gold mark and “Constructing Dreams”."],
+      ["Content Calendar", "Progress, quality, and invitation posts planned month by month."],
+      ["Campaign Setup", "Lead-generation ads and forms aimed at likely buyers."],
+      reviewStep,
+    ],
+    cta: {
+      title: "Building Something Great? Let’s *Market It*.",
+      text: "We plan, design, and run branding, social media, and lead-generation campaigns for builders and developers.",
+    },
+  },
+];
+
+// Alt texts of the designed posts (the headlines on them), from the render script's copy.
+const designedPostAlts = {
+  gw: ["Elevated Living, Redefined", "Why G&W Towers?", "Your address in the sky.", "Book a Site Visit", "Rising, Floor by Floor", "Where the City Lights Begin"],
+  ng: [
+    "Interiors That Feel Like Home",
+    "From Concept to Completion",
+    "Every detail, considered.",
+    "Plan Your Dream Space",
+    "Warm Neutrals, Lasting Calm",
+    "Spaces Made for Living",
+  ],
+  aawaz: [
+    "Find Your Voice",
+    "Learn From the Studio Floor",
+    "Every great story starts with a voice.",
+    "Free Counselling Session",
+    "Voice-Over Basics",
+    "On Air Starts Here",
+  ],
+  staz: [
+    "Constructing Dreams",
+    "Built on Trust",
+    "Quality you can see. Trust you can feel.",
+    "Visit Our Site Office",
+    "Brick by Brick",
+    "Your Dream Home Awaits",
+  ],
+};
+
+for (const study of marketingCaseStudies) {
+  const { key, slug, client } = study;
+  const id = (name) => `${key}-${name}`;
+
+  // Images.
+  await upsertAsset(id("img-hero"), `${slug}/hero.webp`, "image/webp", study.heroAlt);
+  await upsertAsset(id("img-card"), `${slug}/card.webp`, "image/webp", `${study.title} social media posts`);
+  const [overviewPath, overviewAlt] = study.overview.image ?? [
+    `${slug}/overview.webp`,
+    `${client.name}'s social media profile on a phone, with posts beside it`,
+  ];
+  await upsertAsset(id("img-overview"), overviewPath, "image/webp", overviewAlt);
+  const postAlts = study.social.posts ?? designedPostAlts[key].map((headline) => `Social media post: ${headline}`);
+  for (const [index, alt] of postAlts.entries()) {
+    await upsertAsset(id(`img-post-${index + 1}`), `${slug}/post-${index + 1}.webp`, "image/webp", alt);
+  }
+
+  // Client, with its logo where there is an approved one.
+  const clientFields = { name: client.name, website: client.website };
+  if (client.logo) {
+    await upsertAsset(id("logo"), client.logo[0], "image/webp", client.logo[1]);
+    Object.assign(clientFields, {
+      logo: link(id("logo"), "Asset"),
+      logoApproved: true,
+      logoApproval: "Shown on the About page; approved by the project head on 13 Nov 2026",
+    });
+  }
+  await upsert(client.id, "client", clientFields);
+
+  // Overview: text, facts, and the services box.
+  const facts = [
+    ["Industry", study.overview.industry],
+    ["Location", "Karachi, Pakistan"],
+    ["Channels", study.overview.channels],
+    ["Engagement", engagement],
+  ];
+  for (const [index, [title, text]] of facts.entries()) await upsert(id(`fact-${index + 1}`), "caseStudyItem", { title, text });
+  await upsert(id("services"), "caseStudyItem", { title: "Services Provided", text: servicesProvided });
+  await upsert(id("overview"), "caseStudySection", {
+    eyebrow: "Overview",
+    title: `About *${client.name}*`,
+    body: richText(...study.overview.paragraphs),
+    image: link(id("img-overview"), "Asset"),
+    layout: "Image right",
+    facts: facts.map((_, index) => link(id(`fact-${index + 1}`))),
+    highlight: link(id("services")),
+  });
+
+  // Brand identity: a brand board with the real logo and its colours, or cards.
+  if (study.brandBoard) {
+    await upsert(id("brand"), "caseStudyBrandBoard", {
+      eyebrow: "Brand Identity",
+      ...study.brandBoard,
+      logo: link(id("logo"), "Asset"),
+    });
+  } else {
+    const { title, intro, items } = study.brandCards;
+    for (const [index, [itemTitle, text]] of items.entries()) {
+      await upsert(id(`brand-${index + 1}`), "caseStudyItem", { title: itemTitle, text });
+    }
+    await upsert(id("brand"), "caseStudyCards", {
+      eyebrow: "Brand Identity",
+      title,
+      intro,
+      layout: "Icon grid",
+      items: items.map((_, index) => link(id(`brand-${index + 1}`))),
+    });
+  }
+
+  // Social feed.
+  let avatar;
+  if (study.social.avatar === "logo") avatar = link(id("logo"), "Asset");
+  else if (study.social.avatar) {
+    await upsertAsset(id("avatar"), study.social.avatar[0], "image/webp", study.social.avatar[1]);
+    avatar = link(id("avatar"), "Asset");
+  }
+  await upsert(id("social"), "caseStudySocialFeed", {
+    eyebrow: "Social Media Marketing",
+    title: study.social.title,
+    intro: study.social.intro,
+    accountName: client.name,
+    avatar,
+    platforms: ["Facebook", "Instagram"],
+    posts: postAlts.map((_, index) => link(id(`img-post-${index + 1}`), "Asset")),
+  });
+
+  // Funnel.
+  for (const [index, [title, text]] of study.funnel.stages.entries()) {
+    await upsert(id(`stage-${index + 1}`), "caseStudyItem", { title, text });
+  }
+  await upsert(id("funnel"), "caseStudyFunnel", {
+    eyebrow: "Campaigns & Lead Generation",
+    title: study.funnel.title,
+    intro: study.funnel.intro,
+    stages: study.funnel.stages.map((_, index) => link(id(`stage-${index + 1}`))),
+  });
+
+  // Approach steps.
+  for (const [index, [title, text]] of study.steps.entries()) await upsert(id(`step-${index + 1}`), "caseStudyItem", { title, text });
+  await upsert(id("approach"), "caseStudyCards", {
+    eyebrow: "Our Approach",
+    title: `How We Worked With *${client.name}*`,
+    intro: "Branding, social media, campaigns, and lead generation, planned together so each one strengthens the others.",
+    layout: "Numbered steps",
+    items: study.steps.map((_, index) => link(id(`step-${index + 1}`))),
+  });
+
+  // Call to action.
+  await upsert(id("cta"), "caseStudyCallToAction", {
+    title: study.cta.title,
+    text: study.cta.text,
+    buttonLabel: "Start Your Project",
+    buttonLink: "/contact",
+  });
+
+  await upsert(`case-study-${slug}`, "caseStudy", {
+    title: study.title,
+    slug,
+    client: link(client.id),
+    excerpt: study.excerpt,
+    cardHighlight: study.cardHighlight,
+    cardPoints: ["Brand identity & social media", "Paid campaigns", "Lead generation"],
+    cardImage: link(id("img-card"), "Asset"),
+    heroHeading: study.heroHeading,
+    heroText: study.heroText,
+    heroImage: link(id("img-hero"), "Asset"),
+    sections: ["overview", "brand", "social", "funnel", "approach", "cta"].map((name) => link(id(name))),
+    industries: study.industries,
+    services,
+    region: "Pakistan",
+  });
+}
 
 console.log("Done.");
