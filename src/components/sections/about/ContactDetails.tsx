@@ -8,6 +8,11 @@ import { siteConfig } from "@/lib/site";
 // page's card (ContactSection): the office map, the address, phone, and email with their icons,
 // and the social links.
 
+// Google (the studio's Google profile): a "G" drawn as a line, like the other icons.
+function googleIcon() {
+  return <path d="M20 12a8 8 0 1 1-2.34-5.66M20 12h-7.5" />;
+}
+
 // Icons for the social links, by site; any other site gets a globe.
 const socialIcons: Record<string, { name: string; icon: ReactNode }> = {
   "instagram.com": {
@@ -35,6 +40,9 @@ const socialIcons: Record<string, { name: string; icon: ReactNode }> = {
       </>
     ),
   },
+  "share.google": { name: "Google", icon: googleIcon() },
+  "g.page": { name: "Google", icon: googleIcon() },
+  "maps.app.goo.gl": { name: "Google", icon: googleIcon() },
   "linkedin.com": {
     name: "LinkedIn",
     icon: (

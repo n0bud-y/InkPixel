@@ -29,8 +29,8 @@ function LinkColumn({ title, links }: { title: string; links: readonly { href: s
   );
 }
 
-// "Let's make something great.": big closing line, then the studio line, sitemap, services
-// and contact columns (email, address, social icons), and the copyright row. Sizes follow the
+// "Let's make something great.": big closing line, then the logo, studio line, and social icons,
+// the sitemap, services, and contact columns (email, address), and the copyright row. Sizes follow the
 // 1920px design frame.
 // Phones: one column; tablets: two; desktop: four.
 export function Footer() {
@@ -64,6 +64,8 @@ export function Footer() {
             <p className={`mt-[clamp(1.25rem,1.6vw,1.9rem)] max-w-[25em] text-[#b9aea9] ${bodyText}`}>
               {siteConfig.tagline}
             </p>
+            {/* The studio's social profiles (siteConfig.socialProfiles), as in the contact cards. */}
+            <SocialLinks tone="onDark" className="mt-[clamp(1.5rem,1.8vw,2.25rem)] flex-wrap" />
           </div>
           <LinkColumn title="Sitemap" links={footerNav.sitemap} />
           <LinkColumn title="Services" links={footerNav.services} />
@@ -78,8 +80,6 @@ export function Footer() {
             <address className={`mt-6 max-w-[16em] text-[#b9aea9] not-italic ${bodyText}`}>
               {siteConfig.address}
             </address>
-            {/* The studio's social profiles (siteConfig.socialProfiles), as in the contact cards. */}
-            <SocialLinks tone="onDark" className="mt-6" />
           </div>
         </Reveal>
 

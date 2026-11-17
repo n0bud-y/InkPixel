@@ -6,8 +6,9 @@
 //   document's too (the design's had come from another agency's case study).
 // - Cathy O’Bryan’s Books (from application-Cathy-O’Bryan’s-Books.svg). The design's copy,
 //   except the parts copied from other projects (see that section below).
-// - Five marketing case studies (13 Nov 2026, no designs): Pak Armoring, G&W Towers, NG Interiors &
-//   Constructions, Aawaz Institute of Media Sciences, Star Azizi Builders. Developer-written copy
+// - Four marketing case studies (13 Nov 2026, no designs): Pak Armoring, G&W Towers, NG Interiors &
+//   Constructions, Aawaz Institute of Media Sciences (Star Azizi Builders removed 17 Nov 2026,
+//   project head; its entries were deleted from Contentful). Developer-written copy
 //   (no results, numbers, or quotes); stand-in social graphics except Pak Armoring's, which come
 //   from its website (issue I18).
 // Replace the placeholder text in Contentful before launch.
@@ -648,8 +649,8 @@ await addMissingFields("case-study-cathy-obryans-books", cathyCard);
 // available, otherwise cards), social feed, funnel, approach steps, call to action. The copy
 // describes the work only: no results, numbers, or quotes until the client supplies and approves
 // them (add a "Case study: results" section then). Images in contentful/seed/<slug>/: Pak
-// Armoring's posts, logo, and photo come from pakarmoring.com and Star Azizi's logo from the About
-// page; every other graphic is a stand-in designed in the site's style (issue I18).
+// Armoring's posts, logo, and photo come from pakarmoring.com, and the Pak Armoury screenshots from
+// pakarmoury.com; every other graphic is a stand-in designed in the site's style (issue I18).
 
 const services = ["branding", "marketing"];
 const servicesProvided = "Branding, Social Media Marketing, Paid Campaigns, Lead Generation";
@@ -907,65 +908,6 @@ const marketingCaseStudies = [
       text: "We plan and run social media and admissions campaigns for schools, institutes, and training centres.",
     },
   },
-  {
-    key: "staz",
-    slug: "star-azizi-builders",
-    industries: ["real-estate"],
-    title: "Star Azizi Builders",
-    client: {
-      id: "client-star-azizi-builders",
-      name: "Star Azizi Builders",
-      website: "https://www.facebook.com/StarAziziBuilders",
-      logo: ["star-azizi-builders/logo.webp", "Star Azizi Builders Pvt. Ltd, Constructing Dreams"],
-    },
-    excerpt: "Branding, social media, and lead-generation campaigns for Star Azizi Builders, a construction company in Karachi.",
-    cardHighlight: "Bringing the promise of “Constructing Dreams” to social media",
-    heroHeading: "*Constructing Dreams*, One Campaign at a Time",
-    heroText:
-      "Star Azizi Builders (Pvt) Ltd builds homes and spaces in Karachi under the promise “Constructing Dreams”. We brought that promise to its social media and ran campaigns that connect the company with people ready to buy.",
-    heroAlt: "Star Azizi Builders social media posts on a phone and cards, with a lead form",
-    overview: {
-      paragraphs: [
-        "A builder's reputation rests on trust: buyers want to see quality, progress, and a team they can talk to.",
-        "We built on Star Azizi's gold triangle mark and its promise, “Constructing Dreams”, to give every post and ad the same look, shared regular site progress, and ran lead-generation campaigns that invite buyers to visit.",
-      ],
-      industry: "Construction & Real Estate",
-      channels: "Facebook, Instagram",
-    },
-    brandBoard: {
-      title: "Gold, Trust, and *Constructing Dreams*",
-      intro:
-        "The gold triangle and the line “Constructing Dreams” are the heart of the brand. We built the social look around them, so every post feels like it comes from the same trusted builder.",
-      colours: ["Bronze #6C5424", "Star Gold #B49048", "Champagne #D8C078", "Charcoal #2E2B26"],
-      tagline: "Constructing Dreams",
-    },
-    social: {
-      title: "Progress You Can *See*",
-      intro: "Site progress, trust-building messages, and invitations to visit, all in the brand's gold and charcoal.",
-      avatar: ["star-azizi-builders/avatar.webp", "Star Azizi Builders mark"],
-    },
-    funnel: {
-      title: "Building *Buyer Confidence*",
-      intro: "Buyers commit only when they trust the builder, so the campaigns show the work before they ask for a visit.",
-      stages: [
-        ["Awareness", "Brand and project ads reach people looking to buy in Karachi."],
-        ["Trust", "Site progress and quality posts show the work behind every project."],
-        ["Enquiry", "Lead forms make it easy to ask about projects and visits."],
-        ["Visit", "The sales team calls back and invites buyers to the site office."],
-      ],
-    },
-    steps: [
-      ["Discovery", "We learned what buyers want to know about a builder before they enquire."],
-      ["Brand Look", "A social look built on the gold mark and “Constructing Dreams”."],
-      ["Content Calendar", "Progress, quality, and invitation posts planned month by month."],
-      ["Campaign Setup", "Lead-generation ads and forms aimed at likely buyers."],
-      reviewStep,
-    ],
-    cta: {
-      title: "Building Something Great? Let’s *Market It*.",
-      text: "We plan, design, and run branding, social media, and lead-generation campaigns for builders and developers.",
-    },
-  },
 ];
 
 // Alt texts of the designed posts (the headlines on them), from the render script's copy.
@@ -987,17 +929,9 @@ const designedPostAlts = {
     "Voice-Over Basics",
     "On Air Starts Here",
   ],
-  staz: [
-    "Constructing Dreams",
-    "Built on Trust",
-    "Quality you can see. Trust you can feel.",
-    "Visit Our Site Office",
-    "Brick by Brick",
-    "Your Dream Home Awaits",
-  ],
 };
 
-// Each page's own layout (13 Nov 2026, second round, so the five don't look alike): hero, section
+// Each page's own layout (13 Nov 2026, second round, so they don't look alike): hero, section
 // order, and the layout of each section. Keys are the case studies' `key`s.
 const pagePlans = {
   pak: {
@@ -1047,15 +981,6 @@ const pagePlans = {
     feedLayout: "Grid",
     funnelLayout: "Journey",
     order: ["overview", "board", "social", "funnel", "brand", "cta"],
-  },
-  staz: {
-    hero: { heroLayout: "Editorial", heroEyebrow: "Constructing Dreams", heroButtonLabel: "Start Your Project", heroButtonLink: "/contact" },
-    overviewLayout: "Image left",
-    brandLayout: "Wide",
-    feedLayout: "Collage",
-    funnelLayout: "Funnel",
-    approach: { layout: "Numbered steps" },
-    order: ["brand", "overview", "social", "approach", "funnel", "cta"],
   },
 };
 

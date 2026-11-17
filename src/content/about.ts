@@ -6,7 +6,6 @@ import drumondAutoBody from "@/assets/images/about/clients/drumond-auto-body.web
 import gulbaan from "@/assets/images/about/clients/gulbaan.webp";
 import ihr from "@/assets/images/about/clients/ihr.webp";
 import pakArmoring from "@/assets/images/about/clients/pak-armoring.webp";
-import starAziziBuilders from "@/assets/images/about/clients/star-azizi-builders.webp";
 import awardRibbon from "@/assets/images/about/icons/award-ribbon.svg";
 import awardStar from "@/assets/images/about/icons/award-star.svg";
 import missionIcon from "@/assets/images/about/icons/mission.svg";
@@ -53,7 +52,6 @@ export const clients: Client[] = [
   { name: "Pak Armoring", logo: pakArmoring },
   { name: "Gulbaan", logo: gulbaan },
   { name: "ihr", logo: ihr },
-  { name: "Star Azizi Builders", logo: starAziziBuilders },
   { name: "Designz Hub", logo: designzHub },
   { name: "Drumond Auto Body", logo: drumondAutoBody },
 ];

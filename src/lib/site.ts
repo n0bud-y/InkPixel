@@ -32,6 +32,9 @@ export const siteConfig = {
     "https://www.facebook.com/inkpixelstudios/",
     "https://www.linkedin.com/company/ink-pixel-studios/",
     "https://www.instagram.com/inkpixelstudios1/",
+    "https://www.youtube.com/@inkpixelstudios",
+    // The studio's Google profile (share link, 17 Nov 2026).
+    "https://share.google/lPsyJZ0wuWoJVJ2gz",
   ] as string[],
 };
 

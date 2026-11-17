@@ -6,7 +6,7 @@ import { awards, clients } from "@/content/about";
 // White box with a 1px brand-gradient border (as in the design).
 const boxStyle = { background: "linear-gradient(#fff, #fff) padding-box, var(--gradient-reverse) border-box" };
 
-// "Trusted by Industry Leaders": the clients' logos, six in a row on desktop, then a thin
+// "Trusted by Industry Leaders": the clients' logos, five in a row on desktop, then a thin
 // gradient line and the studio's awards, spread across the row with dividers between them
 // (one per row on phones and two on tablets, without dividers).
 export function TrustedBy() {
@@ -21,7 +21,7 @@ export function TrustedBy() {
           >
             Trusted by Industry Leaders
           </h2>
-          <ul className="mt-[clamp(2rem,2.4vw,3rem)] grid grid-cols-2 gap-[clamp(0.75rem,1.1vw,1.3rem)] sm:grid-cols-3 lg:grid-cols-6">
+          <ul className="mt-[clamp(2rem,2.4vw,3rem)] grid grid-cols-2 gap-[clamp(0.75rem,1.1vw,1.3rem)] sm:grid-cols-3 lg:grid-cols-5">
             {clients.map((client) => (
               <li
                 key={client.name}
