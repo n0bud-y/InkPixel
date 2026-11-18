@@ -57,7 +57,7 @@ export type CaseStudyShowcaseSection = {
   image: ContentfulImage;
 };
 
-export type CaseStudyCardsLayout = "timeline" | "timeline-pinned" | "icon-grid" | "around-image" | "steps";
+export type CaseStudyCardsLayout = "timeline" | "story" | "icon-grid" | "around-image" | "steps";
 
 export type CaseStudyCardsSection = {
   type: "cards";
@@ -67,6 +67,8 @@ export type CaseStudyCardsSection = {
   intro: string | null;
   layout: CaseStudyCardsLayout;
   image: ContentfulImage | null;
+  /** Story panels: one image per card, in order (0016). */
+  images: (ContentfulImage | null)[];
   items: CaseStudyItem[];
 };
 
@@ -290,6 +292,7 @@ export type SectionData =
       intro: string | null;
       layout: string | null;
       image: AssetData;
+      imagesCollection: { items: AssetData[] } | null;
       itemsCollection: { items: ItemData[] } | null;
     }
   | {
@@ -485,6 +488,11 @@ export const SECTION_FIELDS = /* GraphQL */ `
       layout
       image {
         ...ImageFields
+      }
+      imagesCollection(limit: 9) {
+        items {
+          ...ImageFields
+        }
       }
       itemsCollection(limit: 9) {
         items {
@@ -735,7 +743,9 @@ const layouts: Record<string, CaseStudySectionLayout> = {
 
 const cardsLayouts: Record<string, CaseStudyCardsLayout> = {
   "Timeline beside text": "timeline",
-  "Timeline beside text (pinned)": "timeline-pinned",
+  // Replaced by "Story panels" (20 Nov 2026); shown as the plain timeline.
+  "Timeline beside text (pinned)": "timeline",
+  "Story panels": "story",
   "Icon grid": "icon-grid",
   "Around image": "around-image",
   "Numbered steps": "steps",
@@ -850,6 +860,7 @@ export function toSection(item: SectionData | null): CaseStudySectionData[] {
           intro: item.intro,
           layout,
           image: toImage(item.image),
+          images: (item.imagesCollection?.items ?? []).map(toImage),
           items,
         },
       ];

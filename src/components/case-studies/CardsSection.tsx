@@ -11,7 +11,7 @@ import {
   cardTitleClass,
   type SectionTone,
 } from "./CaseStudySection";
-import { TimelineStack } from "./TimelineStack";
+import { StoryPanels } from "./StoryPanels";
 
 type CardsProps = Omit<CaseStudyCardsSection, "type"> & { tone: SectionTone };
 
@@ -29,8 +29,8 @@ export function CardsSection(props: CardsProps) {
   switch (props.layout) {
     case "timeline":
       return <TimelineCards {...props} />;
-    case "timeline-pinned":
-      return <TimelineCards {...props} pinned />;
+    case "story":
+      return <StoryCards {...props} />;
     case "icon-grid":
       return <IconGridCards {...props} />;
     case "around-image":
@@ -43,9 +43,8 @@ export function CardsSection(props: CardsProps) {
 const headingId = (id: string) => `section-${id}-title`;
 
 // Text and image on the left; on the right, the cards stacked so each one overlaps the one
-// before it, beside a short line with a dot per card (the last one highlighted). `pinned`: on
-// desktop the section locks to the screen while the cards rise into the stack (TimelineStack).
-function TimelineCards({ id, tone, eyebrow, title, intro, image, items, pinned = false }: CardsProps & { pinned?: boolean }) {
+// before it, beside a short line with a dot per card (the last one highlighted).
+function TimelineCards({ id, tone, eyebrow, title, intro, image, items }: CardsProps) {
   return (
     <CaseStudySectionFrame
       headingId={headingId(id)}
@@ -69,9 +68,6 @@ function TimelineCards({ id, tone, eyebrow, title, intro, image, items, pinned =
         )}
       </Reveal>
 
-      {pinned ? (
-        <TimelineStack items={items} tone={tone} cardTitleClass={cardTitleClass} cardTextClass={cardTextClass} />
-      ) : (
       <Reveal y={40} delay={0.1} className="relative lg:pl-[clamp(2.25rem,2.5vw,3rem)]">
         <div
           aria-hidden="true"
@@ -103,7 +99,21 @@ function TimelineCards({ id, tone, eyebrow, title, intro, image, items, pinned =
           ))}
         </ul>
       </Reveal>
-      )}
+    </CaseStudySectionFrame>
+  );
+}
+
+// Story panels: each card with its own image; on desktop the section locks and one panel at a
+// time is shown (StoryPanels, 0016).
+function StoryCards({ id, tone, eyebrow, title, intro, images, items }: CardsProps) {
+  return (
+    <CaseStudySectionFrame headingId={headingId(id)} tone={tone}>
+      <StoryPanels
+        tone={tone}
+        items={items}
+        images={images}
+        heading={<CaseStudyHeading id={headingId(id)} tone={tone} eyebrow={eyebrow} title={title} intro={intro} />}
+      />
     </CaseStudySectionFrame>
   );
 }

@@ -1132,13 +1132,21 @@ for (const study of marketingCaseStudies) {
   const help = [
     [
       "Website",
-      "pakarmoring.com: a page for every vehicle, grouped into civilian, law-enforcement, and special products, and guides such as How Bulletproof Glass Works and How to Choose the Right Vehicle Armoring Company.",
+      // The domain is left out while pakarmoring.com is hacked (it redirects to a marketplace for
+      // hacking tools, found 20 Nov 2026; issue I20). Put it back once the site is clean.
+      "A page for every vehicle, grouped into civilian, law-enforcement, and special products, and guides such as How Bulletproof Glass Works and How to Choose the Right Vehicle Armoring Company.",
     ],
     ["YouTube", "We handle its channel, @pakarmoringofficial: launch films for vehicles such as the BAAZ and the ZULFIQAR APC, walkthroughs, and live-fire tests that show the protection working."],
     ["Facebook & Instagram", "Short reels from the workshop: finished vehicles, interiors, and armoring in progress."],
     ["Media production", "Photo and video shoots of vehicles, interiors, and ballistic tests, used on the website, YouTube, and social media."],
   ];
   for (const [index, [title, text]] of help.entries()) await ensure(id(`help-${index + 1}`), "caseStudyItem", { title, text }, rewrite);
+  // One real image per place (Story panels, 0016; project head, 20 Nov 2026): vehicles from the
+  // website (downloaded 13 Nov, before the hack), the BAAZ film and the live-fire trial from its
+  // YouTube channel, and a workshop reel.
+  await upsertAsset(id("img-help-website"), "pak-armoring/help-website.webp", "image/webp", "Armored vehicles from the Pak Armoring website: Lexus LX 570, Toyota Tundra, Range Rover, Toyota Hiace, Mercedes-Benz, and Nissan Patrol");
+  await upsertAsset(id("img-help-youtube"), "pak-armoring/help-youtube.webp", "image/webp", "Thumbnail of the YouTube film Baaz, Pakistan's ultimate armored beast");
+  await upsertAsset(id("img-help-media"), "pak-armoring/help-media.webp", "image/webp", "Thumbnail of the YouTube film of an armored vehicle under live-fire trials");
   await ensure(
     id("help"),
     "caseStudyCards",
@@ -1146,9 +1154,9 @@ for (const study of marketingCaseStudies) {
       eyebrow: "Where We Helped",
       title: "Four Places We *Worked*",
       intro: "Each one answers a different question a buyer has, so together they show the work before the first call.",
-      // Locks to the screen on desktop while the cards rise into place (0015, project head, 20 Nov 2026).
-      layout: "Timeline beside text (pinned)",
-      image: asset("img-card"),
+      layout: "Story panels",
+      image: null,
+      images: [asset("img-help-website"), asset("img-help-youtube"), asset("img-post-4"), asset("img-help-media")],
       items: help.map((_, index) => link(id(`help-${index + 1}`))),
     },
     rewrite,
@@ -1262,7 +1270,7 @@ for (const study of marketingCaseStudies) {
       excerpt:
         "How we built Pak Armoring's website, produced its vehicle films, and ran its Facebook and Instagram, so buyers of armored vehicles can see the work before they call.",
       cardHighlight: "Website, video, and social media for an armored vehicle maker",
-      cardPoints: ["Website: pakarmoring.com", "Vehicle films on YouTube", "Facebook & Instagram"],
+      cardPoints: ["Website", "Vehicle films on YouTube", "Facebook & Instagram"],
       cardImage: asset("img-poster"),
       heroHeading: "Pak Armoring: Website, Video, and *Social Media* for an Armored Vehicle Maker",
       heroText:
