@@ -814,6 +814,8 @@ const pagePlans = {
     funnelLayout: "Funnel",
     approach: { layout: "Numbered steps" },
     order: ["overview", "brand", "social", "approach", "funnel", "cta"],
+    // The project head's poster (20 Nov 2026): the hero and card image.
+    poster: "Social media post, story card, quote card, and lead form for NG Interiors, around a phone showing the post Interiors That Feel Like Home",
   },
   aawaz: {
     hero: { heroLayout: "Dark", heroEyebrow: "Admissions Campaigns", heroButtonLabel: "Start Your Project", heroButtonLink: "/contact" },
@@ -823,6 +825,8 @@ const pagePlans = {
     feedLayout: "Grid",
     funnelLayout: "Journey",
     order: ["overview", "board", "social", "funnel", "brand", "cta"],
+    // The project head's poster (20 Nov 2026): the hero and card image.
+    poster: "Social media post, course card, quote card, and lead form for Aawaz Institute, around a phone showing the post Find Your Voice",
   },
 };
 
@@ -1011,6 +1015,10 @@ for (const study of marketingCaseStudies) {
     await ensure(id("board"), "caseStudyShowcase", { name: "Aawaz admissions campaign", image: asset("img-board") });
   }
 
+  // The poster, where there is one: the hero and card image instead of the first ones.
+  if (plan.poster) await upsertAsset(id("img-poster"), `${slug}/poster.webp`, "image/webp", plan.poster);
+  const cover = plan.poster ? "img-poster" : null;
+
   // Call to action.
   await ensure(id("cta"), "caseStudyCallToAction", {
     title: study.cta.title,
@@ -1026,16 +1034,16 @@ for (const study of marketingCaseStudies) {
     excerpt: plan.excerpt ?? study.excerpt,
     cardHighlight: study.cardHighlight,
     cardPoints: plan.cardPoints ?? ["Brand identity & social media", "Paid campaigns", "Lead generation"],
-    cardImage: asset("img-card"),
+    cardImage: asset(cover ?? "img-card"),
     heroHeading: study.heroHeading,
     heroText: study.heroText,
-    heroImage: asset("img-hero"),
+    heroImage: asset(cover ?? "img-hero"),
     ...plan.hero,
     sections: plan.order.map((name) => link(id(name))),
     industries: study.industries,
     services: plan.services ?? services,
     region: "Pakistan",
-  });
+  }, { force: Boolean(cover) });
 }
 
 // Pak Armoring as a client story (19 Nov 2026, project head: the marketing pages read like ads; tell
@@ -1318,6 +1326,8 @@ for (const study of marketingCaseStudies) {
   for (const [name, alt] of scenes) await upsertAsset(id(`img-scene-${name}`), `gw-towers/scene-${name}.webp`, "image/webp", alt);
   await upsertAsset(id("img-story-hero"), "gw-towers/story-hero.webp", "image/webp", "The G&W Towers promo film on a phone, with a bedroom and the sea-facing view beside it");
   await upsertAsset(id("img-story-card"), "gw-towers/story-card.webp", "image/webp", "Scenes from the G&W Towers promo film: the lobby, Clifton at night, and the sea view");
+  // The project head's poster of the promo film (20 Nov 2026): the hero and card image.
+  await upsertAsset(id("img-poster"), "gw-towers/poster.webp", "image/webp", "Three phones playing the G&W Towers promo: bank financing available, prime location in Clifton, and sea-facing views");
 
   // 1. The business.
   const facts = [
@@ -1482,12 +1492,12 @@ for (const study of marketingCaseStudies) {
         "How we produce G&W Towers' promo films, run its TikTok, Facebook, and Instagram, and run the ads that bring buyer enquiries for its apartments in Clifton.",
       cardHighlight: "Video, social media, and ads for a new tower in Clifton",
       cardPoints: ["TikTok, Facebook & Instagram", "Promo films & media", "Ads & lead generation"],
-      cardImage: asset("img-story-card"),
+      cardImage: asset("img-poster"),
       heroLayout: "Centered",
       heroHeading: "G&W Towers: Video, Social Media, and Ads for a New Tower in *Clifton*",
       heroText:
         "G&W Towers is a residential tower in Clifton, Karachi, by Godils & Wakeels. We produce its videos, run its TikTok, Facebook, and Instagram, and run the ads that bring buyer enquiries.",
-      heroImage: asset("img-story-hero"),
+      heroImage: asset("img-poster"),
       sections: ["overview", "help", "film", "scenes", "how", "cta"].map((name) => link(id(name))),
       industries: ["real-estate"],
       services: ["marketing"],
