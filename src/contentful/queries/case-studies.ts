@@ -57,7 +57,7 @@ export type CaseStudyShowcaseSection = {
   image: ContentfulImage;
 };
 
-export type CaseStudyCardsLayout = "timeline" | "icon-grid" | "around-image" | "steps";
+export type CaseStudyCardsLayout = "timeline" | "timeline-pinned" | "icon-grid" | "around-image" | "steps";
 
 export type CaseStudyCardsSection = {
   type: "cards";
@@ -735,6 +735,7 @@ const layouts: Record<string, CaseStudySectionLayout> = {
 
 const cardsLayouts: Record<string, CaseStudyCardsLayout> = {
   "Timeline beside text": "timeline",
+  "Timeline beside text (pinned)": "timeline-pinned",
   "Icon grid": "icon-grid",
   "Around image": "around-image",
   "Numbered steps": "steps",

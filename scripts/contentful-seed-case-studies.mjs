@@ -1146,7 +1146,8 @@ for (const study of marketingCaseStudies) {
       eyebrow: "Where We Helped",
       title: "Four Places We *Worked*",
       intro: "Each one answers a different question a buyer has, so together they show the work before the first call.",
-      layout: "Timeline beside text",
+      // Locks to the screen on desktop while the cards rise into place (0015, project head, 20 Nov 2026).
+      layout: "Timeline beside text (pinned)",
       image: asset("img-card"),
       items: help.map((_, index) => link(id(`help-${index + 1}`))),
     },
