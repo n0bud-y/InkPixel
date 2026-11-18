@@ -7,6 +7,27 @@ import { ScrollSmoother, ScrollTrigger, gsap, useGSAP } from "@/lib/gsap";
 
 const PINNED = "(min-width: 64rem) and (prefers-reduced-motion: no-preference)";
 
+// A panel's text: one paragraph per line. A line that starts with a short label and a colon
+// ("The problem: …", "What we did: …") shows the label in small red capitals above it.
+function PanelText({ text }: { text: string }) {
+  const lines = text.split("\n").filter((line) => line.trim());
+  return (
+    <div className="mt-2.5 space-y-3 text-[clamp(0.9375rem,0.95vw,1.0625rem)] leading-[1.7] text-primary/75">
+      {lines.map((line, index) => {
+        const match = line.match(/^([^:]{2,24}):\s+(.+)$/);
+        return match ? (
+          <p key={index}>
+            <span className="block font-mono text-[11px] font-medium tracking-[0.16em] text-crimson uppercase">{match[1]}</span>
+            {match[2]}
+          </p>
+        ) : (
+          <p key={index}>{line}</p>
+        );
+      })}
+    </div>
+  );
+}
+
 // "Story panels" (cards layout, 0016). Desktop with motion allowed: the section locks to one
 // screen (below the fixed header, normal padding, both columns centred); on the left the heading,
 // the cards as a numbered list, and a progress bar; on the right one large panel (the card's image,
@@ -144,11 +165,11 @@ export function StoryPanels({
             <li
               key={item.title}
               data-active={index === active}
-              className="overflow-hidden rounded-[1.6rem] bg-white text-primary shadow-[0_40px_80px_-40px_rgb(0_0_0_/_0.6)] group-data-[pinned=true]/story:[grid-area:1/1] group-data-[pinned=true]/story:transition-[opacity,translate,visibility] group-data-[pinned=true]/story:duration-500 group-data-[pinned=true]/story:ease-out group-data-[pinned=true]/story:data-[active=false]:invisible group-data-[pinned=true]/story:data-[active=false]:translate-y-6 group-data-[pinned=true]/story:data-[active=false]:opacity-0"
+              className="overflow-hidden rounded-[1.6rem] bg-white text-primary shadow-[0_40px_80px_-40px_rgb(0_0_0_/_0.6)] group-data-[pinned=true]/story:flex group-data-[pinned=true]/story:max-h-[calc(100svh-var(--pin-top,6rem)-2*var(--pin-pad,4rem))] group-data-[pinned=true]/story:flex-col group-data-[pinned=true]/story:[grid-area:1/1] group-data-[pinned=true]/story:transition-[opacity,translate,visibility] group-data-[pinned=true]/story:duration-500 group-data-[pinned=true]/story:ease-out group-data-[pinned=true]/story:data-[active=false]:invisible group-data-[pinned=true]/story:data-[active=false]:translate-y-6 group-data-[pinned=true]/story:data-[active=false]:opacity-0"
             >
               {image && (
                 <div
-                  className={`relative aspect-video w-full overflow-hidden group-data-[pinned=true]/story:max-h-[46svh] ${portrait ? "bg-[radial-gradient(circle_at_50%_40%,#2a2f55,#0b0d1f)]" : "bg-[#0b0d1f]"}`}
+                  className={`relative aspect-video min-h-0 w-full shrink overflow-hidden group-data-[pinned=true]/story:max-h-[46svh] ${portrait ? "bg-[radial-gradient(circle_at_50%_40%,#2a2f55,#0b0d1f)]" : "bg-[#0b0d1f]"}`}
                 >
                   <Image
                     src={image.url}
@@ -160,14 +181,12 @@ export function StoryPanels({
                   />
                 </div>
               )}
-              <div className="px-[clamp(1.25rem,2vw,2.25rem)] py-[clamp(1.25rem,1.8vw,2rem)]">
+              <div className="shrink-0 px-[clamp(1.25rem,2vw,2.25rem)] py-[clamp(1.25rem,1.8vw,2rem)]">
                 <p className="font-mono text-[12px] tracking-[0.18em] text-coral">{number(index)}</p>
                 <h3 className="mt-2 font-display text-[clamp(1.25rem,1.6vw,1.875rem)] leading-tight font-semibold tracking-[-0.01em]">
                   {item.title}
                 </h3>
-                {item.text && (
-                  <p className="mt-2.5 text-[clamp(0.9375rem,0.95vw,1.0625rem)] leading-[1.75] text-primary/75">{item.text}</p>
-                )}
+                {item.text && <PanelText text={item.text} />}
               </div>
             </li>
           );

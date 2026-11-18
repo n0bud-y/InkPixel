@@ -1366,23 +1366,45 @@ for (const study of marketingCaseStudies) {
     rewrite,
   );
 
-  // 3. Where we helped.
+  // 3. The problem and how we helped, place by place (project head, 20 Nov 2026: problem →
+  // solution → where). Each card's text is two labelled lines (StoryPanels shows the labels).
+  // The separate problem section above is no longer on the page.
   const help = [
-    ["Video & media production", "We film the tower, the apartments, the gym, and the views, and edit them into short films like the one below."],
-    ["TikTok", "We run @gwtowers: short videos of the project, its apartments, and its views."],
-    ["Facebook & Instagram", "We run the project's pages, posting the same footage in formats made for each platform."],
-    ["Ads & lead generation", "We run campaigns aimed at buyers in Karachi, each with a clear way to call or message for bookings and details."],
+    [
+      "Video & media production",
+      "Buyers want to see the rooms, finishes, and views before they visit, not only floor plans.",
+      "We film the tower, the apartments, the gym, and the sea-facing views, and cut them into short vertical films.",
+    ],
+    [
+      "TikTok",
+      "Clifton has many towers on offer; a new one has to be noticed by the buyers scrolling past.",
+      "We run @gwtowers with regular short videos of the project, so it stays in front of buyers in Karachi.",
+    ],
+    [
+      "Facebook & Instagram",
+      "Buyers need the key facts quickly: the location, sizes, price, financing, and the move-in date.",
+      "We post the films on its pages with those details on screen, in the right format for each platform.",
+    ],
+    [
+      "Ads & lead generation",
+      "Interest is wasted if buyers don't know how to ask about prices or a site visit.",
+      "We run ads aimed at buyers in Karachi, each with a clear way to call or message the sales team.",
+    ],
   ];
-  for (const [index, [title, text]] of help.entries()) await ensure(id(`help-${index + 1}`), "caseStudyItem", { title, text }, rewrite);
+  for (const [index, [title, problem, solution]] of help.entries()) {
+    await ensure(id(`help-${index + 1}`), "caseStudyItem", { title, text: `The problem: ${problem}\nWhat we did: ${solution}` }, rewrite);
+  }
   await ensure(
     id("help"),
     "caseStudyCards",
     {
-      eyebrow: "Where We Helped",
-      title: "Four Things We *Do* for G&W",
-      intro: "Together they take a buyer from first seeing the tower to asking about a visit.",
-      layout: "Timeline beside text",
-      image: asset("img-scene-smart-home"),
+      eyebrow: "Problem & Solution",
+      title: "The Problem & How We *Helped*",
+      intro: "An apartment in Clifton is a large decision. Here is what buyers need before they visit, and what we do about it, channel by channel.",
+      // Story panels, one still from the promo film per card (project head, 20 Nov 2026).
+      layout: "Story panels",
+      image: null,
+      images: ["skyline", "smart-home", "bedroom", "welcome"].map((name) => asset(`img-scene-${name}`)),
       items: help.map((_, index) => link(id(`help-${index + 1}`))),
     },
     rewrite,
@@ -1466,10 +1488,198 @@ for (const study of marketingCaseStudies) {
       heroText:
         "G&W Towers is a residential tower in Clifton, Karachi, by Godils & Wakeels. We produce its videos, run its TikTok, Facebook, and Instagram, and run the ads that bring buyer enquiries.",
       heroImage: asset("img-story-hero"),
-      sections: ["overview", "problem", "help", "film", "scenes", "how", "cta"].map((name) => link(id(name))),
+      sections: ["overview", "help", "film", "scenes", "how", "cta"].map((name) => link(id(name))),
       industries: ["real-estate"],
       services: ["marketing"],
       region: "Pakistan",
+    },
+    rewrite,
+  );
+}
+
+// Drumond Auto Body (20 Nov 2026, project head): the website redesign, the only work we did for
+// them (no social media). Rewritten the same day (project head: tell what we built, the problems
+// in building it, and how we solved them; not a promotion of the client). The client stays in the
+// background; facts about the job come from the client's brief (Website Redesign Brief v1.0) and
+// what is on the new site (screenshots taken 20 Nov 2026 on its staging address; the project head
+// says it launches soon, so the page treats it as live). Not built, so not claimed: the /links
+// page, LocalBusiness schema, a WhatsApp link, reviews via the Places API (the site shows Google
+// reviews through a widget), 301 redirects. No internal brief details (tag-manager IDs, drive
+// links). Logo: the one on the About page.
+{
+  const id = (name) => `drm-${name}`;
+  const asset = (name) => link(id(name), "Asset");
+  const rewrite = { force: true };
+
+  const images = [
+    ["hero", "hero.webp", "The new Drumond Auto Body website: the home page in a browser and the Services page with its ZIP code check on a phone"],
+    ["card", "card.webp", "The new Drumond Auto Body website on a laptop and a phone"],
+    ["page-home", "page-home.webp", "Home page: Your car back to new. Without the runaround."],
+    ["page-about", "page-about.webp", "About page, rebuilt as a long-form story"],
+    ["page-insurance", "page-insurance.webp", "Insurance page: The insurance part? That's our job."],
+    ["page-services", "page-services.webp", "Services page: #1 Body Shop in Framingham, with the ZIP code check"],
+    ["page-team", "page-team.webp", "Our Team page with the team photo"],
+    ["page-reviews", "page-reviews.webp", "Reviews page with Google reviews"],
+    ["phone-home", "phone-home.webp", "Home page on a phone"],
+    ["phone-services", "phone-services.webp", "Services page with the ZIP code check on a phone"],
+    ["phone-insurance", "phone-insurance.webp", "Insurance page on a phone"],
+    ["phone-team", "phone-team.webp", "Our Team page on a phone"],
+  ];
+  for (const [name, file, alt] of images) {
+    await upsertAsset(id(name.startsWith("page-") ? `img-shot-${name.slice(5)}` : `img-${name}`), `drumond-auto-body/${file}`, "image/webp", alt);
+  }
+  await upsertAsset(id("logo"), "drumond-auto-body/logo.webp", "image/webp", "Drumond Auto Body");
+
+  await upsert("client-drumond-auto-body", "client", {
+    name: "Drumond Auto Body",
+    website: "https://drumondautobody.com",
+    logo: asset("logo"),
+    logoApproved: true,
+    logoApproval: "Shown on the About page; approved by the project head on 20 Nov 2026",
+  });
+
+  // 1. The project.
+  const facts = [
+    ["Client", "Auto body shop, Framingham, MA"],
+    ["Platform", "WordPress + Elementor"],
+    ["Scope", "6 pages, ZIP code check, Google reviews"],
+    ["Our work", "Website design & development"],
+  ];
+  for (const [index, [title, text]] of facts.entries()) await ensure(id(`fact-${index + 1}`), "caseStudyItem", { title, text }, rewrite);
+  await ensure(
+    id("overview"),
+    "caseStudySection",
+    {
+      eyebrow: "The Project",
+      title: "A Detailed Brief, *Six Pages* to Build",
+      body: richText(
+        "Drumond Auto Body, a family-owned body shop in Framingham, Massachusetts, asked us to rebuild its website. It came with a detailed brief: six pages to build or rebuild, the exact words for each, and strict rules for how the site should look, read, and work on phones.",
+        "Our job was to turn that brief into a working website, and to solve the parts that weren't simple pages: showing nearby towns that the shop serves, keeping the Google review count true, and making sure nothing changed on the live site until the client approved it.",
+      ),
+      image: asset("img-card"),
+      layout: "Image right",
+      facts: facts.map((_, index) => link(id(`fact-${index + 1}`))),
+      highlight: null,
+    },
+    rewrite,
+  );
+
+  // 2. The problem and how we solved it, one by one.
+  const solved = [
+    [
+      "services",
+      "ZIP code service area",
+      "The shop has one location but serves many towns, and visitors want to know right away if theirs is covered.",
+      "A ZIP code check on the Services page: a custom WordPress endpoint finds the town, and the headline changes to “#1 Body Shop near” it, with the distance to the shop. Search engines still see the default headline.",
+    ],
+    [
+      "reviews",
+      "Review counts that stay true",
+      "The old site showed review counts typed in by hand, so they were out of date wherever they appeared.",
+      "Reviews now come straight from Google through one widget, on the home, services, and reviews pages, so the rating and count never need updating by hand.",
+    ],
+    [
+      "insurance",
+      "Insurance, explained",
+      "A driver's first question after an accident is who deals with the insurance, and the old site had no page for it.",
+      "We built a new Insurance page that walks through a claim step by step, with the direct repair program, the insurance carriers, and a list of common questions.",
+    ],
+    [
+      "home",
+      "One screen to act",
+      "Visitors usually arrive stressed and on a phone, so the first screen has to tell them what to do.",
+      "The new home page puts the promise, the estimate and call buttons, and the Google rating in the first screen, then the services, reviews, and insurance in plain words.",
+    ],
+    [
+      "team",
+      "Faces, not stock photos",
+      "Nothing on the old site showed the people who work on the cars.",
+      "We built an Our Team page around the real crew photo, and rebuilt the About page as a long-form story with the family's own words.",
+    ],
+  ];
+  for (const [index, [, title, problem, solution]] of solved.entries()) {
+    await ensure(id(`built-${index + 1}`), "caseStudyItem", { title, text: `The problem: ${problem}\nWhat we did: ${solution}` }, rewrite);
+  }
+  await ensure(
+    id("built"),
+    "caseStudyCards",
+    {
+      eyebrow: "Problem & Solution",
+      title: "What We Had to *Solve*",
+      intro: "Most of the brief was pages and words. These were the parts that needed more than a page.",
+      layout: "Story panels",
+      image: null,
+      images: solved.map(([name]) => asset(`img-shot-${name}`)),
+      items: solved.map((_, index) => link(id(`built-${index + 1}`))),
+    },
+    rewrite,
+  );
+
+  // 3. On phones.
+  await ensure(
+    id("mobile"),
+    "caseStudyGallery",
+    {
+      title: "Built for *Phones* First",
+      intro: "Most visitors arrive on a phone, so every page was laid out and checked at phone width: big buttons, call links that open the dialer, and the ZIP check usable with one thumb.",
+      images: ["home", "services", "insurance", "team"].map((name) => asset(`img-phone-${name}`)),
+    },
+    rewrite,
+  );
+
+  // 4. How we worked.
+  const steps = [
+    ["Reading the brief", "We went through the brief page by page: the pages to build, the exact words, and the rules for tone, layout, and phones."],
+    ["Staging first", "We set up a separate staging site, so the live website stayed untouched until the client approved each page."],
+    ["Building the pages", "Home, About, Insurance, Services, Our Team, and Reviews, built on WordPress and Elementor, with the old service pages folded into one Services page."],
+    ["The hard parts", "The ZIP code check with its own lookup endpoint, and Google reviews on the site."],
+    ["Checking on phones", "Every page checked at phone width before review: buttons, forms, call links, and text."],
+  ];
+  for (const [index, [title, text]] of steps.entries()) await ensure(id(`how-${index + 1}`), "caseStudyItem", { title, text }, rewrite);
+  await ensure(
+    id("how"),
+    "caseStudyCards",
+    {
+      eyebrow: "How We Worked",
+      title: "From Brief to *Launch*",
+      layout: "Numbered steps",
+      items: steps.map((_, index) => link(id(`how-${index + 1}`))),
+    },
+    rewrite,
+  );
+
+  // 5. Call to action, plain.
+  await ensure(
+    id("cta"),
+    "caseStudyCallToAction",
+    {
+      title: "Have a Detailed Brief? We'll *Build It*.",
+      text: "Send us what you need, and we'll talk through how to build it.",
+      buttonLabel: "Get in Touch",
+      buttonLink: "/contact",
+    },
+    rewrite,
+  );
+
+  await ensure(
+    "case-study-drumond-auto-body",
+    "caseStudy",
+    {
+      title: "Drumond Auto Body",
+      slug: "drumond-auto-body",
+      client: link("client-drumond-auto-body"),
+      excerpt:
+        "How we rebuilt an auto body shop's website from a detailed brief: six pages, a ZIP code check that shows each visitor's town and distance, and Google reviews that stay current.",
+      cardHighlight: "Website rebuild with a ZIP code service-area check",
+      cardPoints: ["Six-page website rebuild", "ZIP code service-area check", "Live Google reviews"],
+      cardImage: asset("img-card"),
+      heroHeading: "Drumond Auto Body: Rebuilding a Body Shop Website With a *ZIP Code Service-Area Check*",
+      heroText:
+        "We rebuilt the website of a family-owned body shop in Framingham, MA from a detailed brief: six pages on WordPress and Elementor, a ZIP code check for the towns it serves, and Google reviews that stay current.",
+      heroImage: asset("img-hero"),
+      sections: ["overview", "built", "mobile", "how", "cta"].map((name) => link(id(name))),
+      services: ["development"],
+      region: "United States",
     },
     rewrite,
   );
