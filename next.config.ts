@@ -49,6 +49,8 @@ const nextConfig: NextConfig = {
         hostname: "images.ctfassets.net",
         pathname: "/ksvziwcaomrx/**",
       },
+      // YouTube video thumbnails (case-study video sections).
+      { protocol: "https", hostname: "i.ytimg.com", pathname: "/vi/**" },
     ],
   },
   // Basic security headers on every response. No Content-Security-Policy yet (it needs testing

@@ -9,6 +9,7 @@ import { ResultsSection } from "@/components/case-studies/ResultsSection";
 import { ShowcaseSection } from "@/components/case-studies/ShowcaseSection";
 import { SocialFeedSection } from "@/components/case-studies/SocialFeedSection";
 import { TechStackSection } from "@/components/case-studies/TechStackSection";
+import { VideoSection } from "@/components/case-studies/VideoSection";
 import { TestimonialsSection } from "@/components/case-studies/TestimonialsSection";
 import type { CaseStudySectionData } from "@/contentful/queries/case-studies";
 
@@ -59,6 +60,8 @@ export function PageSections({
         return <FunnelSection key={section.id} tone={tone} {...section} />;
       case "results":
         return <ResultsSection key={section.id} tone={tone} {...section} />;
+      case "videos":
+        return <VideoSection key={section.id} tone={tone} {...section} />;
     }
   });
 }

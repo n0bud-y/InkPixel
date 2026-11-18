@@ -150,6 +150,20 @@ export type CaseStudyResultsSection = SectionHeadingData & {
   metrics: CaseStudyItem[];
 };
 
+/** A YouTube video: its id, and its title from YouTube (null if YouTube didn't answer). */
+export type YouTubeVideo = { id: string; title: string | null };
+
+/** A video uploaded to Contentful: its file URL, MIME type, and caption (the asset's description). */
+export type VideoFile = { url: string; contentType: string; caption: string | null };
+
+export type CaseStudyVideosSection = SectionHeadingData & {
+  type: "videos";
+  id: string;
+  /** Uploaded videos (0014), shown first. */
+  files: VideoFile[];
+  videos: YouTubeVideo[];
+};
+
 export type CaseStudySectionData =
   | CaseStudyTextImageSection
   | CaseStudyTechStackSection
@@ -162,7 +176,8 @@ export type CaseStudySectionData =
   | CaseStudyBrandBoardSection
   | CaseStudySocialFeedSection
   | CaseStudyFunnelSection
-  | CaseStudyResultsSection;
+  | CaseStudyResultsSection
+  | CaseStudyVideosSection;
 
 /** "split": logo, heading, and text beside the image, on white. "centered": white heading on
  *  the brand gradient with an arch, image below. "light": eyebrow, heading, text, and button
@@ -325,7 +340,12 @@ export type SectionData =
       postsCollection: { items: AssetData[] } | null;
     })
   | (HeadingData & { __typename: "CaseStudyFunnel"; layout: string | null; stagesCollection: { items: ItemData[] } | null })
-  | (HeadingData & { __typename: "CaseStudyResults"; metricsCollection: { items: ItemData[] } | null });
+  | (HeadingData & { __typename: "CaseStudyResults"; metricsCollection: { items: ItemData[] } | null })
+  | (HeadingData & {
+      __typename: "CaseStudyVideos";
+      videos: (string | null)[] | null;
+      filesCollection: { items: ({ url: string | null; contentType: string | null; description: string | null } | null)[] } | null;
+    });
 
 type HeadingData = { sys: { id: string }; eyebrow: string | null; title: string | null; intro: string | null };
 
@@ -566,6 +586,22 @@ const MARKETING_SECTION_FIELDS = /* GraphQL */ `
         items {
           title
           text
+        }
+      }
+    }
+    ... on CaseStudyVideos {
+      sys {
+        id
+      }
+      eyebrow
+      title
+      intro
+      videos
+      filesCollection(limit: 6) {
+        items {
+          url
+          contentType
+          description
         }
       }
     }
@@ -898,9 +934,55 @@ export function toSection(item: SectionData | null): CaseStudySectionData[] {
       if (!item.title || !metrics.length) return [];
       return [{ type: "results", ...toHeading(item, item.title), metrics }];
     }
+    case "CaseStudyVideos": {
+      // Titles are filled in by getCaseStudy (withVideoTitles).
+      const videos = (item.videos ?? []).flatMap((url) => {
+        const id = url ? youTubeId(url) : null;
+        return id ? [{ id, title: null }] : [];
+      });
+      const files = (item.filesCollection?.items ?? []).flatMap((file) =>
+        file?.url && file.contentType?.startsWith("video/")
+          ? [{ url: file.url.startsWith("//") ? `https:${file.url}` : file.url, contentType: file.contentType, caption: file.description }]
+          : [],
+      );
+      if (!item.title || (!videos.length && !files.length)) return [];
+      return [{ type: "videos", ...toHeading(item, item.title), files, videos }];
+    }
     default:
       return [];
   }
+}
+
+// The 11-character video id from a YouTube link (watch?v=, youtu.be/, shorts/, embed/).
+export function youTubeId(url: string): string | null {
+  const match = url.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+  return match ? match[1] : null;
+}
+
+// A video's title from YouTube's public oEmbed endpoint, cached for a day; null if it fails.
+async function youTubeTitle(id: string): Promise<string | null> {
+  try {
+    const response = await fetch(
+      `https://www.youtube.com/oembed?format=json&url=${encodeURIComponent(`https://www.youtube.com/watch?v=${id}`)}`,
+      { next: { revalidate: 86400 } },
+    );
+    if (!response.ok) return null;
+    const data = (await response.json()) as { title?: unknown };
+    return typeof data.title === "string" ? data.title : null;
+  } catch {
+    return null;
+  }
+}
+
+// Fills in the titles of the videos in a page's video sections.
+async function withVideoTitles(sections: CaseStudySectionData[]): Promise<CaseStudySectionData[]> {
+  return Promise.all(
+    sections.map(async (section) =>
+      section.type === "videos"
+        ? { ...section, videos: await Promise.all(section.videos.map(async (video) => ({ ...video, title: await youTubeTitle(video.id) }))) }
+        : section,
+    ),
+  );
 }
 
 const socialPlatforms: SocialPlatform[] = ["Facebook", "Instagram", "LinkedIn", "TikTok", "YouTube"];
@@ -945,7 +1027,7 @@ export const getCaseStudy = cache(async (slug: string): Promise<CaseStudy | null
     client: item.client?.name
       ? { name: item.client.name, logo: item.client.logoApproved ? toImage(item.client.logo) : null }
       : null,
-    sections: (item.sectionsCollection?.items ?? []).flatMap(toSection),
+    sections: await withVideoTitles((item.sectionsCollection?.items ?? []).flatMap(toSection)),
     seo: {
       title: item.seo?.title ?? null,
       description: item.seo?.description ?? null,

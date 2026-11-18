@@ -662,133 +662,6 @@ const reviewStep = [
 
 const marketingCaseStudies = [
   {
-    key: "pak",
-    slug: "pak-armoring",
-    title: "Pak Armoring",
-    client: {
-      id: "client-pak-armoring",
-      name: "Pak Armoring",
-      website: "https://www.pakarmoring.com",
-      logo: ["pak-armoring/logo.webp", "Pak Armoring"],
-    },
-    excerpt:
-      "Branding, social media, and lead-generation campaigns for a Karachi company that armors cars, SUVs, pickups, and vans for civilian and official use.",
-    cardHighlight: "A consistent, trusted brand for a vehicle armoring specialist",
-    heroHeading: "Building Trust Online for *Pak Armoring*",
-    heroText:
-      "Pak Armoring (Pvt) Ltd has armored vehicles in Pakistan since 2012. We brought its brand, social media, and advertising together, so people looking for a protected vehicle find a company they can trust and can reach it in a few taps.",
-    heroAlt: "Pak Armoring's social media: an armored Toyota Hilux reel on a phone, more reels, and a lead form",
-    overview: {
-      image: ["pak-armoring/glass-test.webp", "Bulletproof glass after a ballistic test, with three stopped rounds"],
-      paragraphs: [
-        "Pak Armoring builds armored and bulletproof versions of cars, SUVs, pickups, vans, and buses for individuals, companies, and law-enforcement agencies. Its work is technical and its customers are careful: they want proof of quality before they ever make a call.",
-        "Our job was to turn that proof into content. We gave the brand one consistent look across its channels, showed the workshop's real builds on social media, and ran campaigns that turn interest into enquiries the sales team can follow up.",
-      ],
-      industry: "Vehicle Armoring & Security",
-      channels: "Facebook, Instagram, Website",
-    },
-    brandBoard: {
-      title: "A Brand Built on *Protection*",
-      intro:
-        "The shield, the eagle, and the green and gold palette carry Pak Armoring's promise of strength and reliability. We kept them consistent on every post, ad, and page, so the brand is recognised at a glance.",
-      colours: ["Armor Green #243024", "Deep Forest #182418", "Shield Gold #E8922A", "Ribbon Amber #FCB43C"],
-      tagline: "One Team One Goal Saving Lives",
-    },
-    social: {
-      title: "Real Builds, *Real Stories*",
-      intro:
-        "Short videos straight from the workshop: finished vehicles, interiors, and armoring in progress. Real work, edited for the feed, gives people the confidence to get in touch.",
-      avatar: "logo",
-      posts: [
-        "Reel: an armored pickup in the workshop yard",
-        "Reel: a van interior with leather captain seats and a starlit ceiling",
-        "Reel: an armored Toyota Hilux with a roof turret",
-        "Reel: Toyota Fortuner now fully armored, on the road",
-        "Reel: close-up of an armored vehicle's roof turret",
-        "Reel: the underside of an armored vehicle in the workshop",
-      ],
-    },
-    funnel: {
-      title: "From First View to *Qualified Lead*",
-      intro:
-        "An armored vehicle is a considered purchase, so the campaigns move people step by step: first seeing the work, then trusting it, then asking for a quote.",
-      stages: [
-        ["Awareness", "Video ads show finished builds to people who need a protected vehicle."],
-        ["Consideration", "Retargeting shares interiors, testing, and build details with people who watched."],
-        ["Enquiry", "Lead forms and direct messages make asking for a quote quick and private."],
-        ["Follow-up", "Each enquiry reaches the sales team with the vehicle and details the customer asked about."],
-      ],
-    },
-    steps: [
-      ["Brand Audit", "We reviewed the logo, colours, and content across every channel to decide what to keep and what to fix."],
-      ["Content Planning", "A monthly plan built around real builds, vehicle types, and the questions customers ask most."],
-      ["Production", "Workshop footage edited into short reels and posts in the brand's look."],
-      ["Campaign Setup", "Audiences, ads, and lead forms set up for the people most likely to buy."],
-      reviewStep,
-    ],
-    cta: {
-      title: "Need a Brand People *Trust*? Let’s Talk.",
-      text: "We plan, design, and run branding, social media, and lead-generation campaigns for companies that sell considered, high-value services.",
-    },
-  },
-  {
-    key: "gw",
-    slug: "gw-towers",
-    industries: ["real-estate"],
-    title: "G&W Towers",
-    client: { id: "client-gw-towers", name: "G&W Towers", website: "https://www.facebook.com/gwtower" },
-    excerpt: "Branding, social media, and lead-generation campaigns for G&W Towers, a property development in Karachi.",
-    cardHighlight: "From a first scroll to a booked site visit",
-    heroHeading: "Marketing a Skyline Address for *G&W Towers*",
-    heroText:
-      "G&W Towers is a property development in Karachi. We built its look for social media and ran campaigns that take interested buyers from a first scroll to a booked site visit.",
-    heroAlt: "G&W Towers social media posts on a phone and cards, with a lead form",
-    overview: {
-      paragraphs: [
-        "Property is bought on trust and on feeling. People want to picture themselves living in a place long before they visit it, and to know the project is real and moving forward.",
-        "We gave G&W Towers a premium, consistent look across its social channels, told the project's story through regular updates, and ran lead-generation campaigns that put serious buyers in touch with the sales team.",
-      ],
-      industry: "Real Estate",
-      channels: "Facebook, Instagram",
-    },
-    brandCards: {
-      title: "A *Premium* Look, Post After Post",
-      intro:
-        "Navy, champagne gold, and a classic serif give the project a calm, upmarket voice that stays the same on every post and ad.",
-      items: [
-        ["Visual Language", "A palette and type style made for premium property, used on every post, story, and ad."],
-        ["Content Pillars", "Lifestyle, project updates, and invitations to visit: three themes that keep the feed balanced."],
-        ["Tone of Voice", "Confident and warm, written for families choosing their next home."],
-      ],
-    },
-    social: {
-      title: "A Feed That *Sells the View*",
-      intro:
-        "Lifestyle posts, construction updates, and clear calls to book a visit, designed to stop the scroll and start a conversation.",
-    },
-    funnel: {
-      title: "From Scroll to *Site Visit*",
-      intro: "Each stage of the campaign has one job, so interest builds into a visit, not just a like.",
-      stages: [
-        ["Reach", "Lifestyle ads put the project in front of people looking for a new home in Karachi."],
-        ["Engage", "Construction updates and floor-plan posts keep interested buyers coming back."],
-        ["Capture", "Lead forms collect names and numbers from people ready to talk."],
-        ["Visit", "The sales team calls each lead and books a site visit."],
-      ],
-    },
-    steps: [
-      ["Discovery", "We learned who the project is for and what buyers ask before they visit."],
-      ["Brand Look", "A premium visual system for posts, stories, and ads."],
-      ["Content Calendar", "Lifestyle, progress, and invitation posts planned month by month."],
-      ["Campaign Setup", "Lead-generation ads and forms aimed at likely buyers."],
-      reviewStep,
-    ],
-    cta: {
-      title: "Selling Property? Let’s Fill Your *Site Visits*.",
-      text: "From brand look to lead forms, we plan and run marketing that turns interest in your project into conversations.",
-    },
-  },
-  {
     key: "ng",
     slug: "ng-interiors-constructions",
     industries: ["real-estate"],
@@ -912,7 +785,6 @@ const marketingCaseStudies = [
 
 // Alt texts of the designed posts (the headlines on them), from the render script's copy.
 const designedPostAlts = {
-  gw: ["Elevated Living, Redefined", "Why G&W Towers?", "Your address in the sky.", "Book a Site Visit", "Rising, Floor by Floor", "Where the City Lights Begin"],
   ng: [
     "Interiors That Feel Like Home",
     "From Concept to Completion",
@@ -934,36 +806,6 @@ const designedPostAlts = {
 // Each page's own layout (13 Nov 2026, second round, so they don't look alike): hero, section
 // order, and the layout of each section. Keys are the case studies' `key`s.
 const pagePlans = {
-  pak: {
-    services: ["branding", "marketing", "development"],
-    excerpt:
-      "Branding, social media, and lead-generation campaigns for a Karachi vehicle armoring company, and a new website for Pak Armoury, an arms and ammunition store.",
-    cardPoints: ["Brand identity & social media", "Lead-generation campaigns", "Pak Armoury website"],
-    engagement: "Branding · Social · Campaigns · Lead Gen · Web",
-    servicesProvided: `${servicesProvided}, Website Development`,
-    overviewLayout: "Image right",
-    brandLayout: "Board",
-    feedLayout: "Phones",
-    funnelLayout: "Funnel",
-    approach: {
-      layout: "Timeline beside text",
-      image: ["pak-armoring/profile.webp", "Pak Armoring's social media profile on a phone, with reels beside it"],
-    },
-    order: ["overview", "brand", "website", "website-pages", "social", "funnel", "approach", "cta"],
-  },
-  gw: {
-    hero: { heroLayout: "Centered" },
-    overviewLayout: "Image left",
-    brandCards: {
-      layout: "Around image",
-      image: ["gw-towers/phone.webp", "A G&W Towers post on a phone: Elevated Living, Redefined"],
-      extraItem: ["Campaign Creative", "Ad designs for feed, stories, and lead forms in the same premium style."],
-    },
-    feedLayout: "Spotlight",
-    feedPosts: 5,
-    funnelLayout: "Journey",
-    order: ["delivered", "overview", "social", "funnel", "brand", "cta"],
-  },
   ng: {
     hero: { heroLayout: "Light", heroEyebrow: "Design · Build · Grow", heroButtonLabel: "Book a Consultation", heroButtonLink: "/contact" },
     overviewLayout: "Image below",
@@ -994,25 +836,36 @@ const stable = (value) =>
 
 // Creates the entry if it doesn't exist; otherwise brings the given fields up to date and
 // republishes it, but only while it is still as this script published it (published once, no
-// draft changes), so an editor's work in Contentful is never overwritten.
-async function ensure(id, contentType, fields) {
+// draft changes), so an editor's work in Contentful is never overwritten. `force`: a rewrite
+// the project head asked for, so entries this script already updated are updated again; an
+// entry with unpublished changes (a draft) is still never touched. A field given as null is
+// removed from the entry.
+async function ensure(id, contentType, fields, { force = false } = {}) {
   const entry = await cma(`/entries/${id}`);
-  if (!entry) return upsert(id, contentType, fields);
-  const changed = Object.keys(fields).filter(
-    (key) => fields[key] !== undefined && stable(entry.fields[key]?.[locale]) !== stable(fields[key]),
-  );
+  if (!entry) return upsert(id, contentType, Object.fromEntries(Object.entries(fields).filter(([, value]) => value !== null)));
+  const changed = Object.keys(fields).filter((key) => {
+    if (fields[key] === undefined) return false;
+    if (fields[key] === null) return entry.fields[key] !== undefined;
+    return stable(entry.fields[key]?.[locale]) !== stable(fields[key]);
+  });
   if (!changed.length) {
     console.log(`  up to date, skipped: ${id}`);
     return;
   }
-  if ((entry.sys.publishedCounter ?? 0) > 1 || entry.sys.version > (entry.sys.publishedVersion ?? 0) + 1) {
+  const draft = entry.sys.version > (entry.sys.publishedVersion ?? 0) + 1;
+  if (draft || (!force && (entry.sys.publishedCounter ?? 0) > 1)) {
     console.warn(`  edited in Contentful, skipped: ${id} (would change ${changed.join(", ")})`);
     return;
+  }
+  const next = { ...entry.fields };
+  for (const key of changed) {
+    if (fields[key] === null) delete next[key];
+    else next[key] = { [locale]: fields[key] };
   }
   const updated = await cma(`/entries/${id}`, {
     method: "PUT",
     headers: { "X-Contentful-Version": String(entry.sys.version) },
-    body: { fields: { ...entry.fields, ...localized(Object.fromEntries(changed.map((key) => [key, fields[key]]))) } },
+    body: { fields: next },
   });
   await cma(`/entries/${id}/published`, {
     method: "PUT",
@@ -1148,44 +1001,6 @@ for (const study of marketingCaseStudies) {
   });
 
   // Page-specific sections.
-  if (key === "pak") {
-    // The website for Pak Armoury (pakarmoury.com), screenshots taken 13 Nov 2026.
-    await upsertAsset(id("img-website"), "pak-armoring/website.webp", "image/webp", "The Pak Armoury website: the Pistols and About pages, and the home page on a phone");
-    await upsertAsset(id("img-website-pages"), "pak-armoring/website-pages.webp", "image/webp", "Pak Armoury website pages: About, Home, and Pistols");
-    await ensure(id("website-fact-1"), "caseStudyItem", { title: "Website", text: "pakarmoury.com" });
-    await ensure(id("website-fact-2"), "caseStudyItem", { title: "Pages", text: "Home, About, Products, Contact" });
-    await ensure(id("website"), "caseStudySection", {
-      eyebrow: "Website Development",
-      title: "A Website for *Pak Armoury*",
-      body: richText(
-        "We also designed and built the website for Pak Armoury, an arms and ammunition store in Karachi with a tradition going back to 1950. The site presents the store's history and its full range clearly, on every screen.",
-        titledBullets([
-          ["Product catalogue", "Pistols, revolvers, shotguns, rifles, air guns, and ammunition, each with its own page."],
-          ["The store's story", "An About page that tells the store's history since 1950."],
-          ["Easy contact", "The phone number in the header of every page, and a contact page."],
-          ["Mobile-friendly", "Pages that adapt to phones, tablets, and desktops."],
-        ]),
-      ),
-      image: asset("img-website"),
-      layout: "Image left",
-      facts: [link(id("website-fact-1")), link(id("website-fact-2"))],
-    });
-    await ensure(id("website-pages"), "caseStudyShowcase", { name: "Pak Armoury website pages", image: asset("img-website-pages") });
-  }
-  if (key === "gw") {
-    await ensure(id("delivered"), "caseStudyFeatureGrid", {
-      title: "What We Delivered for *G&W Towers*",
-      intro: "Brand look, content, campaigns, and lead capture, set up to work as one system.",
-      items: [
-        "A premium visual identity for social media, built around navy, champagne gold, and a classic serif.",
-        "A monthly content calendar of lifestyle posts, project updates, and invitations to visit.",
-        "Post and story designs for Facebook and Instagram in one consistent style.",
-        "Construction-update posts that show the project moving forward.",
-        "Lead-generation ads with built-in forms for interested buyers.",
-        "A simple hand-off so every lead reaches the sales team for a call back.",
-      ],
-    });
-  }
   if (key === "aawaz") {
     await upsertAsset(
       id("img-board"),
@@ -1221,6 +1036,432 @@ for (const study of marketingCaseStudies) {
     services: plan.services ?? services,
     region: "Pakistan",
   });
+}
+
+// Pak Armoring as a client story (19 Nov 2026, project head: the marketing pages read like ads; tell
+// the business, its problem, and where we helped, with real images and video). What we did, as
+// confirmed by the project head: its website (pakarmoring.com), its vehicle videos for YouTube,
+// its Facebook and Instagram, and media production; its YouTube channel is @pakarmoringofficial,
+// which we handle (project head, 19 Nov 2026). No ads or lead generation, no branding. The
+// problem is written from what is public (the product and its buyers), not as a claim about the
+// company's past. The site's /about-us, /products, and /customize-now pages were found hacked on
+// 19 Nov 2026 (gambling spam), so nothing here shows or links to them. Old entries from the
+// marketing layout (pak-brand, pak-funnel, pak-stage-*, pak-approach, pak-step-*, pak-services,
+// pak-website-pages) are no longer on the page and are left unlinked.
+{
+  const id = (name) => `pak-${name}`;
+  const asset = (name) => link(id(name), "Asset");
+  const rewrite = { force: true };
+
+  // Real media: reels and the glass-test photo from pakarmoring.com, two real thumbnails from its
+  // YouTube channel in the hero, the logo from the site. Website screenshots can be added later.
+  const reels = [
+    "Reel: an armored pickup in the workshop yard",
+    "Reel: a van interior with leather captain seats and a starlit ceiling",
+    "Reel: an armored Toyota Hilux with a roof turret",
+    "Reel: Toyota Fortuner now fully armored, on the road",
+    "Reel: close-up of an armored vehicle's roof turret",
+    "Reel: the underside of an armored vehicle in the workshop",
+  ];
+  for (const [index, alt] of reels.entries()) {
+    await upsertAsset(id(`img-post-${index + 1}`), `pak-armoring/post-${index + 1}.webp`, "image/webp", alt);
+  }
+  await upsertAsset(id("logo"), "pak-armoring/logo.webp", "image/webp", "Pak Armoring");
+  await upsertAsset(id("img-overview"), "pak-armoring/glass-test.webp", "image/webp", "Bulletproof glass after a ballistic test, with three stopped rounds");
+  await upsertAsset(id("img-card"), "pak-armoring/card.webp", "image/webp", "Pak Armoring reels from the workshop");
+  await upsertAsset(id("img-story-hero"), "pak-armoring/story-hero.webp", "image/webp", "The Pak Armoring website on a laptop and a phone, with one of its YouTube vehicle films");
+
+  await upsert("client-pak-armoring", "client", {
+    name: "Pak Armoring",
+    website: "https://www.pakarmoring.com",
+    logo: asset("logo"),
+    logoApproved: true,
+    logoApproval: "Shown on the About page; approved by the project head on 13 Nov 2026",
+  });
+
+  // 1. The business.
+  const facts = [
+    ["Industry", "Vehicle Armoring & Security"],
+    ["Location", "Karachi, Pakistan"],
+    ["Range", "30+ armored models"],
+    ["Our work", "Website · Video · Social media · Media production"],
+  ];
+  for (const [index, [title, text]] of facts.entries()) await ensure(id(`fact-${index + 1}`), "caseStudyItem", { title, text }, rewrite);
+  await ensure(
+    id("overview"),
+    "caseStudySection",
+    {
+      eyebrow: "The Business",
+      title: "Who *Pak Armoring* Is",
+      body: richText(
+        "Pak Armoring (Pvt) Ltd is a vehicle armoring company in Korangi Industrial Area, Karachi. It armors cars, SUVs, pickups, vans, and buses, and builds its own armored vehicles, such as the BAAZ, for law enforcement.",
+        "Its range runs to more than thirty models: armored versions of the Toyota Land Cruiser, Fortuner, and Hilux, cash-in-transit vans, ambulances, coach buses, and a security tower, for individuals, companies, and law-enforcement agencies.",
+      ),
+      image: asset("img-overview"),
+      layout: "Image right",
+      facts: facts.map((_, index) => link(id(`fact-${index + 1}`))),
+      highlight: null,
+    },
+    rewrite,
+  );
+
+  // 2. The problem.
+  const problems = [
+    ["Is the protection real?", "Buyers want to see the steel, the ballistic glass, and the testing, not only read that a vehicle is protected."],
+    ["Which vehicle is right?", "With more than thirty models, a family, a bank, and a police force each need to find the one that fits them."],
+    ["Can this company be trusted?", "A company that people trust with their safety has to look established wherever they check it: its website, YouTube, and social media."],
+  ];
+  for (const [index, [title, text]] of problems.entries()) await ensure(id(`problem-${index + 1}`), "caseStudyItem", { title, text }, rewrite);
+  await ensure(
+    id("problem"),
+    "caseStudyCards",
+    {
+      eyebrow: "The Problem",
+      title: "Buyers Need *Proof* Before They Call",
+      intro:
+        "An armored vehicle is a large, careful purchase. Before anyone gets in touch, they want answers to three questions, and a phone call alone can't show them.",
+      layout: "Icon grid",
+      items: problems.map((_, index) => link(id(`problem-${index + 1}`))),
+    },
+    rewrite,
+  );
+
+  // 3. Where we helped.
+  const help = [
+    [
+      "Website",
+      "pakarmoring.com: a page for every vehicle, grouped into civilian, law-enforcement, and special products, and guides such as How Bulletproof Glass Works and How to Choose the Right Vehicle Armoring Company.",
+    ],
+    ["YouTube", "We handle its channel, @pakarmoringofficial: launch films for vehicles such as the BAAZ and the ZULFIQAR APC, walkthroughs, and live-fire tests that show the protection working."],
+    ["Facebook & Instagram", "Short reels from the workshop: finished vehicles, interiors, and armoring in progress."],
+    ["Media production", "Photo and video shoots of vehicles, interiors, and ballistic tests, used on the website, YouTube, and social media."],
+  ];
+  for (const [index, [title, text]] of help.entries()) await ensure(id(`help-${index + 1}`), "caseStudyItem", { title, text }, rewrite);
+  await ensure(
+    id("help"),
+    "caseStudyCards",
+    {
+      eyebrow: "Where We Helped",
+      title: "Four Places We *Worked*",
+      intro: "Each one answers a different question a buyer has, so together they show the work before the first call.",
+      layout: "Timeline beside text",
+      image: asset("img-card"),
+      items: help.map((_, index) => link(id(`help-${index + 1}`))),
+    },
+    rewrite,
+  );
+
+  // 4. The videos (Pak Armoring's own YouTube channel).
+  await ensure(
+    id("videos"),
+    "caseStudyVideos",
+    {
+      eyebrow: "The Videos",
+      title: "Vehicle *Films* for YouTube",
+      intro: "From Pak Armoring's YouTube channel, @pakarmoringofficial, which we handle: vehicle launches, walkthroughs, and live-fire tests.",
+      videos: [
+        "https://www.youtube.com/watch?v=AGk8EU5dTTM",
+        "https://www.youtube.com/watch?v=DjR49HRM1l8",
+        "https://www.youtube.com/watch?v=DqtmlAun2HM",
+        "https://www.youtube.com/watch?v=PSall-ZH__I",
+        "https://www.youtube.com/watch?v=TgtGLOJrujc",
+        "https://www.youtube.com/watch?v=MfJr9qo1Dt4",
+        "https://www.youtube.com/watch?v=znkCltQrWNM",
+      ],
+    },
+    rewrite,
+  );
+
+  // 5. Facebook & Instagram: the real reels.
+  await ensure(
+    id("social"),
+    "caseStudySocialFeed",
+    {
+      eyebrow: "Facebook & Instagram",
+      title: "Reels From the *Workshop*",
+      intro: "Short videos of real vehicles, shot in Pak Armoring's workshop and edited for the feed.",
+      layout: "Phones",
+      accountName: "Pak Armoring",
+      avatar: asset("logo"),
+      platforms: ["Facebook", "Instagram"],
+      posts: reels.map((_, index) => asset(`img-post-${index + 1}`)),
+    },
+    rewrite,
+  );
+
+  // 7. How we did it.
+  const steps = [
+    ["Learning the range", "We went through every vehicle, category, and type of buyer to plan the website and the content."],
+    ["Website structure", "Civilian, law-enforcement, and special products became the main categories, with a page for each vehicle and guides for buyers."],
+    ["Shooting", "Vehicles, interiors, and ballistic tests were filmed and photographed at the workshop."],
+    ["Editing for each channel", "Longer films for YouTube, short reels for Facebook and Instagram, and photos for the website."],
+    ["Publishing", "New builds go on the website, YouTube, and social media as they leave the workshop."],
+  ];
+  for (const [index, [title, text]] of steps.entries()) await ensure(id(`how-${index + 1}`), "caseStudyItem", { title, text }, rewrite);
+  await ensure(
+    id("how"),
+    "caseStudyCards",
+    {
+      eyebrow: "How We Did It",
+      title: "From the Workshop to the *Screen*",
+      layout: "Numbered steps",
+      items: steps.map((_, index) => link(id(`how-${index + 1}`))),
+    },
+    rewrite,
+  );
+
+  // 8. Also built: the Pak Armoury website (project head, 13 Nov 2026).
+  await upsertAsset(id("img-website"), "pak-armoring/website.webp", "image/webp", "The Pak Armoury website: the Pistols and About pages, and the home page on a phone");
+  await ensure(id("website-fact-1"), "caseStudyItem", { title: "Website", text: "pakarmoury.com" });
+  await ensure(id("website-fact-2"), "caseStudyItem", { title: "Pages", text: "Home, About, Products, Contact" });
+  await ensure(
+    id("website"),
+    "caseStudySection",
+    {
+      eyebrow: "Also Built",
+      title: "The *Pak Armoury* Website",
+      body: richText(
+        "We also designed and built the website for Pak Armoury, an arms and ammunition store in Karachi with a tradition going back to 1950. The site presents the store's history and its range clearly, on every screen.",
+        titledBullets([
+          ["Product catalogue", "Pistols, revolvers, shotguns, rifles, air guns, and ammunition, each with its own page."],
+          ["The store's story", "An About page that tells the store's history since 1950."],
+          ["Easy contact", "The phone number in the header of every page, and a contact page."],
+          ["Mobile-friendly", "Pages that adapt to phones, tablets, and desktops."],
+        ]),
+      ),
+      image: asset("img-website"),
+      layout: "Image left",
+      facts: [link(id("website-fact-1")), link(id("website-fact-2"))],
+    },
+    rewrite,
+  );
+
+  // 9. Call to action, plain.
+  await ensure(
+    id("cta"),
+    "caseStudyCallToAction",
+    {
+      title: "Working on Something *Similar*?",
+      text: "Tell us what you make and who buys it, and we'll talk it through.",
+      buttonLabel: "Get in Touch",
+      buttonLink: "/contact",
+    },
+    rewrite,
+  );
+
+  await ensure(
+    "case-study-pak-armoring",
+    "caseStudy",
+    {
+      title: "Pak Armoring",
+      slug: "pak-armoring",
+      client: link("client-pak-armoring"),
+      excerpt:
+        "How we built Pak Armoring's website, produced its vehicle films, and ran its Facebook and Instagram, so buyers of armored vehicles can see the work before they call.",
+      cardHighlight: "Website, video, and social media for an armored vehicle maker",
+      cardPoints: ["Website: pakarmoring.com", "Vehicle films on YouTube", "Facebook & Instagram"],
+      cardImage: asset("img-card"),
+      heroHeading: "Pak Armoring: Website, Video, and *Social Media* for an Armored Vehicle Maker",
+      heroText:
+        "Pak Armoring (Pvt) Ltd armors cars, SUVs, vans, and buses in Karachi. We built its website, produced its vehicle films, and ran its Facebook and Instagram, so buyers can see the work before they get in touch.",
+      heroImage: asset("img-story-hero"),
+      sections: ["overview", "problem", "help", "videos", "social", "how", "website", "cta"].map((name) => link(id(name))),
+      services: ["development", "marketing"],
+      region: "Pakistan",
+    },
+    rewrite,
+  );
+}
+
+// G&W Towers as a client story (19 Nov 2026, project head). What we did, as confirmed by the
+// project head: video and media production, its TikTok (@gwtowers), Facebook and Instagram, and
+// ads and lead generation. No branding. Facts come from its TikTok bio (a joint project of Godils &
+// Wakeels in Clifton) and from the promo film we made (opposite Bar BQ Tonight, 3- and 4-bed
+// apartments open on three sides, voice-controlled smart homes, a gym, bank financing, sea-facing
+// views, ready by year-end). The film's booking number and price are only in the film itself.
+// The problem is written from what is public, not as a claim about the project's past. Old
+// entries from the marketing layout (gw-delivered, gw-brand*, gw-social, gw-funnel, gw-stage-*,
+// gw-approach, gw-step-*, the designed posts) are no longer on the page and are left unlinked.
+{
+  const id = (name) => `gw-${name}`;
+  const asset = (name) => link(id(name), "Asset");
+  const rewrite = { force: true };
+
+  // Real media: the promo film (from the project head) and stills from it.
+  await upsertAsset(
+    id("video-promo"),
+    "gw-towers/promo.mp4",
+    "video/mp4",
+    "G&W Towers promo film: Clifton at night, the lobby, the apartments, the gym, and sea-facing views",
+  );
+  const scenes = [
+    ["skyline", "Clifton at night from the tower: Prime location in Clifton"],
+    ["lobby", "The G&W Towers sign in the lobby"],
+    ["hall", "An apartment entrance: 3 & 4 bed luxury apartments"],
+    ["gym", "The building's gym"],
+    ["smart-home", "A living room: voice-controlled smart home"],
+    ["bedroom", "A bedroom: bank financing available"],
+    ["sea-view", "Sea-facing views from an upper floor"],
+    ["welcome", "The G&W Towers logo over the view: ready to welcome you by year-end"],
+  ];
+  for (const [name, alt] of scenes) await upsertAsset(id(`img-scene-${name}`), `gw-towers/scene-${name}.webp`, "image/webp", alt);
+  await upsertAsset(id("img-story-hero"), "gw-towers/story-hero.webp", "image/webp", "The G&W Towers promo film on a phone, with a bedroom and the sea-facing view beside it");
+  await upsertAsset(id("img-story-card"), "gw-towers/story-card.webp", "image/webp", "Scenes from the G&W Towers promo film: the lobby, Clifton at night, and the sea view");
+
+  // 1. The business.
+  const facts = [
+    ["Developers", "Godils & Wakeels"],
+    ["Location", "Clifton, Karachi"],
+    ["Homes", "3 & 4 bed apartments"],
+    ["Our work", "Video · TikTok · Facebook & Instagram · Ads"],
+  ];
+  for (const [index, [title, text]] of facts.entries()) await ensure(id(`fact-${index + 1}`), "caseStudyItem", { title, text }, rewrite);
+  await ensure(
+    id("overview"),
+    "caseStudySection",
+    {
+      eyebrow: "The Business",
+      title: "Who *G&W Towers* Is",
+      body: richText(
+        "G&W Towers is a residential tower in Clifton, Karachi, launched jointly by Godils & Wakeels. It stands opposite the Bar BQ Tonight restaurant, with sea-facing views from its upper floors.",
+        "It offers 3- and 4-bedroom apartments, open on three sides, with voice-controlled smart-home features, a gym, and bank financing, and is set to welcome its first residents by the end of the year.",
+      ),
+      image: asset("img-scene-lobby"),
+      layout: "Image right",
+      facts: facts.map((_, index) => link(id(`fact-${index + 1}`))),
+      highlight: null,
+    },
+    rewrite,
+  );
+
+  // 2. The problem.
+  const problems = [
+    ["What is it like inside?", "Buyers want to see the rooms, the finishes, and the views, not only floor plans."],
+    ["Why this project?", "Clifton has many towers on offer. A new one has to be recognised quickly, with its location and features clear at a glance."],
+    ["How do I find out more?", "People who are interested need an easy way to ask about prices, financing, and a site visit."],
+  ];
+  for (const [index, [title, text]] of problems.entries()) await ensure(id(`problem-${index + 1}`), "caseStudyItem", { title, text }, rewrite);
+  await ensure(
+    id("problem"),
+    "caseStudyCards",
+    {
+      eyebrow: "The Problem",
+      title: "Buyers Need to *See It* Before They Visit",
+      intro:
+        "An apartment in Clifton is a large decision, and buyers compare many projects. Before they book a visit, they want answers a brochure alone can't give.",
+      layout: "Icon grid",
+      items: problems.map((_, index) => link(id(`problem-${index + 1}`))),
+    },
+    rewrite,
+  );
+
+  // 3. Where we helped.
+  const help = [
+    ["Video & media production", "We film the tower, the apartments, the gym, and the views, and edit them into short films like the one below."],
+    ["TikTok", "We run @gwtowers: short videos of the project, its apartments, and its views."],
+    ["Facebook & Instagram", "We run the project's pages, posting the same footage in formats made for each platform."],
+    ["Ads & lead generation", "We run campaigns aimed at buyers in Karachi, each with a clear way to call or message for bookings and details."],
+  ];
+  for (const [index, [title, text]] of help.entries()) await ensure(id(`help-${index + 1}`), "caseStudyItem", { title, text }, rewrite);
+  await ensure(
+    id("help"),
+    "caseStudyCards",
+    {
+      eyebrow: "Where We Helped",
+      title: "Four Things We *Do* for G&W",
+      intro: "Together they take a buyer from first seeing the tower to asking about a visit.",
+      layout: "Timeline beside text",
+      image: asset("img-scene-smart-home"),
+      items: help.map((_, index) => link(id(`help-${index + 1}`))),
+    },
+    rewrite,
+  );
+
+  // 4. The film.
+  await ensure(
+    id("film"),
+    "caseStudyVideos",
+    {
+      eyebrow: "The Film",
+      title: "A 20-Second *Tour*",
+      intro:
+        "One of the short promos we made: Clifton at night, the lobby, the apartments, the gym, and the sea-facing views, with the key details on screen.",
+      files: [asset("video-promo")],
+    },
+    rewrite,
+  );
+
+  // 5. Scenes from the film.
+  await ensure(
+    id("scenes"),
+    "caseStudyGallery",
+    {
+      title: "Scenes From the *Film*",
+      intro: "Stills from the promo. Each scene answers one question a buyer has: where, what, how much, and when.",
+      images: scenes.map(([name]) => asset(`img-scene-${name}`)),
+    },
+    rewrite,
+  );
+
+  // 6. How we did it.
+  const steps = [
+    ["Picking the message", "Location, apartment sizes, price, financing, and the move-in date: the details buyers ask about first."],
+    ["Filming", "Clifton at night, the lobby, the apartments, the gym, and the views from the upper floors."],
+    ["Editing for short video", "Vertical cuts with one clear line on screen per scene, and booking details throughout."],
+    ["Publishing", "The films go out on TikTok, Facebook, and Instagram."],
+    ["Campaigns", "Ads put the films in front of buyers in Karachi, and their enquiries go to the sales team."],
+  ];
+  for (const [index, [title, text]] of steps.entries()) await ensure(id(`how-${index + 1}`), "caseStudyItem", { title, text }, rewrite);
+  await ensure(
+    id("how"),
+    "caseStudyCards",
+    {
+      eyebrow: "How We Did It",
+      title: "From the Site to the *Feed*",
+      layout: "Numbered steps",
+      items: steps.map((_, index) => link(id(`how-${index + 1}`))),
+    },
+    rewrite,
+  );
+
+  // 7. Call to action, plain.
+  await ensure(
+    id("cta"),
+    "caseStudyCallToAction",
+    {
+      title: "Marketing a *Property* Project?",
+      text: "Tell us about it, and we'll talk through how to show it to the right buyers.",
+      buttonLabel: "Get in Touch",
+      buttonLink: "/contact",
+    },
+    rewrite,
+  );
+
+  await upsert("client-gw-towers", "client", { name: "G&W Towers", website: "https://www.facebook.com/gwtower" });
+  await ensure(
+    "case-study-gw-towers",
+    "caseStudy",
+    {
+      title: "G&W Towers",
+      slug: "gw-towers",
+      client: link("client-gw-towers"),
+      excerpt:
+        "How we produce G&W Towers' promo films, run its TikTok, Facebook, and Instagram, and run the ads that bring buyer enquiries for its apartments in Clifton.",
+      cardHighlight: "Video, social media, and ads for a new tower in Clifton",
+      cardPoints: ["TikTok, Facebook & Instagram", "Promo films & media", "Ads & lead generation"],
+      cardImage: asset("img-story-card"),
+      heroLayout: "Centered",
+      heroHeading: "G&W Towers: Video, Social Media, and Ads for a New Tower in *Clifton*",
+      heroText:
+        "G&W Towers is a residential tower in Clifton, Karachi, by Godils & Wakeels. We produce its videos, run its TikTok, Facebook, and Instagram, and run the ads that bring buyer enquiries.",
+      heroImage: asset("img-story-hero"),
+      sections: ["overview", "problem", "help", "film", "scenes", "how", "cta"].map((name) => link(id(name))),
+      industries: ["real-estate"],
+      services: ["marketing"],
+      region: "Pakistan",
+    },
+    rewrite,
+  );
 }
 
 console.log("Done.");
