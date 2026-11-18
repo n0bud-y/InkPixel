@@ -4,7 +4,8 @@ import { Magnetic } from "@/components/motion/Magnetic";
 import { withAccent } from "@/components/ui/accent";
 import { Button } from "@/components/ui/Button";
 import { Eyebrow } from "@/components/ui/Eyebrow";
-import type { CaseStudy } from "@/contentful/queries/case-studies";
+import type { CaseStudy, VideoFile } from "@/contentful/queries/case-studies";
+import { HeroVideo } from "./HeroVideo";
 
 type HeroProps = {
   layout: CaseStudy["heroLayout"];
@@ -15,12 +16,15 @@ type HeroProps = {
   image: CaseStudy["heroImage"];
   layers: CaseStudy["heroLayers"];
   client: CaseStudy["client"];
+  /** A video behind the hero (0017): the banner layout, whatever `layout` says. */
+  video?: VideoFile | null;
 };
 
 // Top of a case study, in one of three layouts (picked per case study in Contentful). The text
 // entrance is CSS, like the home hero, so it starts on the first frame; the hero image is the
 // LCP element, so it is preloaded and never hidden. Headings can mark *accent* words.
 export function CaseStudyHero(props: HeroProps) {
+  if (props.video) return <VideoHero {...props} video={props.video} />;
   switch (props.layout) {
     case "centered":
       return <CenteredHero {...props} />;
@@ -329,6 +333,53 @@ function EditorialHero({ eyebrow, heading, text, button, image, layers, client }
             className="absolute top-1/2 left-1/2 -z-10 h-[80%] w-[70%] -translate-1/2 rounded-full bg-[radial-gradient(closest-side,rgb(250_97_67_/_0.22),transparent)]"
           />
           <HeroVisual image={image} layers={layers} sizes="(min-width: 1024px) 70vw, 100vw" />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// A full-width banner with the video playing behind it (the hero image is its still), darkened
+// on the left (on phones, all over) so the logo, eyebrow, white heading, text, and button read on
+// any frame; a fade at the bottom into the navy.
+function VideoHero({ eyebrow, heading, text, button, image, client, video }: HeroProps & { video: VideoFile }) {
+  return (
+    <section
+      aria-labelledby="case-study-title"
+      className="relative isolate flex min-h-[min(100svh,60rem)] items-center overflow-hidden bg-primary"
+    >
+      <HeroVideo video={video} still={image} />
+      <div aria-hidden="true" className="absolute inset-0 -z-10 bg-primary/65 lg:hidden" />
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 -z-10 hidden bg-linear-to-r from-primary/95 via-primary/65 to-primary/10 lg:block"
+      />
+      <div aria-hidden="true" className="absolute inset-x-0 bottom-0 -z-10 h-1/3 bg-linear-to-t from-primary/80 to-transparent" />
+
+      <div className="container-site w-full pt-32 pb-[clamp(4rem,5.85vw,7rem)] sm:pt-36 lg:pt-40 2xl:pt-48">
+        <div className="max-w-[46rem] motion-safe:animate-rise">
+          <LogoChip client={client} />
+          {eyebrow && (
+            <div className="mb-[clamp(1rem,1.3vw,1.5rem)]">
+              <Eyebrow>{eyebrow}</Eyebrow>
+            </div>
+          )}
+          <h1
+            id="case-study-title"
+            className="max-w-[16em] font-display text-[clamp(2.25rem,3.6vw,4.5rem)] leading-[1.06] font-bold tracking-[-0.02em] text-white [text-shadow:0_2px_24px_rgb(0_0_0_/_0.35)]"
+          >
+            {withAccent(heading)}
+          </h1>
+          {text && <p className="mt-6 max-w-[36em] text-[clamp(0.9375rem,1.05vw,1.25rem)] leading-[1.9] text-light/90">{text}</p>}
+          {button && (
+            <div className="mt-[clamp(1.75rem,2.2vw,2.75rem)]">
+              <Magnetic>
+                <Button href={button.href} icon>
+                  {button.label}
+                </Button>
+              </Magnetic>
+            </div>
+          )}
         </div>
       </div>
     </section>

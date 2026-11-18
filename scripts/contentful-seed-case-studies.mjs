@@ -1080,6 +1080,10 @@ for (const study of marketingCaseStudies) {
   await upsertAsset(id("img-story-hero"), "pak-armoring/story-hero.webp", "image/webp", "The Pak Armoring website on a laptop and a phone, with one of its YouTube vehicle films");
   // Pak Armoring's own poster (from the project head, 19 Nov 2026): the hero and card image.
   await upsertAsset(id("img-poster"), "pak-armoring/poster.webp", "image/webp", "Pak Armoring's shield logo above a line-up of its armored vehicles, from SUVs and pickups to an APC and a bus");
+  // The banner video (20 Nov 2026, project head): 15 s of its armored vehicles, re-encoded without
+  // sound (1600 px, H.264 CRF 29, 3.2 MB); the still is its last shot, three vehicles lined up.
+  await upsertAsset(id("video-hero"), "pak-armoring/hero-video.mp4", "video/mp4", "Pak Armoring's armored vehicles on the move");
+  await upsertAsset(id("img-hero-still"), "pak-armoring/hero-still.webp", "image/webp", "Three Pak Armoring vehicles lined up, lights on: two armored pickups and an armored personnel carrier");
 
   await upsert("client-pak-armoring", "client", {
     name: "Pak Armoring",
@@ -1283,7 +1287,11 @@ for (const study of marketingCaseStudies) {
       heroHeading: "Pak Armoring: Website, Video, and *Social Media* for an Armored Vehicle Maker",
       heroText:
         "Pak Armoring (Pvt) Ltd armors cars, SUVs, vans, and buses in Karachi. We built its website, produced its vehicle films, and ran its Facebook and Instagram, so buyers can see the work before they get in touch.",
-      heroImage: asset("img-poster"),
+      heroEyebrow: "Website · Video · Social Media",
+      heroButtonLabel: "Start Your Project",
+      heroButtonLink: "/contact",
+      heroImage: asset("img-hero-still"),
+      heroVideo: asset("video-hero"),
       sections: ["overview", "problem", "help", "videos", "social", "how", "website", "cta"].map((name) => link(id(name))),
       services: ["development", "marketing"],
       region: "Pakistan",

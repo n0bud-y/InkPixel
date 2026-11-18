@@ -158,6 +158,14 @@ export type YouTubeVideo = { id: string; title: string | null };
 /** A video uploaded to Contentful: its file URL, MIME type, and caption (the asset's description). */
 export type VideoFile = { url: string; contentType: string; caption: string | null };
 
+type VideoAssetData = { url: string | null; contentType: string | null; description: string | null } | null;
+
+// An uploaded asset as a video file (with an absolute URL), or null when it isn't a video.
+function toVideoFile(file: VideoAssetData): VideoFile | null {
+  if (!file?.url || !file.contentType?.startsWith("video/")) return null;
+  return { url: file.url.startsWith("//") ? `https:${file.url}` : file.url, contentType: file.contentType, caption: file.description };
+}
+
 export type CaseStudyVideosSection = SectionHeadingData & {
   type: "videos";
   id: string;
@@ -201,6 +209,9 @@ export type CaseStudy = {
   /** The hero image cut into pieces, back to front, each the size of the hero image; shown
    *  instead of it, floating. Empty when not set or when any piece is missing. */
   heroLayers: ContentfulImage[];
+  /** A video played muted and looping behind the hero text (0017); the hero image is its still.
+   *  When set, the hero is the video banner and the layout and layers are not used. */
+  heroVideo: VideoFile | null;
   /** The logo is only included once the client has approved its use. */
   client: { name: string; logo: ContentfulImage | null } | null;
   sections: CaseStudySectionData[];
@@ -347,7 +358,7 @@ export type SectionData =
   | (HeadingData & {
       __typename: "CaseStudyVideos";
       videos: (string | null)[] | null;
-      filesCollection: { items: ({ url: string | null; contentType: string | null; description: string | null } | null)[] } | null;
+      filesCollection: { items: VideoAssetData[] } | null;
     });
 
 type HeadingData = { sys: { id: string }; eyebrow: string | null; title: string | null; intro: string | null };
@@ -366,6 +377,7 @@ type CaseStudyData = {
       heroButtonLink: string | null;
       heroImage: AssetData;
       heroLayersCollection: { items: AssetData[] } | null;
+      heroVideo: VideoAssetData;
       client: { name: string | null; logoApproved: boolean | null; logo: AssetData } | null;
       sectionsCollection: { items: (SectionData | null)[] } | null;
       seo: {
@@ -649,6 +661,11 @@ const CASE_STUDY = /* GraphQL */ `
           items {
             ...ImageFields
           }
+        }
+        heroVideo {
+          url
+          contentType
+          description
         }
         client {
           name
@@ -952,11 +969,10 @@ export function toSection(item: SectionData | null): CaseStudySectionData[] {
         const id = url ? youTubeId(url) : null;
         return id ? [{ id, title: null }] : [];
       });
-      const files = (item.filesCollection?.items ?? []).flatMap((file) =>
-        file?.url && file.contentType?.startsWith("video/")
-          ? [{ url: file.url.startsWith("//") ? `https:${file.url}` : file.url, contentType: file.contentType, caption: file.description }]
-          : [],
-      );
+      const files = (item.filesCollection?.items ?? []).flatMap((file) => {
+        const video = toVideoFile(file);
+        return video ? [video] : [];
+      });
       if (!item.title || (!videos.length && !files.length)) return [];
       return [{ type: "videos", ...toHeading(item, item.title), files, videos }];
     }
@@ -1036,6 +1052,7 @@ export const getCaseStudy = cache(async (slug: string): Promise<CaseStudy | null
     heroButton: toButton(item.heroButtonLabel, item.heroButtonLink),
     heroImage,
     heroLayers: toLayers(item.heroLayersCollection?.items ?? []),
+    heroVideo: toVideoFile(item.heroVideo),
     client: item.client?.name
       ? { name: item.client.name, logo: item.client.logoApproved ? toImage(item.client.logo) : null }
       : null,
