@@ -59,7 +59,7 @@ export function WorkFilter({ caseStudies, services }: { caseStudies: CaseStudySu
                     aria-pressed={current}
                     onClick={() => choose(pill.slug)}
                     className={[
-                      "inline-flex h-11 items-center rounded-full px-5 text-[clamp(0.875rem,0.9vw,1rem)] font-medium transition-colors duration-200 2xl:h-12 2xl:px-6",
+                      "inline-flex h-11 cursor-pointer items-center rounded-full px-5 text-[clamp(0.875rem,0.9vw,1rem)] font-medium transition-colors duration-200 2xl:h-12 2xl:px-6",
                       current
                         ? "bg-brand-gradient text-white shadow-[0_10px_24px_-12px_rgb(201_29_76_/_0.8)]"
                         : "border border-white/15 text-light/80 hover:border-white/35 hover:text-white",

@@ -1070,6 +1070,8 @@ for (const study of marketingCaseStudies) {
   await upsertAsset(id("img-overview"), "pak-armoring/glass-test.webp", "image/webp", "Bulletproof glass after a ballistic test, with three stopped rounds");
   await upsertAsset(id("img-card"), "pak-armoring/card.webp", "image/webp", "Pak Armoring reels from the workshop");
   await upsertAsset(id("img-story-hero"), "pak-armoring/story-hero.webp", "image/webp", "The Pak Armoring website on a laptop and a phone, with one of its YouTube vehicle films");
+  // Pak Armoring's own poster (from the project head, 19 Nov 2026): the hero and card image.
+  await upsertAsset(id("img-poster"), "pak-armoring/poster.webp", "image/webp", "Pak Armoring's shield logo above a line-up of its armored vehicles, from SUVs and pickups to an APC and a bus");
 
   await upsert("client-pak-armoring", "client", {
     name: "Pak Armoring",
@@ -1260,11 +1262,11 @@ for (const study of marketingCaseStudies) {
         "How we built Pak Armoring's website, produced its vehicle films, and ran its Facebook and Instagram, so buyers of armored vehicles can see the work before they call.",
       cardHighlight: "Website, video, and social media for an armored vehicle maker",
       cardPoints: ["Website: pakarmoring.com", "Vehicle films on YouTube", "Facebook & Instagram"],
-      cardImage: asset("img-card"),
+      cardImage: asset("img-poster"),
       heroHeading: "Pak Armoring: Website, Video, and *Social Media* for an Armored Vehicle Maker",
       heroText:
         "Pak Armoring (Pvt) Ltd armors cars, SUVs, vans, and buses in Karachi. We built its website, produced its vehicle films, and ran its Facebook and Instagram, so buyers can see the work before they get in touch.",
-      heroImage: asset("img-story-hero"),
+      heroImage: asset("img-poster"),
       sections: ["overview", "problem", "help", "videos", "social", "how", "website", "cta"].map((name) => link(id(name))),
       services: ["development", "marketing"],
       region: "Pakistan",
