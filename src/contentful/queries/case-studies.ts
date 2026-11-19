@@ -402,6 +402,8 @@ type CaseStudiesData = {
       services: (string | null)[] | null;
       featured: boolean | null;
       heroImage: AssetData;
+      cardImage: AssetData;
+      heroVideo: { url: string | null } | null;
       sys: { publishedAt: string };
     } | null)[];
   };
@@ -711,6 +713,12 @@ const CASE_STUDIES = /* GraphQL */ `
         featured
         heroImage {
           ...ImageFields
+        }
+        cardImage {
+          ...ImageFields
+        }
+        heroVideo {
+          url
         }
         sys {
           publishedAt
@@ -1075,7 +1083,11 @@ export const getCaseStudies = cache(async (): Promise<CaseStudySummary[]> => {
   const data = await caseStudyQuery<CaseStudiesData>(CASE_STUDIES, { tags: ["caseStudy"] });
 
   return (data?.caseStudyCollection.items ?? []).flatMap((item) => {
-    const image = toImage(item?.heroImage ?? null);
+    // The hero image, except for a case study with a video banner (0017): its hero image is a
+    // frame of the video, so the card image is shown instead when there is one (Pak Armoring's
+    // logo; project head, 20 Nov 2026).
+    const heroImage = toImage(item?.heroImage ?? null);
+    const image = (item?.heroVideo?.url ? toImage(item.cardImage ?? null) : null) ?? heroImage;
     if (!item?.title || !item.slug || !item.excerpt || !image) return [];
     return [
       {
