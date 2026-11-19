@@ -45,6 +45,9 @@ npm install --include=dev --no-audit --no-fund
 # (GLIBC_2.29 not found), and Next.js then only offers Webpack. One build process at a time: the
 # hosting caps how many processes an account may start (spawn EAGAIN), see next.config.ts.
 echo "→ Building"
+# Fresh Contentful data every build: a fetch cache left by the previous build can hand the build
+# an old list, so new case studies or posts aren't prerendered (20 Nov 2026).
+rm -rf .next/cache/fetch-cache
 NEXT_BUILD_CPUS=1 npx next build --webpack
 
 echo "→ Completing the server folder (static files and public/)"
