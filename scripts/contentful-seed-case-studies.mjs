@@ -1935,6 +1935,8 @@ for (const study of marketingCaseStudies) {
 
   const images = [
     ["hero", "The VSSR Exotics website in a browser and its portal's sign-in page on a phone"],
+    // The card and hero image since 20 Nov 2026 (project head): the agency's own site, not VSSR.
+    ["poster", "The Designzhub360 website: its Our Work page in a browser and its VSSR Exotics project page on a phone"],
     ["overview", "The Designzhub360 website in a browser and on a phone"],
     ["vssr", "The VSSR Exotics rentals page with its live inventory, and the sign-in page of its portal"],
     ["ap", "The American Port admin console's sign-in page, and the marketplace's home page on a phone"],
@@ -2088,7 +2090,7 @@ for (const study of marketingCaseStudies) {
         "How we work as a design and production partner for the agency Designzhub360: website UI/UX design, builds on Shopify, WordPress, PHP, and Laravel, and DNS setup, including the live VSSR Exotics platform.",
       cardHighlight: "Design and production partner for an agency",
       cardPoints: ["Website UI/UX design", "Shopify, WordPress & Laravel builds", "DNS & domain setup"],
-      cardImage: asset("img-hero"),
+      cardImage: asset("img-poster"),
       heroLayout: "Editorial",
       heroEyebrow: "Agency Partnership",
       heroHeading: "Designzhub360: An Ongoing Design & *Development Partnership*",
@@ -2096,7 +2098,7 @@ for (const study of marketingCaseStudies) {
         "We are a design and production partner for Designzhub360: we design websites for its clients, build the ones assigned to production on Shopify, WordPress, PHP, and Laravel, and set up their domains.",
       heroButtonLabel: "Start Your Project",
       heroButtonLink: "/contact",
-      heroImage: asset("img-hero"),
+      heroImage: asset("img-poster"),
       sections: ["overview", "model", "builds", "mobile", "how", "cta"].map((name) => link(id(name))),
       services: ["development"],
       region: "United States",
