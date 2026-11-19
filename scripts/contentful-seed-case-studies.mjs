@@ -661,67 +661,7 @@ const reviewStep = [
 ];
 
 const marketingCaseStudies = [
-  {
-    key: "ng",
-    slug: "ng-interiors-constructions",
-    industries: ["real-estate"],
-    title: "NG Interiors & Constructions",
-    client: {
-      id: "client-ng-interiors",
-      name: "NG Interiors & Constructions",
-      website: "https://www.facebook.com/nailagulistanofficial",
-    },
-    excerpt:
-      "Branding, social media, and lead-generation campaigns for NG Interiors & Constructions, an interior design and construction company in Karachi.",
-    cardHighlight: "Turning admirers of the work into consultation requests",
-    heroHeading: "A Warmer Brand for *NG Interiors & Constructions*",
-    heroText:
-      "NG Interiors & Constructions designs and builds homes and spaces in Karachi. We shaped a warm, consistent brand for its social media and ran campaigns that turn admirers of its work into consultation requests.",
-    heroAlt: "NG Interiors social media posts on a phone and cards, with a lead form",
-    overview: {
-      paragraphs: [
-        "Interior design is a visual business: people decide whether they like a studio by scrolling through its work. A feed that looks scattered makes even beautiful projects look ordinary.",
-        "We gave NG Interiors & Constructions one calm, warm look across its channels, planned content around ideas, process, and finished spaces, and ran campaigns that invite people to book a consultation.",
-      ],
-      industry: "Interiors & Construction",
-      channels: "Facebook, Instagram",
-    },
-    brandCards: {
-      title: "Warm, Calm, and *Unmistakably NG*",
-      intro: "Earthy terracotta, soft sand, and an elegant serif give the brand the same feeling as the spaces it creates.",
-      items: [
-        ["Visual Language", "Warm neutrals and elegant type that let the work stand out."],
-        ["Content Pillars", "Design ideas, behind-the-scenes process, and finished spaces."],
-        ["Tone of Voice", "Friendly and expert, like advice from a designer you trust."],
-      ],
-    },
-    social: {
-      title: "A Feed That Feels Like *Home*",
-      intro:
-        "Design tips, process, and invitations to book a consultation, arranged into a feed that looks as considered as the spaces themselves.",
-    },
-    funnel: {
-      title: "From Inspiration to *Consultation*",
-      intro: "Homeowners take time to choose a designer, so the campaigns stay with them from the first idea to the first meeting.",
-      stages: [
-        ["Inspire", "Design ideas and finished spaces reach homeowners planning a change."],
-        ["Educate", "Process and tips posts show how a project runs from concept to completion."],
-        ["Capture", "Consultation forms collect details about each space."],
-        ["Consult", "The team follows up and books a design consultation."],
-      ],
-    },
-    steps: [
-      ["Discovery", "We learned which projects and clients NG Interiors wants more of."],
-      ["Brand Look", "A warm visual system for posts, stories, and ads."],
-      ["Content Calendar", "Ideas, process, and finished-space posts planned month by month."],
-      ["Campaign Setup", "Consultation ads and forms aimed at homeowners planning a project."],
-      reviewStep,
-    ],
-    cta: {
-      title: "Your Work Is Beautiful. Let’s Make Your *Feed* Match.",
-      text: "We design social content and run campaigns that help design and build studios win the projects they want.",
-    },
-  },
+  // NG Interiors & Constructions: its own block below since 20 Nov 2026 (a client story).
   {
     key: "aawaz",
     slug: "aawaz-institute",
@@ -785,14 +725,6 @@ const marketingCaseStudies = [
 
 // Alt texts of the designed posts (the headlines on them), from the render script's copy.
 const designedPostAlts = {
-  ng: [
-    "Interiors That Feel Like Home",
-    "From Concept to Completion",
-    "Every detail, considered.",
-    "Plan Your Dream Space",
-    "Warm Neutrals, Lasting Calm",
-    "Spaces Made for Living",
-  ],
   aawaz: [
     "Find Your Voice",
     "Learn From the Studio Floor",
@@ -806,17 +738,6 @@ const designedPostAlts = {
 // Each page's own layout (13 Nov 2026, second round, so they don't look alike): hero, section
 // order, and the layout of each section. Keys are the case studies' `key`s.
 const pagePlans = {
-  ng: {
-    hero: { heroLayout: "Light", heroEyebrow: "Design · Build · Grow", heroButtonLabel: "Book a Consultation", heroButtonLink: "/contact" },
-    overviewLayout: "Image below",
-    brandCards: { layout: "Icon grid" },
-    feedLayout: "Carousel",
-    funnelLayout: "Funnel",
-    approach: { layout: "Numbered steps" },
-    order: ["overview", "brand", "social", "approach", "funnel", "cta"],
-    // The project head's poster (20 Nov 2026): the hero and card image.
-    poster: "Social media post, story card, quote card, and lead form for NG Interiors, around a phone showing the post Interiors That Feel Like Home",
-  },
   aawaz: {
     hero: { heroLayout: "Dark", heroEyebrow: "Admissions Campaigns", heroButtonLabel: "Start Your Project", heroButtonLink: "/contact" },
     overviewLayout: "Image right",
@@ -2316,6 +2237,203 @@ for (const study of marketingCaseStudies) {
       heroImage: asset("img-hero"),
       sections: ["overview", "problem", "help", "videos", "how", "cta"].map((name) => link(id(name))),
       services: ["marketing"],
+      region: "Pakistan",
+    },
+    rewrite,
+  );
+}
+
+// NG Interiors & Constructions as a client story (20 Nov 2026, project head; was in the marketing
+// loop above, with developer-designed stand-in graphics). What we do, as confirmed by the project
+// head: Facebook & Instagram, reels and project videos, ads and lead generation, and brand and post
+// design. Facts come from the studio's own pages (Facebook, Instagram @nginteriorsandconstructions,
+// TikTok @nginteriorsconstructions; read 20 Nov 2026). No follower counts and no results claimed;
+// the logo itself is not claimed as ours. Images: screenshots of those pages (the page's email
+// blurred), its Facebook cover and an Instagram post, and covers of its own TikTok videos. The
+// poster sent by the project head stays the card and hero image.
+{
+  const id = (name) => `ng-${name}`;
+  const asset = (name) => link(id(name), "Asset");
+  const rewrite = { force: true };
+  const item = (key, title, text) => {
+    if (text.length > 400) throw new Error(`${key}: text is ${text.length} characters (max 400)`);
+    return ensure(id(key), "caseStudyItem", { title, text }, rewrite);
+  };
+
+  await upsertAsset(id("img-poster"), "ng-interiors-constructions/poster.webp", "image/webp", "Social media post, story card, quote card, and lead form for NG Interiors, around a phone showing the post Interiors That Feel Like Home");
+  const images = [
+    ["who", "NG Interiors & Constructions' Facebook page in a browser and on a phone"],
+    ["panel-social", "NG Interiors & Constructions' Facebook page and Instagram profile"],
+    ["panel-video", "NG Interiors & Constructions' TikTok profile with its project videos"],
+    ["panel-leads", "The studio's contact details on its Facebook page, and a project video: Trust the process"],
+    ["panel-brand", "The Naila Gulistan cover banner and a project post: National Radio Telecommunication Corporation"],
+    ["site-1", "Walking through a residential project at Greens 3, Clifton"],
+    ["site-2", "An artisan spraying a Duco finish on site"],
+    ["site-3", "A site at the start of the work: open ceiling and bare walls"],
+    ["site-4", "A finished space with artwork and lounge seating"],
+  ];
+  for (const [name, alt] of images) await upsertAsset(id(`img-${name}`), `ng-interiors-constructions/${name}.webp`, "image/webp", alt);
+
+  // 1. Who they are.
+  const facts = [
+    ["Client", "Interior design & construction studio"],
+    ["Location", "Khayaban-e-Mujahid, Karachi"],
+    ["Projects", "Residential, commercial, turnkey"],
+    ["Our work", "Social media, video, ads & design"],
+  ];
+  for (const [index, [title, text]] of facts.entries()) await item(`who-fact-${index + 1}`, title, text);
+  await ensure(
+    id("who"),
+    "caseStudySection",
+    {
+      eyebrow: "The Client",
+      title: "Who *NG Interiors & Constructions* Is",
+      body: richText(
+        "NG Interiors & Constructions is Naila Gulistan's interior design and construction studio on Khayaban-e-Mujahid, Karachi. It handles interior architecture and construction for homes and commercial spaces, including turnkey projects, and sees clients at its studio by appointment.",
+        "Its projects range from homes such as Greens 3 in Clifton to commercial work such as architecture for the National Radio Telecommunication Corporation. Facebook, Instagram, and TikTok are where it shows that work, from bare site to finished room.",
+      ),
+      image: asset("img-who"),
+      layout: "Image right",
+      facts: facts.map((_, index) => link(id(`who-fact-${index + 1}`))),
+      highlight: null,
+    },
+    rewrite,
+  );
+
+  // 2. The problem.
+  const challenges = [
+    ["Months of work, one photo", "A finished room photographs well, but the months behind it, from bare walls to the last finish, are what show a studio's skill."],
+    ["Visits by appointment", "Clients visit the studio by appointment, so its pages have to answer the first questions and make it easy to ask for a consultation."],
+    ["Three platforms, one studio", "Facebook, Instagram, and TikTok each need their own format, but all three should look like the same studio."],
+  ];
+  for (const [index, [title, text]] of challenges.entries()) await item(`challenge-${index + 1}`, title, text);
+  await ensure(
+    id("challenge"),
+    "caseStudyCards",
+    {
+      eyebrow: "The Problem",
+      title: "Showing Work That Takes *Months*",
+      intro: "An interior project is slow, physical work. Social media rewards the opposite: short, regular, and visual.",
+      layout: "Icon grid",
+      items: challenges.map((_, index) => link(id(`challenge-${index + 1}`))),
+    },
+    rewrite,
+  );
+
+  // 3. Where we help: the four parts of the work.
+  const help = [
+    [
+      "panel-social",
+      "Facebook & Instagram",
+      "Projects run for months, but the pages need something new every week.",
+      "We plan and publish the studio's posts on Facebook and Instagram, write the captions, and keep both pages active through every stage of a project.",
+    ],
+    [
+      "panel-video",
+      "Reels & project videos",
+      "Site work happens once. If nobody films it, the process behind a finished room is lost.",
+      "We film and edit project videos and reels for Instagram and TikTok: site walkthroughs, works in progress, artisans at work, and before-and-after reveals.",
+    ],
+    [
+      "panel-leads",
+      "Ads & lead generation",
+      "Studio visits are by appointment, so the right people need a simple way to ask for a consultation.",
+      "We run the studio's Facebook and Instagram ads for consultation enquiries, and keep its contact details clear on every page: phone, WhatsApp, and address.",
+    ],
+    [
+      "panel-brand",
+      "Brand & post design",
+      "A studio that sells design has to look designed wherever it appears.",
+      "We design its posts, covers, and project announcements in one consistent look, around the Naila Gulistan logo: gold, black, and white, with clean serif type.",
+    ],
+  ];
+  for (const [index, [, title, need, work]] of help.entries()) {
+    await item(`help-${index + 1}`, title, `The need: ${need}\nWhat we do: ${work}`);
+  }
+  await ensure(
+    id("help"),
+    "caseStudyCards",
+    {
+      eyebrow: "Where We Help",
+      title: "Four Parts of the *Work*",
+      intro: "From the site to the post: everything the studio's followers see.",
+      layout: "Story panels",
+      image: null,
+      images: help.map(([name]) => asset(`img-${name}`)),
+      items: help.map((_, index) => link(id(`help-${index + 1}`))),
+    },
+    rewrite,
+  );
+
+  // 4. The real work: covers of the studio's own project videos.
+  await ensure(
+    id("work"),
+    "caseStudyGallery",
+    {
+      title: "From the *Site*",
+      intro: "From the studio's TikTok, @nginteriorsconstructions, which we handle: walkthroughs, artisans at work, and the change from bare site to finished room.",
+      images: [1, 2, 3, 4].map((n) => asset(`img-site-${n}`)),
+    },
+    rewrite,
+  );
+
+  // 5. How we work.
+  const steps = [
+    ["Plan around the projects", "Posts and videos are planned around each project's stages: design, site work, finishing, and handover."],
+    ["Film on site", "We capture walkthroughs, works in progress, and the craftsmanship behind each finish."],
+    ["Edit & design", "Footage becomes reels and project videos; announcements and covers are designed in the studio's look."],
+    ["Publish", "Each post goes out on Facebook, Instagram, and TikTok in that platform's format."],
+    ["Run the ads", "Ads for consultation enquiries run alongside, with the studio's phone and WhatsApp on every page."],
+  ];
+  for (const [index, [title, text]] of steps.entries()) await item(`process-${index + 1}`, title, text);
+  await ensure(
+    id("process"),
+    "caseStudyCards",
+    {
+      eyebrow: "How We Work",
+      title: "From the Site to the *Post*",
+      layout: "Numbered steps",
+      items: steps.map((_, index) => link(id(`process-${index + 1}`))),
+    },
+    rewrite,
+  );
+
+  // 6. Call to action, plain.
+  await ensure(
+    id("cta"),
+    "caseStudyCallToAction",
+    {
+      title: "A Design Studio With Work to *Show*?",
+      text: "Tell us about your projects and where your clients find you.",
+      buttonLabel: "Get in Touch",
+      buttonLink: "/contact",
+    },
+    rewrite,
+  );
+
+  await ensure(
+    "case-study-ng-interiors-constructions",
+    "caseStudy",
+    {
+      title: "NG Interiors & Constructions",
+      slug: "ng-interiors-constructions",
+      client: link("client-ng-interiors"),
+      excerpt:
+        "How we run NG Interiors & Constructions' Facebook, Instagram, and TikTok: project videos, post design, and ads for consultation enquiries.",
+      cardHighlight: "Social media, video, and ads for an interior design studio",
+      cardPoints: ["Facebook, Instagram & TikTok", "Project videos & reels", "Ads & post design"],
+      cardImage: asset("img-poster"),
+      heroLayout: "Light",
+      heroEyebrow: "Social Media · Video · Ads",
+      heroHeading: "NG Interiors & Constructions: Social Media and Video for an *Interior Design Studio*",
+      heroText:
+        "NG Interiors & Constructions designs and builds homes and commercial spaces in Karachi. We run its Facebook, Instagram, and TikTok: the posts, the project videos, the post design, and the ads for consultations.",
+      heroButtonLabel: "Start Your Project",
+      heroButtonLink: "/contact",
+      heroImage: asset("img-poster"),
+      sections: ["who", "challenge", "help", "work", "process", "cta"].map((name) => link(id(name))),
+      industries: ["real-estate"],
+      services: ["marketing", "branding"],
       region: "Pakistan",
     },
     rewrite,
