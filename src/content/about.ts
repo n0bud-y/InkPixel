@@ -36,6 +36,7 @@ import moazzamAli from "@/assets/images/about/team/syed-moazzam-ali.webp";
 import shahnoorHamza from "@/assets/images/about/team/syed-shahnoor-hamza.webp";
 import tahaAli from "@/assets/images/about/team/syed-taha-ali.webp";
 import tassinAhmed from "@/assets/images/about/team/tassin-ahmed.webp";
+import wajiHussain from "@/assets/images/about/team/waji-hussain.webp";
 import wali from "@/assets/images/about/team/wali.webp";
 
 export const aboutHero = {
@@ -133,6 +134,8 @@ export const team = {
     { name: "Mussyab Khan", role: "Senior Manager - Web Application", photo: mussyabKhan },
     { name: "Ali Hassan", role: "Senior Manager - Marketing", photo: aliHassan },
     { name: "Syed Shahnoor Hamza", role: "Senior Manager - Performance Marketing", photo: shahnoorHamza },
+    // Added 20 Nov 2026 (project head): after Syed Shahnoor Hamza.
+    { name: "Waji Hussain", role: "Senior Manager - Media", photo: wajiHussain },
     { name: "Syed Taha Ali", role: "Senior Manager - Design", photo: tahaAli },
     // Added 20 Nov 2026 (project head): next to Syed Taha Ali, in design.
     { name: "Khurram Riaz", role: "Executive - Design", photo: khurramRiaz },

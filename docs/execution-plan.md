@@ -349,6 +349,7 @@ Newest first.
 
 | Date | Update |
 |---|---|
+| 20 Nov 2026 | Team: `waji-hussain.webp` (607×790 WebP) and an entry in `about.ts` after Syed Shahnoor Hamza. Typecheck and lint pass; checked locally (no console errors on /about) |
 | 20 Nov 2026 | Team: `khurram-riaz.webp` (607×790 WebP with transparent corners, like the others) and an entry in `about.ts` `team.members` after Syed Taha Ali; the carousel and its dots are built from that list, so no component change. Typecheck and lint pass; checked locally (the card after Syed Taha Ali, no console errors on /about) |
 | 20 Nov 2026 | IHR video banner: assets `ihr-video-hero` (`in-house-recruitment/hero-video.mp4`: 1280 px, 25 fps, H.264 CRF 32, no audio, faststart; from a 1080p 40 MB file) and `ihr-img-hero-still` (frame at 4.5 s, 1600 px WebP) as `heroVideo` and `heroImage`; `cardImage` stays `ihr-img-hero`, which Our Work now shows for video-banner case studies. Checked locally at 1440 and 390, video playing and still-only; 0 console errors |
 | 20 Nov 2026 | Pak Armoring card: asset `pak-img-card-logo` as `cardImage` (`heroImage` stays `pak-img-hero-still`). `case-studies.ts`: the `CaseStudies` query also reads `cardImage` and `heroVideo { url }`; `getCaseStudies` uses the card image when the case study has a hero video, otherwise the hero image as before (Drumond and Cathy, whose card images differ, are unchanged). Typecheck and lint pass; checked locally (box, banner with reduced motion) |
