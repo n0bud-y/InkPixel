@@ -1703,4 +1703,216 @@ for (const study of marketingCaseStudies) {
   );
 }
 
+// In-house Recruitment (20 Nov 2026, project head): our ongoing development and support of IHR's
+// platforms, written from the project's case-study brief (IHR Case Study Brief) about what we
+// built and solved. Per the brief: the HubSpot sync covers supported profile fields only (email,
+// password, and membership-type changes are excluded); LearnWorlds accounts are created through
+// its API from a one-click action in the Laravel dashboard; website and AWS optimization are two
+// separate jobs; no numbers, dates, or results; Rectec and the ATS integrations are not mentioned.
+// Images: screenshots of the public website and the portal's login page (taken 20 Nov 2026), and
+// diagrams of the integrations drawn by us (the admin side, HubSpot, and LearnWorlds are behind a
+// login). No client logo (not approved).
+{
+  const id = (name) => `ihr-${name}`;
+  const asset = (name) => link(id(name), "Asset");
+  const rewrite = { force: true };
+  const item = (key, title, text) => {
+    if (text.length > 400) throw new Error(`${key}: text is ${text.length} characters (max 400)`);
+    return ensure(id(key), "caseStudyItem", { title, text }, rewrite);
+  };
+
+  const images = [
+    ["hero", "The In-house Recruitment website in a browser and the member portal's login page on a phone"],
+    ["overview", "The IHR Learning page in a browser and the Member Benefits page on a phone"],
+    ["ecosystem", "Diagram: the WordPress website and the Laravel portal, with HubSpot and LearnWorlds connected to the portal, hosted on AWS"],
+    ["hubspot", "Diagram: an admin edits a member's profile in Laravel, the supported fields are sent through the API, and the HubSpot contact is updated; email, password, and membership type are not part of this sync"],
+    ["learnworlds", "Diagram: an admin creates a member in Laravel, one click starts the integration, Laravel calls the LearnWorlds API, and the user account is created"],
+    ["portal", "The member portal's login page"],
+    ["website", "The Member Benefits page in a browser and the IHR Learning page on a phone"],
+    ["speed", "Diagram: website work (performance issues, page resources, page delivery) and AWS work (resource use, server-side bottlenecks, stability) as two separate jobs"],
+    ["phone-home", "Home page on a phone"],
+    ["phone-learning", "IHR Learning page on a phone"],
+    ["phone-benefits", "Member Benefits page on a phone"],
+    ["phone-portal", "Member portal login on a phone"],
+  ];
+  for (const [name, alt] of images) await upsertAsset(id(`img-${name}`), `in-house-recruitment/${name}.webp`, "image/webp", alt);
+
+  await upsert("client-in-house-recruitment", "client", {
+    name: "In-house Recruitment",
+    website: "https://www.inhouserecruitment.co.uk",
+  });
+
+  // 1. The project.
+  const facts = [
+    ["Client", "Recruitment membership, UK"],
+    ["Platforms", "WordPress, Laravel, HubSpot, LearnWorlds"],
+    ["Hosting", "AWS"],
+    ["Our work", "Ongoing development & support"],
+  ];
+  for (const [index, [title, text]] of facts.entries()) await item(`fact-${index + 1}`, title, text);
+  await ensure(
+    id("overview"),
+    "caseStudySection",
+    {
+      eyebrow: "The Project",
+      title: "One Membership, *Several Systems*",
+      body: richText(
+        "In-house Recruitment (IHR) is a UK membership community for in-house recruiters and talent acquisition teams. Its members meet it in several places: a public WordPress website, a Laravel member portal, and LearnWorlds for online learning, with HubSpot as the CRM behind them.",
+        "We are IHR's ongoing technical partner, not a one-off build. We develop and maintain the website and the portal, look after the AWS server, and handle daily support. The biggest part of the work was making these systems work together.",
+      ),
+      image: asset("img-overview"),
+      layout: "Image right",
+      facts: facts.map((_, index) => link(id(`fact-${index + 1}`))),
+      highlight: null,
+    },
+    rewrite,
+  );
+
+  // 2. The four systems, around a diagram.
+  const systems = [
+    ["WordPress website", "The public site: membership information, events, learning, and content. We update its pages, fix how it displays on phones, and keep it fast."],
+    ["Laravel member portal", "Member accounts and profiles, the admin dashboard, and the team's membership workflows. The hub the other systems connect to."],
+    ["HubSpot CRM", "IHR's contact records. Supported profile changes made in the portal now reach it automatically."],
+    ["LearnWorlds", "IHR's learning platform. Member accounts are created on it from the portal in one click, through its API."],
+  ];
+  for (const [index, [title, text]] of systems.entries()) await item(`system-${index + 1}`, title, text);
+  await ensure(
+    id("systems"),
+    "caseStudyCards",
+    {
+      eyebrow: "The Ecosystem",
+      title: "Four *Connected* Systems",
+      intro: "Each system does its own job. Much of our work is in the links between them.",
+      layout: "Around image",
+      image: asset("img-ecosystem"),
+      items: systems.map((_, index) => link(id(`system-${index + 1}`))),
+    },
+    rewrite,
+  );
+
+  // 3. The problems and how we solved them.
+  const solved = [
+    [
+      "hubspot",
+      "Profiles kept in step with HubSpot",
+      "Member details lived in the Laravel portal and in HubSpot, so each profile change had to be made twice.",
+      "Through HubSpot's API, a profile update in the Laravel dashboard now updates the matching HubSpot contact. Email, password, and membership-type changes are left out of this sync.",
+    ],
+    [
+      "learnworlds",
+      "LearnWorlds accounts in one click",
+      "Every new member also needed an account on LearnWorlds, IHR's learning platform, created by hand on a separate site.",
+      "We added a one-click action to the Laravel dashboard. After creating a member, an admin clicks once, and the portal creates the matching LearnWorlds user through its API.",
+    ],
+    [
+      "portal",
+      "A portal that runs every day",
+      "The portal isn't a static site: members log in and edit their profiles, and the team runs memberships from its admin side.",
+      "We develop and maintain the Laravel application: accounts and profiles, the admin dashboard and user management, membership workflows, and fixes for login, access, and profile issues.",
+    ],
+    [
+      "website",
+      "A website that works on every screen",
+      "Pages on the WordPress website were inconsistent, and parts of them didn't display properly on phones and tablets.",
+      "We updated pages and layouts across the site, made the presentation consistent, and fixed responsive problems: spacing, alignment, navigation, and elements that broke on small screens.",
+    ],
+    [
+      "speed",
+      "Speed, on two levels",
+      "How well the site runs depends on the website itself and on the AWS server behind it, so fixing one alone wasn't enough.",
+      "On the website: performance issues found and fixed, resources and page delivery optimized. On AWS: resource use and server-side bottlenecks investigated, and the hosting tuned for stability.",
+    ],
+  ];
+  for (const [index, [, title, problem, solution]] of solved.entries()) {
+    await item(`solved-${index + 1}`, title, `The problem: ${problem}\nWhat we did: ${solution}`);
+  }
+  await ensure(
+    id("solved"),
+    "caseStudyCards",
+    {
+      eyebrow: "Problem & Solution",
+      title: "What We Had to *Solve*",
+      intro: "Alongside daily support, these were the larger pieces of work.",
+      layout: "Story panels",
+      image: null,
+      images: solved.map(([name]) => asset(`img-${name}`)),
+      items: solved.map((_, index) => link(id(`solved-${index + 1}`))),
+    },
+    rewrite,
+  );
+
+  // 4. On phones.
+  await ensure(
+    id("mobile"),
+    "caseStudyGallery",
+    {
+      title: "On *Phones*",
+      intro: "Part of the work was fixing how the website displays on small screens. These are the pages as they are now, on a phone.",
+      images: ["home", "learning", "benefits", "portal"].map((name) => asset(`img-phone-${name}`)),
+    },
+    rewrite,
+  );
+
+  // 5. How we work: the ongoing support.
+  const steps = [
+    ["Member queries", "Account problems and login and access issues from members, investigated and resolved."],
+    ["Admin requests", "Profile and administrative requests from the IHR team, handled day to day."],
+    ["Bug fixes", "Reported bugs and errors on the website and in the portal, tracked down and fixed."],
+    ["Maintenance", "The WordPress website and the Laravel portal kept up to date and working."],
+    ["Steady improvements", "Smaller fixes and improvements between the larger pieces of work, as the team needs them."],
+  ];
+  for (const [index, [title, text]] of steps.entries()) await item(`how-${index + 1}`, title, text);
+  await ensure(
+    id("how"),
+    "caseStudyCards",
+    {
+      eyebrow: "Ongoing Support",
+      title: "How We *Work* With IHR",
+      layout: "Numbered steps",
+      items: steps.map((_, index) => link(id(`how-${index + 1}`))),
+    },
+    rewrite,
+  );
+
+  // 6. Call to action, plain.
+  await ensure(
+    id("cta"),
+    "caseStudyCallToAction",
+    {
+      title: "Systems That Don't *Talk* to Each Other?",
+      text: "Tell us which platforms you run and where your team does the same work twice.",
+      buttonLabel: "Get in Touch",
+      buttonLink: "/contact",
+    },
+    rewrite,
+  );
+
+  await ensure(
+    "case-study-in-house-recruitment",
+    "caseStudy",
+    {
+      title: "In-house Recruitment",
+      slug: "in-house-recruitment",
+      client: link("client-in-house-recruitment"),
+      excerpt:
+        "How we develop and support a UK recruitment membership platform: a Laravel portal synced with HubSpot, one-click LearnWorlds accounts, website and AWS optimization, and daily support.",
+      cardHighlight: "A Laravel portal connected to HubSpot and LearnWorlds",
+      cardPoints: ["HubSpot profile sync", "One-click LearnWorlds accounts", "Website & AWS optimization"],
+      cardImage: asset("img-hero"),
+      heroLayout: "Dark",
+      heroEyebrow: "Development · Integrations · Support",
+      heroHeading: "In-house Recruitment: Connecting a Membership Platform's Website, Portal, CRM, and *Learning Platform*",
+      heroText:
+        "IHR runs its membership on WordPress, Laravel, HubSpot, and LearnWorlds. We develop and support them, and connected them: profile changes in the portal reach HubSpot, and LearnWorlds accounts are created in one click.",
+      heroButtonLabel: "Start Your Project",
+      heroButtonLink: "/contact",
+      heroImage: asset("img-hero"),
+      sections: ["overview", "systems", "solved", "mobile", "how", "cta"].map((name) => link(id(name))),
+      services: ["development"],
+      region: "United Kingdom",
+    },
+    rewrite,
+  );
+}
+
 console.log("Done.");
