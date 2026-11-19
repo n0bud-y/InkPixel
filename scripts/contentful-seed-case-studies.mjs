@@ -1740,6 +1740,10 @@ for (const study of marketingCaseStudies) {
     ["phone-portal", "Member portal login on a phone"],
   ];
   for (const [name, alt] of images) await upsertAsset(id(`img-${name}`), `in-house-recruitment/${name}.webp`, "image/webp", alt);
+  // The banner video (20 Nov 2026, project head): IHR Awards night, 37 s, re-encoded without sound
+  // (1280 px, 25 fps, H.264 CRF 32, 3.9 MB; was 40 MB); the still is the ballroom at 4.5 s.
+  await upsertAsset(id("video-hero"), "in-house-recruitment/hero-video.mp4", "video/mp4", "The IHR Awards night: the ballroom, the stage, and guests celebrating");
+  await upsertAsset(id("img-hero-still"), "in-house-recruitment/hero-still.webp", "image/webp", "The IHR Awards ballroom: tables of guests under purple stage lights");
 
   await upsert("client-in-house-recruitment", "client", {
     name: "In-house Recruitment",
@@ -1910,7 +1914,9 @@ for (const study of marketingCaseStudies) {
         "IHR runs its membership on WordPress, Laravel, HubSpot, and LearnWorlds. We develop and support them, and connected them: profile changes in the portal reach HubSpot, and LearnWorlds accounts are created in one click.",
       heroButtonLabel: "Start Your Project",
       heroButtonLink: "/contact",
-      heroImage: asset("img-hero"),
+      // The banner video's still. The poster (case-study box, project cards) stays the card image.
+      heroImage: asset("img-hero-still"),
+      heroVideo: asset("video-hero"),
       sections: ["overview", "systems", "solved", "mobile", "how", "cta"].map((name) => link(id(name))),
       services: ["development"],
       region: "United Kingdom",

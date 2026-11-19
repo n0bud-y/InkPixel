@@ -349,6 +349,7 @@ Newest first.
 
 | Date | Update |
 |---|---|
+| 20 Nov 2026 | IHR video banner: assets `ihr-video-hero` (`in-house-recruitment/hero-video.mp4`: 1280 px, 25 fps, H.264 CRF 32, no audio, faststart; from a 1080p 40 MB file) and `ihr-img-hero-still` (frame at 4.5 s, 1600 px WebP) as `heroVideo` and `heroImage`; `cardImage` stays `ihr-img-hero`, which Our Work now shows for video-banner case studies. Checked locally at 1440 and 390, video playing and still-only; 0 console errors |
 | 20 Nov 2026 | Pak Armoring card: asset `pak-img-card-logo` as `cardImage` (`heroImage` stays `pak-img-hero-still`). `case-studies.ts`: the `CaseStudies` query also reads `cardImage` and `heroVideo { url }`; `getCaseStudies` uses the card image when the case study has a hero video, otherwise the hero image as before (Drumond and Cathy, whose card images differ, are unchanged). Typecheck and lint pass; checked locally (box, banner with reduced motion) |
 | 20 Nov 2026 | `scripts/deploy-cpanel.sh`: `rm -rf .next/cache/fetch-cache` before `next build --webpack` (a stale fetch cache from the previous build made `generateStaticParams` return an old case-study list). Local `npm run build` after clearing it: 84 pages, 10 case studies prerendered, no errors or warnings |
 | 20 Nov 2026 | Designzhub360 poster: new asset `dzh-img-poster` (headless captures of designzhub360.com/work at 1440×900 and /work/vssr-exotics/ at 390×844, scrolled first so lazy images load), set as `cardImage` and `heroImage` of `case-study-designzhub360`; the old `dzh-img-hero` (VSSR) is no longer used |
