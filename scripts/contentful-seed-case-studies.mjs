@@ -2392,7 +2392,7 @@ for (const study of marketingCaseStudies) {
   // The top banner (project head, 20 Nov 2026): made only from the institute's real material.
   await upsertAsset(id("img-banner"), "aawaz-institute/hero.webp", "image/webp", "The Aawaz Institute Facebook page on a phone, surrounded by its real Admissions 2027 post, campus photo, and BS in Artificial Intelligence and Mass Communication creatives");
   const images = [
-    ["who", "The AIMS campus building, with the Aawaz Institute of Media & Management Sciences name and contact details"],
+    ["who", "The Aawaz Institute Facebook page in a browser and on a phone"],
     ["panel-creative", "Six AIMS program and course creatives in navy and yellow"],
     ["panel-social", "The Aawaz Institute Facebook page, and its Qawali Night Get Together 2025 event post"],
     ["panel-ads", "The Admissions 2027 post for the four-year BS programs, beside the institute's Facebook page"],
