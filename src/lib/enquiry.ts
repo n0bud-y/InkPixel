@@ -2,9 +2,7 @@ import { contactPage } from "@/content/contact-page";
 
 const { form } = contactPage;
 
-/** What a contact form sends: the Contact page's project form, or the short "Get in touch" form
- *  (About and the service pages). */
-export type Enquiry = {
+type ContactEnquiry = {
   form: "project" | "contact";
   name: string;
   email: string;
@@ -21,9 +19,32 @@ export type Enquiry = {
   website?: string;
 };
 
-/** The email for an enquiry: its subject, and its text (the message, the estimator answers, then
- *  the details), as the site sends it to the studio. */
+/** A service-estimator submission has no visitor identity; it contains the service and answers. */
+type EstimateEnquiry = {
+  form: "estimate";
+  estimate: { name: string; answers: [string, string][] };
+  /** The page the estimator was submitted from. */
+  page?: string;
+  /** Honeypot: hidden from people, so only bots fill it in. */
+  website?: string;
+};
+
+/** What a contact form or a service-page cost estimator sends. */
+export type Enquiry = ContactEnquiry | EstimateEnquiry;
+
+/** The email for an enquiry: its subject and text, as the site sends it to the studio. */
 export function enquiryEmail(enquiry: Enquiry) {
+  if (enquiry.form === "estimate") {
+    return {
+      subject: `Cost estimate request: ${enquiry.estimate.name}`.replace(/\s+/g, " ").trim(),
+      text: [
+        `Service: ${enquiry.estimate.name}`,
+        `${form.estimate.note}:`,
+        ...enquiry.estimate.answers.map(([question, answer]) => `- ${question}: ${answer}`),
+      ].join("\n"),
+    };
+  }
+
   const named = (enquiry.services ?? []).filter((name) => name !== form.notSure);
   const subject =
     enquiry.form === "project"

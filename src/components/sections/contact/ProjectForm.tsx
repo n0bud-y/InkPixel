@@ -21,6 +21,9 @@ type Errors = Partial<Record<TextField, string>>;
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+/** The "Not sure yet" chip's value. */
+const NOT_SURE = "not-sure";
+
 // A white line icon as a shape filled with a colour (CSS mask).
 const maskOf = (src: string): CSSProperties => ({
   maskImage: `url(${src})`,
@@ -36,7 +39,7 @@ const maskOf = (src: string): CSSProperties => ({
 const input =
   "mt-2 block w-full rounded-xl border bg-primary/[0.025] px-4 py-3 text-[clamp(0.9375rem,0.95vw,1.0625rem)] text-primary outline-none transition duration-200 placeholder:text-primary/35 hover:border-primary/25 focus:border-crimson/70 focus:bg-white focus:ring-4 focus:ring-crimson/10";
 const chip =
-  "inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full border px-4 py-2 text-[clamp(0.875rem,0.9vw,1rem)] font-medium transition duration-200 peer-focus-visible:ring-4 peer-focus-visible:ring-crimson/25";
+  "inline-flex min-h-11 items-center gap-2 rounded-full border px-4 py-2 text-[clamp(0.875rem,0.9vw,1rem)] font-medium transition duration-200 peer-focus-visible:ring-4 peer-focus-visible:ring-crimson/25";
 
 // The Contact page's form: name, email, phone, company, the services (chips, several allowed),
 // and the message (no budget field: removed 26 Oct 2026). Submit sends it to the studio's inbox (sendEnquiry,
@@ -48,6 +51,8 @@ const chip =
 //
 // - Errors show under a field when it is left empty or wrong, and on Submit (which then moves
 //   focus to the first one); they clear as soon as the field is fixed.
+// - "Not sure yet" stands alone: choosing it clears the services and locks them until it is
+//   turned off again.
 // - Coming from a cost estimator (/contact?service=<service page>&<question>=<answer>…), its core
 //   service is chosen and the answers show in a box above the message (with "Remove"), and go
 //   into the email. `?service=<core service>` only chooses the service. The address is read in the
@@ -99,7 +104,10 @@ export function ProjectForm({
   };
 
   const toggleService = (slug: string) =>
-    setChosen((current) => (current.includes(slug) ? current.filter((item) => item !== slug) : [...current, slug]));
+    setChosen((current) => {
+      if (slug === NOT_SURE) return current.includes(NOT_SURE) ? [] : [NOT_SURE];
+      return current.includes(slug) ? current.filter((item) => item !== slug) : [...current, slug];
+    });
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -199,8 +207,9 @@ export function ProjectForm({
         </Field>
 
         <ChipGroup legend={form.services.label} hint={form.services.hint}>
-          {[...services, { slug: "not-sure", label: form.notSure, icon: "" }].map((service) => {
+          {[...services, { slug: NOT_SURE, label: form.notSure, icon: "" }].map((service) => {
             const on = chosen.includes(service.slug);
+            const locked = chosen.includes(NOT_SURE) && service.slug !== NOT_SURE;
             return (
               <label key={service.slug} className="relative">
                 <input
@@ -208,11 +217,18 @@ export function ProjectForm({
                   name="service"
                   value={service.slug}
                   checked={on}
+                  disabled={locked}
                   onChange={() => toggleService(service.slug)}
                   className="peer sr-only"
                 />
                 <span
-                  className={`${chip} ${on ? "border-transparent bg-brand-gradient-reverse text-white shadow-[0_10px_24px_-12px_rgb(201_29_76_/_0.8)]" : "border-primary/15 bg-white text-primary hover:border-crimson/40 hover:bg-crimson/[0.03]"}`}
+                  className={`${chip} ${
+                    on
+                      ? "cursor-pointer border-transparent bg-brand-gradient-reverse text-white shadow-[0_10px_24px_-12px_rgb(201_29_76_/_0.8)]"
+                      : locked
+                        ? "cursor-not-allowed border-primary/15 bg-white text-primary opacity-40"
+                        : "cursor-pointer border-primary/15 bg-white text-primary hover:border-crimson/40 hover:bg-crimson/[0.03]"
+                  }`}
                 >
                   {service.icon ? (
                     <span

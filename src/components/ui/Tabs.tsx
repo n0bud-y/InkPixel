@@ -113,7 +113,7 @@ export function TabList({
 
 // Milliseconds the mouse rests on a tab before `selectOnHover` switches to it, so sweeping
 // across the list doesn't flicker through every tab (as in the header menus).
-const HOVER_DELAY = 120;
+const HOVER_DELAY = 60;
 
 export function Tab({
   value,

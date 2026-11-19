@@ -9,10 +9,10 @@ import { env } from "@/env";
 import { enquiryEmail, type Enquiry } from "@/lib/enquiry";
 import { siteConfig } from "@/lib/site";
 
-// The contact forms' server function: checks what was sent, saves it to a backup log on the
-// server, and emails it to the studio (info@inkpixelstudios.com, or CONTACT_TO) with the visitor
-// as Reply-To, so the studio can answer straight from its inbox. The same flow as the studio's
-// PHP form handlers (PHP's mail()), so it needs no settings on cPanel hosting:
+// The contact forms and service estimators' server function: checks what was sent, saves it to a
+// backup log on the server, and emails it to the studio (info@inkpixelstudios.com, or CONTACT_TO).
+// Contact forms include the visitor as Reply-To; estimates contain no visitor identity. The same
+// flow as the studio's PHP form handlers (PHP's mail()), so it needs no settings on cPanel hosting:
 // - Email: through the server's own mail program (sendmail, as PHP's mail() uses), from
 //   info@inkpixelstudios.com. If SMTP_HOST, SMTP_USER, and SMTP_PASSWORD are set, through that
 //   mailbox over SMTP instead.
@@ -22,14 +22,13 @@ import { siteConfig } from "@/lib/site";
 // - The visitor sees "sent" (the thank-you popup) when the email went out or the enquiry was
 //   saved; only when both fail do they get the "try again" line.
 // - Fields are checked again here (types and lengths), whatever the browser did.
-// - Bots: a hidden "website" field that only bots fill in (they get "sent" and nothing is
-//   emailed or saved), and at most 5 enquiries per visitor (IP address) per 10 minutes.
+// - Contact-form bots: a hidden "website" field only bots fill in (they get "sent" and nothing
+//   is emailed or saved). All submissions are limited to 5 per visitor (IP address) per 10 minutes.
 
 const text = (max: number) => z.string().trim().max(max);
 const optional = (max: number) => text(max).optional();
 
-const enquirySchema = z.object({
-  form: z.enum(["project", "contact"]),
+const contactFields = {
   name: text(120).min(1),
   email: z.string().trim().max(254).pipe(z.email()),
   phone: optional(40),
@@ -39,7 +38,21 @@ const enquirySchema = z.object({
   message: text(5000).min(1),
   page: optional(200),
   website: z.string().max(500).optional(),
-});
+};
+const estimateFields = {
+  estimate: z.object({
+    name: text(120).min(1),
+    answers: z.array(z.tuple([text(300), text(300)])).min(1).max(12),
+  }),
+  page: optional(200),
+  website: z.string().max(500).optional(),
+};
+
+const enquirySchema = z.discriminatedUnion("form", [
+  z.object({ ...contactFields, form: z.literal("project") }),
+  z.object({ ...contactFields, form: z.literal("contact") }),
+  z.object({ ...estimateFields, form: z.literal("estimate") }),
+]);
 
 export type EnquiryResult = { ok: true } | { ok: false; reason: "invalid" | "busy" | "unavailable" };
 
@@ -109,14 +122,15 @@ export async function sendEnquiry(input: Enquiry): Promise<EnquiryResult> {
   const { subject, text: body } = enquiryEmail(enquiry);
   const page = enquiry.page ? `${siteConfig.url}${enquiry.page}` : siteConfig.url;
   const { transport, from } = mailer();
+  const source = enquiry.form === "estimate" ? "service estimator" : "contact form";
   let sent = false;
   try {
     await transport.sendMail({
       from: { name: `${siteConfig.name} website`, address: from },
       to: env.CONTACT_TO ?? siteConfig.email,
-      replyTo: { name: enquiry.name, address: enquiry.email },
+      ...(enquiry.form === "estimate" ? {} : { replyTo: { name: enquiry.name, address: enquiry.email } }),
       subject,
-      text: `${body}\n\n—\nSent from the contact form on ${page}`,
+      text: `${body}\n\n—\nSent from the ${source} on ${page}`,
     });
     sent = true;
   } catch (error) {

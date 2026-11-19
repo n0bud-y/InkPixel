@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import { Reveal } from "@/components/motion/Reveal";
 import { withAccent } from "@/components/ui/accent";
 import { Button } from "@/components/ui/Button";
@@ -43,12 +42,9 @@ export async function ServiceProjects({
             className="max-w-[82rem]"
           />
           <div data-reveal className="mt-5">
-            <Link
-              href={page.projects.button.href}
-              className={`inline-flex h-[clamp(2.5rem,2.6vw,3.1rem)] items-center rounded-full border-2 border-crimson/80 px-[clamp(1.25rem,1.6vw,1.9rem)] text-[clamp(0.875rem,0.95vw,1.125rem)] font-semibold text-crimson transition-colors duration-200 hover:border-crimson hover:bg-crimson hover:text-white ${dark ? "bg-white" : ""}`}
-            >
+            <Button href={page.projects.button.href} variant={dark ? "primary" : "primary-reverse"} size="sm">
               {page.projects.button.label}
-            </Link>
+            </Button>
           </div>
         </Reveal>
 
