@@ -2371,8 +2371,9 @@ for (const study of marketingCaseStudies) {
 
 // Aawaz Institute of Media & Management Sciences (AIMS) as a client story (20 Nov 2026, project
 // head; was the last case study in the marketing loop above, with developer-designed stand-in
-// graphics). What we do, as confirmed by the project head: its website (aawaz.edu.pk), Facebook
-// & Instagram, admissions ads and leads, and post and creative design. Facts come from its own
+// graphics). What we do, as confirmed by the project head: Facebook & Instagram, admissions ads
+// and leads, and post and creative design. Not its website (project head, 20 Nov 2026: we handle
+// its socials only), so the website is never claimed; creatives are taken from it. Facts come from its own
 // Facebook page and website (read 20 Nov 2026). No follower counts and no results claimed. Images:
 // the institute's own Facebook cover, screenshots of its website and Facebook page, and its real
 // program and course creatives (from aawaz.edu.pk) and Admissions 2027 creative (from Facebook).
@@ -2390,10 +2391,9 @@ for (const study of marketingCaseStudies) {
   await upsertAsset(id("img-poster"), "aawaz-institute/poster.webp", "image/webp", "Social media post, course card, quote card, and lead form for Aawaz Institute, around a phone showing the post Find Your Voice");
   const images = [
     ["who", "The AIMS campus building, with the Aawaz Institute of Media & Management Sciences name and contact details"],
-    ["panel-website", "The aawaz.edu.pk website: Build Your Future at AIMS, and the Degree Programs page on a phone"],
     ["panel-creative", "Six AIMS program and course creatives in navy and yellow"],
-    ["panel-social", "The Aawaz Institute Facebook page in a browser and on a phone"],
-    ["panel-ads", "The Admissions 2027 creative for the four-year BS programs, beside the Degree Programs page it leads to"],
+    ["panel-social", "The Aawaz Institute Facebook page, and its Qawali Night Get Together 2025 event post"],
+    ["panel-ads", "The Admissions 2027 post for the four-year BS programs, beside the institute's Facebook page"],
     ["creative-1", "Creative: BS in Artificial Intelligence"],
     ["creative-2", "Creative: BS in Digital Media Marketing"],
     ["creative-3", "Creative: BS in Mass Communication, degree awarded by the University of Karachi"],
@@ -2417,7 +2417,7 @@ for (const study of marketingCaseStudies) {
     ["Client", "Media & management institute"],
     ["Location", "Gulshan-e-Iqbal, Karachi"],
     ["Degrees", "Awarded by the University of Karachi"],
-    ["Our work", "Website, social media, ads & creatives"],
+    ["Our work", "Social media, ads & creatives"],
   ];
   for (const [index, [title, text]] of facts.entries()) await item(`who-fact-${index + 1}`, title, text);
   await ensure(
@@ -2441,7 +2441,7 @@ for (const study of marketingCaseStudies) {
   // 2. The problem.
   const challenges = [
     ["Intakes come in waves", "Admissions open for a few months at a time, and each intake has to reach students and parents while it is open."],
-    ["Many programs to explain", "Eight degree programs and six short courses, each needing its own clear message and its own place to apply."],
+    ["Many programs to explain", "Eight degree programs and six short courses, each needing its own clear message."],
     ["Questions before applying", "Students and parents want to see the programs, the fees, and the campus before they decide."],
   ];
   for (const [index, [title, text]] of challenges.entries()) await item(`challenge-${index + 1}`, title, text);
@@ -2461,22 +2461,16 @@ for (const study of marketingCaseStudies) {
   // 3. Where we help: the four parts of the work.
   const help = [
     [
-      "panel-website",
-      "The website, aawaz.edu.pk",
-      "Students compare institutes online, and every program needs a page they can find and apply from.",
-      "We handle the institute's website: each degree program and short course on its own page, the fee structure, the student societies, a blog, and Apply Online on every page.",
+      "panel-social",
+      "Facebook & Instagram",
+      "Students and parents follow the institute between intakes too, for programs, news, and campus life.",
+      "We plan and publish its posts on Facebook and Instagram: programs, admissions news, and events such as the AIMS Annual Dinner and Qawali Night.",
     ],
     [
       "panel-creative",
       "Program & course creatives",
       "Each program and course needs a creative of its own that is still recognisably AIMS.",
-      "We design them in one look: AIMS navy and yellow, a student or a mascot, and the program's name in bold, used on the website and on the social pages.",
-    ],
-    [
-      "panel-social",
-      "Facebook & Instagram",
-      "Students and parents follow the institute between intakes too, for programs, news, and campus life.",
-      "We plan and publish its posts on Facebook and Instagram: programs, admissions news, and events such as the AIMS Annual Dinner and Qawali Night.",
+      "We design them in one look: AIMS navy and yellow, a student or a mascot, and the program's name in bold, used across its social pages and wherever it shows its programs.",
     ],
     [
       "panel-ads",
@@ -2493,8 +2487,8 @@ for (const study of marketingCaseStudies) {
     "caseStudyCards",
     {
       eyebrow: "Where We Help",
-      title: "Four Parts of the *Work*",
-      intro: "From the website to the admissions campaign: what students see before they apply.",
+      title: "Three Parts of the *Work*",
+      intro: "From the first post to the admissions campaign: what students see before they apply.",
       layout: "Story panels",
       image: null,
       images: help.map(([name]) => asset(`img-${name}`)),
@@ -2509,7 +2503,7 @@ for (const study of marketingCaseStudies) {
     "caseStudyGallery",
     {
       title: "A Creative for Every *Program*",
-      intro: "From aawaz.edu.pk and the institute's pages, which we design: one creative per degree program and course, all in the AIMS look.",
+      intro: "The institute's program and course creatives, which we design: one per degree program and course, all in the AIMS look.",
       images: [1, 2, 3, 4, 5, 6, 7, 8].map((n) => asset(`img-creative-${n}`)),
     },
     rewrite,
@@ -2518,8 +2512,8 @@ for (const study of marketingCaseStudies) {
   // 5. How we work.
   const steps = [
     ["Plan each intake", "Each admissions season is planned ahead: which programs to push, when, and to whom."],
-    ["Design the creatives", "Every program and course gets its creative in the AIMS look, for the website and the social pages."],
-    ["Keep the website current", "Programs, fees, and admissions details on aawaz.edu.pk stay up to date for every intake."],
+    ["Design the creatives", "Every program and course gets its creative in the AIMS look."],
+    ["Publish", "Posts and creatives go out on Facebook and Instagram, in each platform's format."],
     ["Run the campaigns", "Admissions ads lead students to Apply Online and to the admissions office."],
     ["Between intakes", "Events, societies, and campus life keep the pages active all year."],
   ];
@@ -2557,20 +2551,20 @@ for (const study of marketingCaseStudies) {
       slug: "aawaz-institute",
       client: link("client-aawaz-institute"),
       excerpt:
-        "How we handle AIMS, Aawaz Institute of Media & Management Sciences: its website, Facebook and Instagram, program creatives, and admissions campaigns.",
-      cardHighlight: "Website, social media, and admissions for a Karachi institute",
-      cardPoints: ["Website aawaz.edu.pk", "Program creatives", "Admissions campaigns"],
+        "How we handle the social media of AIMS, Aawaz Institute of Media & Management Sciences: Facebook and Instagram, program creatives, and admissions campaigns.",
+      cardHighlight: "Social media and admissions campaigns for a Karachi institute",
+      cardPoints: ["Facebook & Instagram", "Program creatives", "Admissions campaigns"],
       cardImage: asset("img-poster"),
       heroLayout: "Dark",
-      heroEyebrow: "Website · Social Media · Admissions",
-      heroHeading: "Aawaz Institute: A Website, Social Media, and *Admissions Campaigns* for AIMS",
+      heroEyebrow: "Social Media · Creatives · Admissions",
+      heroHeading: "Aawaz Institute: Social Media and *Admissions Campaigns* for AIMS",
       heroText:
-        "Aawaz Institute of Media & Management Sciences (AIMS) in Karachi offers degrees awarded by the University of Karachi and short media courses. We handle its website, its Facebook and Instagram, its program creatives, and its admissions campaigns.",
+        "Aawaz Institute of Media & Management Sciences (AIMS) in Karachi offers degrees awarded by the University of Karachi and short media courses. We handle its Facebook and Instagram, its program creatives, and its admissions campaigns.",
       heroButtonLabel: "Start Your Project",
       heroButtonLink: "/contact",
       heroImage: asset("img-poster"),
       sections: ["who", "challenge", "help", "creatives", "process", "cta"].map((name) => link(id(name))),
-      services: ["development", "marketing", "branding"],
+      services: ["marketing", "branding"],
       region: "Pakistan",
     },
     rewrite,
