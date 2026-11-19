@@ -2105,4 +2105,209 @@ for (const study of marketingCaseStudies) {
   );
 }
 
+// Saddam Hussain (20 Nov 2026, project head): we run his social media: his Facebook page
+// (facebook.com/Saddam.SH.17), his YouTube channel (@SaddamSH17), video editing, and coverage of
+// his appearances (all four confirmed by the project head). He is a footballer (the project head
+// first wrote "cricketer"; his own pages say Captain of Pakistan's national football team, and
+// SSGC FC, Karachi; confirmed as football). Facts come from his own pages (20 Nov 2026). No
+// follower, subscriber, or view counts and no results are claimed. Images: screenshots of his
+// pages (the personal email in his Facebook intro is blurred) and thumbnails of his own videos.
+{
+  const id = (name) => `sh-${name}`;
+  const asset = (name) => link(id(name), "Asset");
+  const rewrite = { force: true };
+  const item = (key, title, text) => {
+    if (text.length > 400) throw new Error(`${key}: text is ${text.length} characters (max 400)`);
+    return ensure(id(key), "caseStudyItem", { title, text }, rewrite);
+  };
+
+  const images = [
+    ["hero", "Saddam Hussain's YouTube channel in a browser and his Facebook page on a phone"],
+    ["overview", "Saddam Hussain in his number 17 shirt on match day"],
+    ["facebook", "Saddam Hussain's verified Facebook page in a browser and on a phone"],
+    ["youtube", "Saddam Hussain's YouTube channel, with its banner: Ability is what you're capable of doing"],
+    ["editing", "Thumbnail of the Portfolio highlights video: Saddam Hussain, Pakistan national team captain, midfielder and defender"],
+    ["events", "Saddam Hussain saluting at the guard-changing ceremony at Mazar-e-Quaid: Pakistan Zindabad"],
+  ];
+  for (const [name, alt] of images) await upsertAsset(id(`img-${name}`), `saddam-hussain/${name}.webp`, "image/webp", alt);
+
+  await upsert("client-saddam-hussain", "client", {
+    name: "Saddam Hussain",
+    website: "https://www.facebook.com/Saddam.SH.17/",
+  });
+
+  // 1. Who he is (from his own pages).
+  const facts = [
+    ["Client", "Professional footballer"],
+    ["Role", "Captain, Pakistan national team"],
+    ["Club", "SSGC FC, Karachi"],
+    ["Our work", "Facebook, YouTube, video & events"],
+  ];
+  for (const [index, [title, text]] of facts.entries()) await item(`fact-${index + 1}`, title, text);
+  await ensure(
+    id("overview"),
+    "caseStudySection",
+    {
+      eyebrow: "The Client",
+      title: "Who *Saddam Hussain* Is",
+      body: richText(
+        "Saddam Hussain is a professional footballer and the captain of Pakistan's national football team, wearing number 17. At club level he plays for SSGC FC in Karachi.",
+        "Off the pitch, he appears as a guest of honour at tournaments and ceremonies, shares his training, and speaks about the future of football in Pakistan. His Facebook page and YouTube channel are where his fans follow all of it.",
+      ),
+      image: asset("img-overview"),
+      layout: "Image right",
+      facts: facts.map((_, index) => link(id(`fact-${index + 1}`))),
+      highlight: null,
+    },
+    rewrite,
+  );
+
+  // 2. The problem.
+  const problems = [
+    ["Matches come first", "Match days, training, and travel leave a player little time to post, edit, and keep two pages up to date."],
+    ["Moments happen once", "A guest appearance or a ceremony happens once. If nobody films it and posts it, the moment is gone."],
+    ["Two platforms, one voice", "Facebook and YouTube each need their own format, but both should look and sound like the same person."],
+  ];
+  for (const [index, [title, text]] of problems.entries()) await item(`problem-${index + 1}`, title, text);
+  await ensure(
+    id("problem"),
+    "caseStudyCards",
+    {
+      eyebrow: "The Problem",
+      title: "A Player's Pages Need a *Team*",
+      intro: "Fans want to follow every match, session, and appearance, but a footballer's season leaves no time to run social media.",
+      layout: "Icon grid",
+      items: problems.map((_, index) => link(id(`problem-${index + 1}`))),
+    },
+    rewrite,
+  );
+
+  // 3. Where we help: the four parts of the work.
+  const help = [
+    [
+      "facebook",
+      "His Facebook page",
+      "A verified page that fans follow closely needs regular posts, not bursts between matches.",
+      "We plan and publish his posts, write the captions, and keep the page active around his matches, training, and appearances.",
+    ],
+    [
+      "youtube",
+      "His YouTube channel",
+      "Long videos, match clips, and Shorts need clear titles and a channel that looks like him.",
+      "We upload his videos with their titles, descriptions, and thumbnails, and look after the channel's look, including its banner: Ability is what you're capable of doing.",
+    ],
+    [
+      "editing",
+      "Video editing",
+      "Raw match and training footage doesn't tell a story on its own.",
+      "We edit his videos: the Portfolio highlights reel from his career, a six-part football inspiration series, training sessions, and match-day clips.",
+    ],
+    [
+      "events",
+      "Event coverage",
+      "His appearances as a guest of honour are some of his best moments with fans.",
+      "We cover them on video and in photos: a youth tournament at Askari VI, the guard-changing ceremony at Mazar-e-Quaid, a World Cup night in Karachi, and a Ramadan iftar.",
+    ],
+  ];
+  for (const [index, [, title, need, work]] of help.entries()) {
+    await item(`help-${index + 1}`, title, `The need: ${need}\nWhat we do: ${work}`);
+  }
+  await ensure(
+    id("help"),
+    "caseStudyCards",
+    {
+      eyebrow: "Where We Help",
+      title: "Four Parts of the *Work*",
+      intro: "From the match to the post: everything his fans see on Facebook and YouTube.",
+      layout: "Story panels",
+      image: null,
+      images: help.map(([name]) => asset(`img-${name}`)),
+      items: help.map((_, index) => link(id(`help-${index + 1}`))),
+    },
+    rewrite,
+  );
+
+  // 4. His videos, from his channel.
+  await ensure(
+    id("videos"),
+    "caseStudyVideos",
+    {
+      eyebrow: "The Videos",
+      title: "From His *Channel*",
+      intro: "From Saddam Hussain's YouTube channel, @SaddamSH17, which we handle: highlights, matches, training, and his appearances.",
+      videos: [
+        "https://www.youtube.com/watch?v=NVuXJY3Zls8",
+        "https://www.youtube.com/watch?v=cJnixW-MAxk",
+        "https://www.youtube.com/watch?v=ZDWjLv_KcVY",
+        "https://www.youtube.com/watch?v=mdNx07uEcqc",
+        "https://www.youtube.com/watch?v=j_ZhoOIOIVE",
+        "https://www.youtube.com/watch?v=VzWnQDzS9y0",
+        "https://www.youtube.com/watch?v=0654lIiZ0o8",
+      ],
+    },
+    rewrite,
+  );
+
+  // 5. How we work.
+  const steps = [
+    ["Plan around the season", "Posts are planned around his matches, training, travel, and appearances."],
+    ["Film & photograph", "We cover his events and sessions on video and in photos."],
+    ["Edit", "Footage becomes highlights, match-day clips, training videos, and Shorts."],
+    ["Publish", "Each post and video goes out on Facebook and YouTube with its own caption, title, and thumbnail."],
+    ["Keep one voice", "The same look and tone on both pages, so fans always know it's him."],
+  ];
+  for (const [index, [title, text]] of steps.entries()) await item(`how-${index + 1}`, title, text);
+  await ensure(
+    id("how"),
+    "caseStudyCards",
+    {
+      eyebrow: "How We Work",
+      title: "From the Pitch to the *Post*",
+      layout: "Numbered steps",
+      items: steps.map((_, index) => link(id(`how-${index + 1}`))),
+    },
+    rewrite,
+  );
+
+  // 6. Call to action.
+  await ensure(
+    id("cta"),
+    "caseStudyCallToAction",
+    {
+      title: "An Athlete or Public Figure? We'll Run Your *Pages*.",
+      text: "Tell us where your fans follow you and what you'd like them to see.",
+      buttonLabel: "Get in Touch",
+      buttonLink: "/contact",
+    },
+    rewrite,
+  );
+
+  await ensure(
+    "case-study-saddam-hussain",
+    "caseStudy",
+    {
+      title: "Saddam Hussain",
+      slug: "saddam-hussain",
+      client: link("client-saddam-hussain"),
+      excerpt:
+        "How we run the Facebook page and YouTube channel of Saddam Hussain, captain of Pakistan's national football team: posts, video editing, and event coverage.",
+      cardHighlight: "Social media for Pakistan's football captain",
+      cardPoints: ["Facebook page", "YouTube channel", "Video editing & event coverage"],
+      cardImage: asset("img-hero"),
+      heroLayout: "Dark",
+      heroEyebrow: "Social Media · Video · Events",
+      heroHeading: "Saddam Hussain: Social Media for Pakistan's *Football Captain*",
+      heroText:
+        "Saddam Hussain captains Pakistan's national football team. We run his Facebook page and YouTube channel: the posts, the video editing, and the coverage of his appearances.",
+      heroButtonLabel: "Start Your Project",
+      heroButtonLink: "/contact",
+      heroImage: asset("img-hero"),
+      sections: ["overview", "problem", "help", "videos", "how", "cta"].map((name) => link(id(name))),
+      services: ["marketing"],
+      region: "Pakistan",
+    },
+    rewrite,
+  );
+}
+
 console.log("Done.");
