@@ -349,6 +349,7 @@ Newest first.
 
 | Date | Update |
 |---|---|
+| 20 Nov 2026 | Aawaz video banner: the MP4 (720p) taken from the public LinkedIn post page (`data-sources` of its video element), trimmed to 0–26 s, re-encoded (25 fps, CRF 30, no audio, faststart) as `aawaz-institute/hero-video.mp4` (`aawaz-video-hero`), still `hero-still.webp` (`aawaz-img-hero-still`, frame at 3 s); `cardImage` → `aawaz-img-banner`. Checked locally: video plays, still-only view, 390 px, Our Work box, 0 console errors |
 | 20 Nov 2026 | Aawaz who image: `aawaz-institute/who.webp` re-rendered (Facebook capture in browser and phone frames, transparent background) and replaced on the existing asset `aawaz-img-who` with a new description |
 | 20 Nov 2026 | Aawaz banner: asset `aawaz-img-banner` (`aawaz-institute/hero.webp`, overwriting the unused November stand-in file; 1680×1176 WebP with transparency, rendered from HTML in headless Chrome from the real captures) as `heroImage`; `cardImage` stays the poster. Checked locally at 1440 and 390, layout shift 0, 0 console errors |
 | 20 Nov 2026 | Aawaz social-only: seed block edited (no `panel-website` asset or panel; texts; `services: ["marketing", "branding"]`), `panel-website.webp` removed, `panel-social` and `panel-ads` re-rendered from the Facebook capture and the real event and admissions posts and replaced on the same assets. The old `aawaz-img-panel-website` asset stays in Contentful, unused. Checked locally: no website claim in the page text, 0 console errors, three panels lock and step through |

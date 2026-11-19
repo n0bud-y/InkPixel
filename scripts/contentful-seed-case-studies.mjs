@@ -2391,6 +2391,11 @@ for (const study of marketingCaseStudies) {
   await upsertAsset(id("img-poster"), "aawaz-institute/poster.webp", "image/webp", "Social media post, course card, quote card, and lead form for Aawaz Institute, around a phone showing the post Find Your Voice");
   // The top banner (project head, 20 Nov 2026): made only from the institute's real material.
   await upsertAsset(id("img-banner"), "aawaz-institute/hero.webp", "image/webp", "The Aawaz Institute Facebook page on a phone, surrounded by its real Admissions 2027 post, campus photo, and BS in Artificial Intelligence and Mass Communication creatives");
+  // The banner video (project head, 20 Nov 2026): the first 26 s of the institute's own LinkedIn
+  // post "Orientation Day Highlights | Batch 2029" (campus, stage, crowd, students), without sound
+  // (720p, 25 fps, H.264 CRF 30, 2.1 MB); the still is the stage, "Aaghaz-e-Azm, Batch 2029".
+  await upsertAsset(id("video-hero"), "aawaz-institute/hero-video.mp4", "video/mp4", "AIMS Orientation Day, Batch 2029: the campus, the stage, and new students");
+  await upsertAsset(id("img-hero-still"), "aawaz-institute/hero-still.webp", "image/webp", "The AIMS Orientation Day stage: Aaghaz-e-Azm, Batch 2029, with the panel seated in front");
   const images = [
     ["who", "The Aawaz Institute Facebook page in a browser and on a phone"],
     ["panel-creative", "Six AIMS program and course creatives in navy and yellow"],
@@ -2556,7 +2561,8 @@ for (const study of marketingCaseStudies) {
         "How we handle the social media of AIMS, Aawaz Institute of Media & Management Sciences: Facebook and Instagram, program creatives, and admissions campaigns.",
       cardHighlight: "Social media and admissions campaigns for a Karachi institute",
       cardPoints: ["Facebook & Instagram", "Program creatives", "Admissions campaigns"],
-      cardImage: asset("img-poster"),
+      // The real-image banner (project head, 20 Nov 2026): the Our Work box and the project cards.
+      cardImage: asset("img-banner"),
       heroLayout: "Dark",
       heroEyebrow: "Social Media · Creatives · Admissions",
       heroHeading: "Aawaz Institute: Social Media and *Admissions Campaigns* for AIMS",
@@ -2564,7 +2570,8 @@ for (const study of marketingCaseStudies) {
         "Aawaz Institute of Media & Management Sciences (AIMS) in Karachi offers degrees awarded by the University of Karachi and short media courses. We handle its Facebook and Instagram, its program creatives, and its admissions campaigns.",
       heroButtonLabel: "Start Your Project",
       heroButtonLink: "/contact",
-      heroImage: asset("img-banner"),
+      heroImage: asset("img-hero-still"),
+      heroVideo: asset("video-hero"),
       sections: ["who", "challenge", "help", "creatives", "process", "cta"].map((name) => link(id(name))),
       services: ["marketing", "branding"],
       region: "Pakistan",
