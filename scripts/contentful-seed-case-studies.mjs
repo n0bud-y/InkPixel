@@ -1915,4 +1915,194 @@ for (const study of marketingCaseStudies) {
   );
 }
 
+// Designzhub360 (20 Nov 2026, project head): our ongoing partnership with the agency, from the
+// partnership's case-study brief and what the sites show (screenshots taken 20 Nov 2026). Per the
+// brief: design-only projects are UI/UX design only, never implied to include development; VSSR
+// Exotics is live and gets the most detail; American Port and Groceries Ahead are completed but
+// not live (staging screenshots, no links); no metrics, dates, counts, exclusivity, or contract
+// terms; hosting, SSL, backups, and monitoring are not claimed. Decided with the project head:
+// American Port is described as the marketplace its screens show (the brief's "booking system
+// replacing Velora" did not match them); VSSR is the custom WordPress website (its code shows a
+// WordPress theme) plus the Laravel portal, both ours. No agency logo (not approved).
+{
+  const id = (name) => `dzh-${name}`;
+  const asset = (name) => link(id(name), "Asset");
+  const rewrite = { force: true };
+  const item = (key, title, text) => {
+    if (text.length > 400) throw new Error(`${key}: text is ${text.length} characters (max 400)`);
+    return ensure(id(key), "caseStudyItem", { title, text }, rewrite);
+  };
+
+  const images = [
+    ["hero", "The VSSR Exotics website in a browser and its portal's sign-in page on a phone"],
+    ["overview", "The Designzhub360 website in a browser and on a phone"],
+    ["vssr", "The VSSR Exotics rentals page with its live inventory, and the sign-in page of its portal"],
+    ["ap", "The American Port admin console's sign-in page, and the marketplace's home page on a phone"],
+    ["grocery", "The Groceries Ahead storefront in a browser, and its delivery areas on a phone"],
+    ["phone-vssr", "VSSR Exotics home page on a phone"],
+    ["phone-vssr-rentals", "VSSR Exotics rentals page on a phone"],
+    ["phone-ap", "American Port marketplace home page on a phone"],
+    ["phone-grocery", "Groceries Ahead storefront on a phone"],
+  ];
+  for (const [name, alt] of images) await upsertAsset(id(`img-${name}`), `designzhub360/${name}.webp`, "image/webp", alt);
+
+  await upsert("client-designzhub360", "client", {
+    name: "Designzhub360",
+    website: "https://designzhub360.com",
+  });
+
+  // 1. The partnership.
+  const facts = [
+    ["Partner", "Design & marketing agency"],
+    ["Model", "Ongoing retainer"],
+    ["Design", "Website UI & UX"],
+    ["Production", "Shopify, WordPress, PHP, Laravel"],
+  ];
+  for (const [index, [title, text]] of facts.entries()) await item(`fact-${index + 1}`, title, text);
+  await ensure(
+    id("overview"),
+    "caseStudySection",
+    {
+      eyebrow: "The Partnership",
+      title: "A Production Partner for an *Agency*",
+      body: richText(
+        "Designzhub360 is a design and marketing agency for small businesses, authors, and nonprofits. When its clients need a website, the design and production work can come to us, project after project, under an ongoing retainer.",
+        "That work comes in two kinds. Some projects are design only: we create the website's UI and UX, and our part ends there. Others are assigned to production: we build the site, configure it, and set up its domain. Across the partnership that has meant Shopify, WordPress, PHP, and custom PHP websites, and three larger custom platforms.",
+      ),
+      image: asset("img-overview"),
+      layout: "Image right",
+      facts: facts.map((_, index) => link(id(`fact-${index + 1}`))),
+      highlight: null,
+    },
+    rewrite,
+  );
+
+  // 2. The two kinds of work, and the setup that goes with production.
+  const kinds = [
+    ["UI/UX design", "Page structures, layouts, visual design, and interaction patterns for the agency's client websites. On design-only projects, this is the whole of our part."],
+    ["Production", "For projects assigned to production: the build on Shopify, WordPress, PHP, custom PHP, or Laravel, then the configuration that gets it ready to launch."],
+    ["DNS & domain setup", "DNS records, domain routing, and the setup that connects a finished website or application to its domain."],
+  ];
+  for (const [index, [title, text]] of kinds.entries()) await item(`kind-${index + 1}`, title, text);
+  await ensure(
+    id("model"),
+    "caseStudyCards",
+    {
+      eyebrow: "The Service Model",
+      title: "Two Kinds of *Work*",
+      intro: "Every project the agency sends is scoped as one or the other, and we keep the two apart.",
+      layout: "Icon grid",
+      items: kinds.map((_, index) => link(id(`kind-${index + 1}`))),
+    },
+    rewrite,
+  );
+
+  // 3. The three custom platforms: VSSR Exotics first (live).
+  const builds = [
+    [
+      "vssr",
+      "VSSR Exotics",
+      "Status: Live.\nWhat it is: Exotic car and Slingshot rentals in Las Vegas.\nWhat we built: Its custom WordPress website, where renters browse the live inventory and book online or call, and its Laravel portal, with its own sign-in.",
+    ],
+    [
+      "ap",
+      "American Port",
+      "Status: Completed, not yet live.\nWhat it is: A marketplace for American-made products from independent sellers.\nWhat we built: A custom Laravel marketplace: the storefront, and an admin console for orders, products, vendors, and payouts.",
+    ],
+    [
+      "grocery",
+      "Groceries Ahead",
+      "Status: Completed, not yet live.\nWhat it is: Grocery delivery in the Charleston and Myrtle Beach areas.\nWhat we built: A custom Laravel and Vue storefront that sells products from vendors, with shopping split by delivery area.",
+    ],
+  ];
+  for (const [index, [, title, text]] of builds.entries()) await item(`build-${index + 1}`, title, text);
+  await ensure(
+    id("builds"),
+    "caseStudyCards",
+    {
+      eyebrow: "Featured Projects",
+      title: "Three Custom *Platforms*",
+      intro: "Beyond standard websites, three larger platforms went through the partnership. One is live; two are finished and waiting to launch.",
+      layout: "Story panels",
+      image: null,
+      images: builds.map(([name]) => asset(`img-${name}`)),
+      items: builds.map((_, index) => link(id(`build-${index + 1}`))),
+    },
+    rewrite,
+  );
+
+  // 4. On phones.
+  await ensure(
+    id("mobile"),
+    "caseStudyGallery",
+    {
+      title: "On *Phones*",
+      intro: "VSSR Exotics (live), then American Port and Groceries Ahead (not yet live), on a phone.",
+      images: ["vssr", "vssr-rentals", "ap", "grocery"].map((name) => asset(`img-phone-${name}`)),
+    },
+    rewrite,
+  );
+
+  // 5. How we work with the agency.
+  const steps = [
+    ["The brief", "The agency sends a client project, scoped as design only or as production."],
+    ["UI/UX design", "We design the page structures, layouts, and interactions for the client's website."],
+    ["The build", "On production projects, we build the site on the platform it needs: Shopify, WordPress, PHP, custom PHP, or Laravel."],
+    ["Configuration & DNS", "We configure the site for production and set up its DNS records and domain routing."],
+    ["Ongoing support", "Technical coordination and support with the agency, project after project."],
+  ];
+  for (const [index, [title, text]] of steps.entries()) await item(`how-${index + 1}`, title, text);
+  await ensure(
+    id("how"),
+    "caseStudyCards",
+    {
+      eyebrow: "How We Work",
+      title: "From Agency Brief to *Production*",
+      layout: "Numbered steps",
+      items: steps.map((_, index) => link(id(`how-${index + 1}`))),
+    },
+    rewrite,
+  );
+
+  // 6. Call to action, for agencies.
+  await ensure(
+    id("cta"),
+    "caseStudyCallToAction",
+    {
+      title: "An Agency Needing *Production* Capacity?",
+      text: "Tell us what your clients need, design only or a full build, and we'll talk through how we'd work with you.",
+      buttonLabel: "Get in Touch",
+      buttonLink: "/contact",
+    },
+    rewrite,
+  );
+
+  await ensure(
+    "case-study-designzhub360",
+    "caseStudy",
+    {
+      title: "Designzhub360",
+      slug: "designzhub360",
+      client: link("client-designzhub360"),
+      excerpt:
+        "How we work as a design and production partner for the agency Designzhub360: website UI/UX design, builds on Shopify, WordPress, PHP, and Laravel, and DNS setup, including the live VSSR Exotics platform.",
+      cardHighlight: "Design and production partner for an agency",
+      cardPoints: ["Website UI/UX design", "Shopify, WordPress & Laravel builds", "DNS & domain setup"],
+      cardImage: asset("img-hero"),
+      heroLayout: "Editorial",
+      heroEyebrow: "Agency Partnership",
+      heroHeading: "Designzhub360: An Ongoing Design & *Development Partnership*",
+      heroText:
+        "We are a design and production partner for Designzhub360: we design websites for its clients, build the ones assigned to production on Shopify, WordPress, PHP, and Laravel, and set up their domains.",
+      heroButtonLabel: "Start Your Project",
+      heroButtonLink: "/contact",
+      heroImage: asset("img-hero"),
+      sections: ["overview", "model", "builds", "mobile", "how", "cta"].map((name) => link(id(name))),
+      services: ["development"],
+      region: "United States",
+    },
+    rewrite,
+  );
+}
+
 console.log("Done.");
