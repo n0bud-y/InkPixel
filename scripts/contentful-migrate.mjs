@@ -1,4 +1,4 @@
-// Runs one Contentful migration file against the space and environment in .env.local.
+  // Runs one Contentful migration file against the space and environment in .env.local.
 // Usage: npm run contentful:migrate -- contentful/migrations/<file>.cjs [--yes]
 // It shows the planned changes and asks before applying them (--yes skips the question).
 // Needs CONTENTFUL_MANAGEMENT_TOKEN, which only these scripts use; the website never reads it.
