@@ -3,11 +3,12 @@ import { Magnetic } from "@/components/motion/Magnetic";
 import { Reveal } from "@/components/motion/Reveal";
 import { Button } from "@/components/ui/Button";
 
+// Only figures that can be measured (site review, 20 Nov 2026, project head): "Web development
+// excellence 80%" and "Mobile app development impact 78%" were removed. 100+ projects is the
+// figure used everywhere (About, service pages).
 const stats = [
   { value: 93, suffix: "%", label: "Project satisfaction rate" },
-  { value: 80, suffix: "%", label: "Web development excellence" },
   { value: 100, suffix: "+", label: "Digital projects shipped" },
-  { value: 78, suffix: "%", label: "Mobile app development impact" },
 ];
 
 export function Stats() {

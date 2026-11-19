@@ -111,7 +111,9 @@ const cardClass = [
 
 // The case study's hero image (a product mockup) on a light panel, as on the service pages'
 // project cards. Multiplied, so an image's own white background takes on the panel's colour.
-function Shot({ item, sizes, className = "" }: { item: CaseStudySummary; sizes: string; className?: string }) {
+// `preload`: the featured card's image, the largest thing on the first screen (site review,
+// 20 Nov 2026: it was lazy, so the page's largest paint waited for it).
+function Shot({ item, sizes, className = "", preload = false }: { item: CaseStudySummary; sizes: string; className?: string; preload?: boolean }) {
   return (
     <div className={`relative overflow-hidden bg-linear-to-br from-[#fbe7e3] to-[#f6dfe6] ${className}`}>
       <Image
@@ -120,6 +122,7 @@ function Shot({ item, sizes, className = "" }: { item: CaseStudySummary; sizes: 
         fill
         unoptimized={item.image.isSvg}
         sizes={sizes}
+        preload={preload}
         className="object-contain p-[7%] mix-blend-multiply transition-transform duration-700 ease-out motion-safe:group-hover:scale-[1.04]"
       />
     </div>
@@ -164,7 +167,7 @@ function More() {
 function WideCard({ item, labels }: { item: CaseStudySummary; labels: Map<string, string> }) {
   return (
     <article className={`${cardClass} grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]`}>
-      <Shot item={item} sizes="(min-width: 64rem) 50vw, 100vw" className="aspect-[16/10] lg:order-last lg:aspect-auto lg:min-h-[clamp(22rem,28vw,34rem)]" />
+      <Shot item={item} preload sizes="(min-width: 64rem) 50vw, 100vw" className="aspect-[16/10] lg:order-last lg:aspect-auto lg:min-h-[clamp(22rem,28vw,34rem)]" />
       <div className="flex flex-col p-[clamp(1.5rem,3vw,3.5rem)]">
         <Meta number={1} item={item} labels={labels} />
         <h3 className="mt-[clamp(1.5rem,2.5vw,3rem)] font-display text-[clamp(1.75rem,2.6vw,3.25rem)] leading-[1.08] font-medium tracking-[-0.02em] text-balance text-white lg:mt-auto">

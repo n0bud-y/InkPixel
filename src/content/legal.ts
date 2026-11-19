@@ -40,7 +40,7 @@ export const privacyPolicy: LegalDocument = {
   title: "Privacy *Policy*",
   intro:
     "Welcome to Ink Pixel Studios. We value your privacy and take seriously your personal information that you disclose to us via our site, contact forms, consultations or business interactions.",
-  updated: "23 October 2026",
+  updated: "20 November 2026",
   sections: [
     {
       id: "introduction",
@@ -92,7 +92,9 @@ export const privacyPolicy: LegalDocument = {
         "The information gathered will be dependent upon website technologies and tools being used.",
         "Cookies and other similar technologies are also used.",
         "Cookies, pixels, tags and similar technologies are used on our website to facilitate the website's functionality, for storing preferences, for understanding the behavior of visitors, for measuring the performance of marketing actions and otherwise.",
-        "Non-essential cookies will only be installed where necessary following the proper consent. Consent can also be managed via your browser settings, or any consent-management tool you can find on our site.",
+        // Site review (20 Nov 2026, project head): the site has no consent banner, so the policy says
+        // what actually happens instead of promising prior consent and a consent tool.
+        "We use Google Analytics to understand how visitors use the website. It sets cookies when you visit a page. You can block or delete cookies in your browser settings at any time, and you can stop Google Analytics from collecting your visits with Google's opt-out browser add-on (tools.google.com/dlpage/gaoptout).",
         "Some aspects of the website may be affected if you block some of the cookies.",
       ],
     },

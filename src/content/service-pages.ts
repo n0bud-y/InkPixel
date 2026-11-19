@@ -24,7 +24,6 @@ import domainTravelTourism from "@/assets/images/services/icons/domain-travel-to
 import statClutch from "@/assets/images/services/icons/stat-clutch.png";
 import statGoodfirms from "@/assets/images/services/icons/stat-goodfirms.png";
 import statProjects from "@/assets/images/services/icons/stat-projects.png";
-import statWebExperts from "@/assets/images/services/icons/stat-web-experts.png";
 import stepDesign from "@/assets/images/services/icons/step-design.svg";
 import stepDevelop from "@/assets/images/services/icons/step-develop.svg";
 import stepKickoff from "@/assets/images/services/icons/step-kickoff.svg";
@@ -195,10 +194,10 @@ const webDevelopment: ServicePage = {
     ],
     button: { label: "Talk To Our Experts", href: contact },
   },
-  // As in the design (project head decision, 10 Oct 2026; home and About say 100+ projects).
+  // Site review (20 Nov 2026, project head): 100+ projects, as on the home page and About (was
+  // 500+, as in the design), and no "60+ Experts" per category.
   stats: [
-    { value: 60, suffix: "+", label: "Web Experts", icon: statWebExperts },
-    { value: 500, suffix: "+", label: "Successful Projects", icon: statProjects },
+    { value: 100, suffix: "+", label: "Successful Projects", icon: statProjects },
     { value: 5, suffix: "", decimals: 1, label: "GoodFirms Rating", icon: statGoodfirms },
     { value: 4.8, suffix: "", decimals: 1, label: "Clutch Rating", icon: statClutch },
   ],
@@ -292,7 +291,7 @@ function dummyServicePage(category: ServiceCategory, service: Service): ServiceP
       title: `Our Simple, Frictionless ${category.label} Workflow`,
       text: "We use lean, agile methodology for collaborative work and faster turnarounds, with you involved at every step.",
     },
-    stats: webDevelopment.stats.map((stat, index) => (index === 0 ? { ...stat, label: `${category.label} Experts` } : stat)),
+    stats: webDevelopment.stats,
   };
 }
 

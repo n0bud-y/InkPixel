@@ -9,7 +9,6 @@ import pakArmoring from "@/assets/images/about/clients/pak-armoring.webp";
 import awardRibbon from "@/assets/images/about/icons/award-ribbon.svg";
 import awardStar from "@/assets/images/about/icons/award-star.svg";
 import missionIcon from "@/assets/images/about/icons/mission.svg";
-import statProfessionals from "@/assets/images/about/icons/stat-professionals.svg";
 import statProjects from "@/assets/images/about/icons/stat-projects.svg";
 import statSatisfaction from "@/assets/images/about/icons/stat-satisfaction.svg";
 import statYears from "@/assets/images/about/icons/stat-years.svg";
@@ -74,15 +73,15 @@ export type AboutStat = {
   icon: StaticImageData;
 };
 
-// "Who Are We". Projects and satisfaction match the home page's stats; professionals and years
-// confirmed by the project head (9 Oct 2026).
+// "Who Are We". Projects and satisfaction match the home page's stats; years confirmed by the
+// project head (9 Oct 2026). "500+ Professionals" was removed in the site review (20 Nov 2026,
+// project head): it contradicted the studio's size and the other figures.
 export const whoWeAre = {
   title: "Who *Are We*",
   text: "Ink Pixel Studios stands out as a leading software and digital solutions company in Pakistan because we combine creativity, technical expertise, and business strategy. Our team of skilled professionals is committed to delivering innovative, reliable, and high-quality solutions that help businesses grow, improve efficiency, and achieve measurable results. From web and mobile development to branding and digital marketing, we ensure every project is handled with professionalism and care.",
   stats: [
     { value: 100, suffix: "+", label: "Successful Projects", icon: statProjects },
     { value: 93, suffix: "%", label: "Client Satisfaction", icon: statSatisfaction },
-    { value: 500, suffix: "+", label: "Professionals", icon: statProfessionals },
     { value: 10, suffix: "+ Years", label: "Of Experience", icon: statYears },
   ] satisfies AboutStat[],
   values: [

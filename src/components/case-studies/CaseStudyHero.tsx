@@ -44,8 +44,13 @@ export function CaseStudyHero(props: HeroProps) {
 // size of the image, so stacked at rest they are exactly the image. They share one pace (2s
 // each way) and start up to 0.65s apart, a gentle wave in which overlapping layers stay within a few pixels
 // of each other (further apart, the cut edges between them would show).
-function HeroVisual({ image, layers, sizes }: Pick<HeroProps, "image" | "layers"> & { sizes: string }) {
+// `width`: the image's width classes, matching `sizes` (the width it was shown at before).
+function HeroVisual({ image, layers, sizes, width }: Pick<HeroProps, "image" | "layers"> & { sizes: string; width: string }) {
   if (!layers.length) {
+    // A set width (as in `sizes`, never wider than its column), height from the aspect ratio:
+    // the box is reserved before the image arrives. (Was w-auto h-auto, which ignores the width
+    // and height attributes, so the box was 0 × 0 until it loaded and the page below jumped:
+    // site review, 20 Nov 2026, layout shift 0.198 on G&W Towers.)
     return (
       <Image
         src={image.url}
@@ -55,7 +60,7 @@ function HeroVisual({ image, layers, sizes }: Pick<HeroProps, "image" | "layers"
         unoptimized={image.isSvg}
         preload
         sizes={sizes}
-        className="h-auto w-auto max-w-full"
+        className={`h-auto max-w-full ${width}`}
       />
     );
   }
@@ -117,7 +122,7 @@ function SplitHero({ heading, text, image, layers, client }: HeroProps) {
         </div>
 
         <div className="flex justify-center lg:justify-end">
-          <HeroVisual image={image} layers={layers} sizes="(min-width: 1024px) 46vw, 100vw" />
+          <HeroVisual image={image} layers={layers} sizes="(min-width: 1024px) 46vw, 100vw" width="w-full lg:w-[46vw]" />
         </div>
       </div>
     </section>
@@ -175,7 +180,7 @@ function CenteredHero({ heading, image, layers }: HeroProps) {
             {withAccent(heading)}
         </h1>
         <div className="mt-[clamp(2rem,2.5vw,3rem)] flex justify-center">
-          <HeroVisual image={image} layers={layers} sizes="(min-width: 1280px) 61vw, 100vw" />
+          <HeroVisual image={image} layers={layers} sizes="(min-width: 1280px) 61vw, 100vw" width="w-full xl:w-[61vw]" />
         </div>
       </div>
     </section>
@@ -213,7 +218,7 @@ function LightHero({ eyebrow, heading, text, button, image, layers }: HeroProps)
           )}
         </div>
         <div className="mt-[clamp(1.5rem,2vw,2.5rem)] flex justify-center">
-          <HeroVisual image={image} layers={layers} sizes="(min-width: 1024px) 55vw, 100vw" />
+          <HeroVisual image={image} layers={layers} sizes="(min-width: 1024px) 55vw, 100vw" width="w-full lg:w-[55vw]" />
         </div>
       </div>
     </section>
@@ -277,7 +282,7 @@ function DarkHero({ eyebrow, heading, text, button, image, layers, client }: Her
           )}
         </div>
         <div className="flex justify-center lg:justify-end">
-          <HeroVisual image={image} layers={layers} sizes="(min-width: 1024px) 50vw, 100vw" />
+          <HeroVisual image={image} layers={layers} sizes="(min-width: 1024px) 50vw, 100vw" width="w-full lg:w-[50vw]" />
         </div>
       </div>
     </section>
@@ -332,7 +337,7 @@ function EditorialHero({ eyebrow, heading, text, button, image, layers, client }
             aria-hidden="true"
             className="absolute top-1/2 left-1/2 -z-10 h-[80%] w-[70%] -translate-1/2 rounded-full bg-[radial-gradient(closest-side,rgb(250_97_67_/_0.22),transparent)]"
           />
-          <HeroVisual image={image} layers={layers} sizes="(min-width: 1024px) 70vw, 100vw" />
+          <HeroVisual image={image} layers={layers} sizes="(min-width: 1024px) 70vw, 100vw" width="w-full lg:w-[70vw]" />
         </div>
       </div>
     </section>
