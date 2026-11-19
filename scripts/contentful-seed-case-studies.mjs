@@ -2389,6 +2389,8 @@ for (const study of marketingCaseStudies) {
   };
 
   await upsertAsset(id("img-poster"), "aawaz-institute/poster.webp", "image/webp", "Social media post, course card, quote card, and lead form for Aawaz Institute, around a phone showing the post Find Your Voice");
+  // The top banner (project head, 20 Nov 2026): made only from the institute's real material.
+  await upsertAsset(id("img-banner"), "aawaz-institute/hero.webp", "image/webp", "The Aawaz Institute Facebook page on a phone, surrounded by its real Admissions 2027 post, campus photo, and BS in Artificial Intelligence and Mass Communication creatives");
   const images = [
     ["who", "The AIMS campus building, with the Aawaz Institute of Media & Management Sciences name and contact details"],
     ["panel-creative", "Six AIMS program and course creatives in navy and yellow"],
@@ -2562,7 +2564,7 @@ for (const study of marketingCaseStudies) {
         "Aawaz Institute of Media & Management Sciences (AIMS) in Karachi offers degrees awarded by the University of Karachi and short media courses. We handle its Facebook and Instagram, its program creatives, and its admissions campaigns.",
       heroButtonLabel: "Start Your Project",
       heroButtonLink: "/contact",
-      heroImage: asset("img-poster"),
+      heroImage: asset("img-banner"),
       sections: ["who", "challenge", "help", "creatives", "process", "cta"].map((name) => link(id(name))),
       services: ["marketing", "branding"],
       region: "Pakistan",
