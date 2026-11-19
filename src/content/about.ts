@@ -23,6 +23,7 @@ import aliHassan from "@/assets/images/about/team/ali-hassan.webp";
 import aliyan from "@/assets/images/about/team/aliyan.webp";
 import danishKhalidBari from "@/assets/images/about/team/danish-khalid-bari.webp";
 import isfahanAli from "@/assets/images/about/team/isfahan-ali.webp";
+import khurramRiaz from "@/assets/images/about/team/khurram-riaz.webp";
 import monisBariTeam from "@/assets/images/about/team/monis-bari.webp";
 import muhammadAyyan from "@/assets/images/about/team/muhammad-ayyan.webp";
 import muhammadDaniyal from "@/assets/images/about/team/muhammad-daniyal.webp";
@@ -133,6 +134,8 @@ export const team = {
     { name: "Ali Hassan", role: "Senior Manager - Marketing", photo: aliHassan },
     { name: "Syed Shahnoor Hamza", role: "Senior Manager - Performance Marketing", photo: shahnoorHamza },
     { name: "Syed Taha Ali", role: "Senior Manager - Design", photo: tahaAli },
+    // Added 20 Nov 2026 (project head): next to Syed Taha Ali, in design.
+    { name: "Khurram Riaz", role: "Executive - Design", photo: khurramRiaz },
     { name: "Muhammad Daniyal", role: "Senior Executive - Web Developer", photo: muhammadDaniyal },
     { name: "Muhammad Ayyan", role: "Executive - Web Developer", photo: muhammadAyyan },
     { name: "Shahzaib Moin", role: "Executive - Marketing", photo: shahzaibMoin },
