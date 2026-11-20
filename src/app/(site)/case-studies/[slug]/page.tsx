@@ -79,6 +79,7 @@ export default async function CaseStudyPage(props: PageProps<"/case-studies/[slu
         layers={caseStudy.heroLayers}
         client={caseStudy.client}
         video={caseStudy.heroVideo}
+        services={caseStudy.services}
       />
       <PageSections
         sections={caseStudy.sections}

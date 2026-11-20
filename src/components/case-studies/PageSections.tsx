@@ -8,13 +8,15 @@ import { GallerySection } from "@/components/case-studies/GallerySection";
 import { ResultsSection } from "@/components/case-studies/ResultsSection";
 import { ShowcaseSection } from "@/components/case-studies/ShowcaseSection";
 import { SocialFeedSection } from "@/components/case-studies/SocialFeedSection";
+import { SwotSection } from "@/components/case-studies/SwotSection";
 import { TechStackSection } from "@/components/case-studies/TechStackSection";
 import { VideoSection } from "@/components/case-studies/VideoSection";
 import { TestimonialsSection } from "@/components/case-studies/TestimonialsSection";
 import type { CaseStudySectionData } from "@/contentful/queries/case-studies";
 
 // A case study's or a product's sections from Contentful, in order, alternating navy and white
-// (starting with navy). `largerImage` and `removePadding` list text + image sections (by title)
+// (starting with navy). A SWOT section (always on white, right under the banner) is left out of
+// the alternation, so the sections after it keep their colours. `largerImage` and `removePadding` list text + image sections (by title)
 // that need the design's larger image or no padding around it.
 export function PageSections({
   sections,
@@ -25,7 +27,10 @@ export function PageSections({
   largerImage?: string[];
   removePadding?: string[];
 }) {
-  return sections.map((section, index) => {
+  let index = -1;
+  return sections.map((section) => {
+    if (section.type === "swot") return <SwotSection key={section.id} {...section} />;
+    index += 1;
     const tone = index % 2 === 0 ? "dark" : "light";
     switch (section.type) {
       case "textImage":

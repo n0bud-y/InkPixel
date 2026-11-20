@@ -174,6 +174,16 @@ export type CaseStudyVideosSection = SectionHeadingData & {
   videos: YouTubeVideo[];
 };
 
+/** A SWOT analysis (0018): the client's situation when the work started, as a 2×2 matrix. */
+export type CaseStudySwotSection = SectionHeadingData & {
+  type: "swot";
+  id: string;
+  strengths: string[];
+  weaknesses: string[];
+  opportunities: string[];
+  threats: string[];
+};
+
 export type CaseStudySectionData =
   | CaseStudyTextImageSection
   | CaseStudyTechStackSection
@@ -187,7 +197,8 @@ export type CaseStudySectionData =
   | CaseStudySocialFeedSection
   | CaseStudyFunnelSection
   | CaseStudyResultsSection
-  | CaseStudyVideosSection;
+  | CaseStudyVideosSection
+  | CaseStudySwotSection;
 
 /** "split": logo, heading, and text beside the image, on white. "centered": white heading on
  *  the brand gradient with an arch, image below. "light": eyebrow, heading, text, and button
@@ -212,6 +223,8 @@ export type CaseStudy = {
   /** A video played muted and looping behind the hero text (0017); the hero image is its still.
    *  When set, the hero is the video banner and the layout and layers are not used. */
   heroVideo: VideoFile | null;
+  /** The services ticked in Contentful (slugs from src/content/services.ts). */
+  services: string[];
   /** The logo is only included once the client has approved its use. */
   client: { name: string; logo: ContentfulImage | null } | null;
   sections: CaseStudySectionData[];
@@ -359,6 +372,13 @@ export type SectionData =
       __typename: "CaseStudyVideos";
       videos: (string | null)[] | null;
       filesCollection: { items: VideoAssetData[] } | null;
+    })
+  | (HeadingData & {
+      __typename: "CaseStudySwot";
+      strengths: (string | null)[] | null;
+      weaknesses: (string | null)[] | null;
+      opportunities: (string | null)[] | null;
+      threats: (string | null)[] | null;
     });
 
 type HeadingData = { sys: { id: string }; eyebrow: string | null; title: string | null; intro: string | null };
@@ -378,6 +398,7 @@ type CaseStudyData = {
       heroImage: AssetData;
       heroLayersCollection: { items: AssetData[] } | null;
       heroVideo: VideoAssetData;
+      services: (string | null)[] | null;
       client: { name: string | null; logoApproved: boolean | null; logo: AssetData } | null;
       sectionsCollection: { items: (SectionData | null)[] } | null;
       seo: {
@@ -611,6 +632,18 @@ const MARKETING_SECTION_FIELDS = /* GraphQL */ `
         }
       }
     }
+    ... on CaseStudySwot {
+      sys {
+        id
+      }
+      eyebrow
+      title
+      intro
+      strengths
+      weaknesses
+      opportunities
+      threats
+    }
     ... on CaseStudyVideos {
       sys {
         id
@@ -669,6 +702,7 @@ const CASE_STUDY = /* GraphQL */ `
           contentType
           description
         }
+        services
         client {
           name
           logoApproved
@@ -984,6 +1018,13 @@ export function toSection(item: SectionData | null): CaseStudySectionData[] {
       if (!item.title || (!videos.length && !files.length)) return [];
       return [{ type: "videos", ...toHeading(item, item.title), files, videos }];
     }
+    case "CaseStudySwot": {
+      const list = (values: (string | null)[] | null) => (values ?? []).flatMap((value) => (value?.trim() ? [value.trim()] : []));
+      const swot = { strengths: list(item.strengths), weaknesses: list(item.weaknesses), opportunities: list(item.opportunities), threats: list(item.threats) };
+      // Hidden unless every quadrant has a point.
+      if (!item.title || Object.values(swot).some((points) => !points.length)) return [];
+      return [{ type: "swot", ...toHeading(item, item.title), ...swot }];
+    }
     default:
       return [];
   }
@@ -1061,6 +1102,7 @@ export const getCaseStudy = cache(async (slug: string): Promise<CaseStudy | null
     heroImage,
     heroLayers: toLayers(item.heroLayersCollection?.items ?? []),
     heroVideo: toVideoFile(item.heroVideo),
+    services: (item.services ?? []).filter((service): service is string => Boolean(service)),
     client: item.client?.name
       ? { name: item.client.name, logo: item.client.logoApproved ? toImage(item.client.logo) : null }
       : null,

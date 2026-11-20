@@ -720,6 +720,106 @@ async function ensure(id, contentType, fields, { force = false } = {}) {
   console.log(`  updated and published: ${id} (${changed.join(", ")})`);
 }
 
+// SWOT analyses (20 Nov 2026, project head; section type 0018): one per case study, right under
+// the banner. Written only from facts on each case study and the client's public pages, as the
+// situation when our work started; the sections below each one show how the weaknesses and threats
+// were worked on. No numbers. Created here, before the case studies that link to them.
+const swots = {
+  gulbaan: [
+    "Gulbaan",
+    ["Fresh, premium flower arrangements for many occasions", "Delivery across Lahore and Islamabad", "A gift people buy for their most personal moments"],
+    ["No dedicated online store: browsing and ordering online wasn't easy", "Products needed a presentation as appealing as the flowers themselves"],
+    ["More people ordering gifts online in Lahore and Islamabad", "Browsing by occasion, from birthdays to apologies"],
+    ["Customers expect buying online to feel as good as buying in person", "Other online florists and gift shops competing for the same orders"],
+  ],
+  "cathy-obryans-books": [
+    "Cathy O’Bryan",
+    ["A body of work across novels, personal stories, paintings, and illustrations", "Book covers and artwork with a strong visual identity of their own"],
+    ["Books and artwork spread out, with no single place to find them all", "Long chapters that are hard to read on a phone without a proper reader"],
+    ["One app on iOS and Android for reading and browsing her art", "Secure payments and social features that bring readers closer to the author"],
+    ["So much content that an app could easily feel crowded", "Artwork losing its impact if shown poorly on small screens"],
+  ],
+  "drumond-auto-body": [
+    "Drumond Auto Body",
+    ["A family-owned body shop in Framingham, Massachusetts", "Real Google reviews from its customers", "A detailed brief with the exact words for every page"],
+    ["Review counts on the old site were typed by hand and out of date", "No page explaining insurance claims", "Nothing showed the people who work on the cars"],
+    ["Drivers in the many towns around Framingham", "Insurance questions it could answer before the first call"],
+    ["Visitors arrive stressed and on a phone, just after an accident", "Unapproved changes to the live site could cost the shop enquiries"],
+  ],
+  "pak-armoring": [
+    "Pak Armoring",
+    ["Armors cars, SUVs, pickups, vans, and buses in Karachi", "Builds its own armored vehicles, such as the BAAZ", "A range of more than thirty models"],
+    ["Buyers couldn't see the work before getting in touch", "A range too wide to explain without a page for each vehicle"],
+    ["Video: vehicle launches, walkthroughs, and live-fire tests", "Buyers from families to banks to law enforcement"],
+    ["A high-trust purchase: buyers need proof before they call", "Each kind of buyer needs different information to choose"],
+  ],
+  "gw-towers": [
+    "G&W Towers",
+    ["A prime location in Clifton, Karachi", "Sea-facing apartments", "Bank financing available"],
+    ["Buyers can't walk through an apartment online", "Enquiries needed a clear way to reach the sales team"],
+    ["Short video on TikTok, Facebook, and Instagram", "Ads that reach people looking for apartments in Karachi"],
+    ["Buyers compare many projects before they book", "A property purchase needs trust before the first visit"],
+  ],
+  "in-house-recruitment": [
+    "In-house Recruitment",
+    ["An established UK membership community for in-house recruiters", "A website, member portal, CRM, and learning platform already in place"],
+    ["Profile changes had to be made twice: in the portal and in HubSpot", "LearnWorlds accounts were created by hand for every member", "Pages that didn't display properly on phones"],
+    ["Connecting the systems through their APIs", "A faster website and server"],
+    ["Member records drifting out of step between systems", "Slow pages and server bottlenecks affecting members"],
+  ],
+  designzhub360: [
+    "Designzhub360",
+    ["A design and marketing agency for small businesses, authors, and nonprofits", "A steady flow of client websites"],
+    ["Every project needs design, and many need a full build: skills not always kept in-house", "Larger projects need custom platforms beyond standard sites"],
+    ["Offering custom platforms such as VSSR Exotics to its clients", "A production partner on an ongoing retainer"],
+    ["Several client deadlines running at once", "Scope confusion between design-only and production projects"],
+  ],
+  "saddam-hussain": [
+    "Saddam Hussain",
+    ["Captain of Pakistan's national football team", "A verified Facebook page and his own YouTube channel", "Appearances at tournaments and ceremonies"],
+    ["Little time to post around matches, training, and travel", "Raw footage that needs editing before fans can enjoy it"],
+    ["Highlights, training, and match-day videos", "Guest appearances worth covering for his fans"],
+    ["Moments that happen once are lost if nobody films them", "Two platforms that could drift into different styles"],
+  ],
+  "ng-interiors-constructions": [
+    "NG Interiors & Constructions",
+    ["An interior design and construction studio for homes and commercial spaces", "Real projects, from Greens 3 in Clifton to the NRTC building", "A strong visual brand: the Naila Gulistan logo"],
+    ["Months of work often shown as a single photo", "Studio visits by appointment only"],
+    ["Before-and-after and site videos for Instagram and TikTok", "Ads that bring consultation enquiries"],
+    ["Slow, physical work competing on fast, visual platforms", "Three platforms that should still look like one studio"],
+  ],
+  "aawaz-institute": [
+    "AIMS",
+    ["Degrees awarded by the University of Karachi", "Eight degree programs and six short courses", "A campus in Gulshan-e-Iqbal, Karachi, with student societies"],
+    ["Many programs, each needing its own message", "Admissions open for only part of the year"],
+    ["A creative for every program and course", "Admissions campaigns on Facebook and Instagram", "Events such as Qawali Night for year-round content"],
+    ["Other institutes recruiting in the same season", "Students and parents with many questions before they apply"],
+  ],
+};
+
+/** The SWOT entry id for a case study. */
+const swotId = (slug) => `swot-${slug}`;
+
+for (const [slug, [name, strengths, weaknesses, opportunities, threats]] of Object.entries(swots)) {
+  for (const point of [...strengths, ...weaknesses, ...opportunities, ...threats]) {
+    if (point.length > 220) throw new Error(`${slug}: SWOT point over 220 characters: ${point}`);
+  }
+  await ensure(
+    swotId(slug),
+    "caseStudySwot",
+    {
+      eyebrow: "SWOT Analysis",
+      title: `Where ${name} *Stood*`,
+      intro: `${name}'s strengths, weaknesses, opportunities, and threats when our work began. The sections below show how we worked on the weaknesses and threats.`,
+      strengths,
+      weaknesses,
+      opportunities,
+      threats,
+    },
+    { force: true },
+  );
+}
+
 for (const study of marketingCaseStudies) {
   const { key, slug, client } = study;
   const plan = pagePlans[key];
@@ -1130,7 +1230,7 @@ for (const study of marketingCaseStudies) {
       // Our Work box shows the card image (the logo) for case studies with a video banner.
       heroImage: asset("img-hero-still"),
       heroVideo: asset("video-hero"),
-      sections: ["overview", "problem", "help", "videos", "social", "how", "website", "cta"].map((name) => link(id(name))),
+      sections: [link(swotId("pak-armoring")), ...["overview", "problem", "help", "videos", "social", "how", "website", "cta"].map((name) => link(id(name)))],
       services: ["development", "marketing"],
       region: "Pakistan",
     },
@@ -1344,7 +1444,7 @@ for (const study of marketingCaseStudies) {
       heroText:
         "G&W Towers is a residential tower in Clifton, Karachi, by Godils & Wakeels. We produce its videos, run its TikTok, Facebook, and Instagram, and run the ads that bring buyer enquiries.",
       heroImage: asset("img-poster"),
-      sections: ["overview", "help", "film", "scenes", "how", "cta"].map((name) => link(id(name))),
+      sections: [link(swotId("gw-towers")), ...["overview", "help", "film", "scenes", "how", "cta"].map((name) => link(id(name)))],
       industries: ["real-estate"],
       services: ["marketing"],
       region: "Pakistan",
@@ -1533,7 +1633,7 @@ for (const study of marketingCaseStudies) {
       heroText:
         "We rebuilt the website of a family-owned body shop in Framingham, MA from a detailed brief: six pages on WordPress and Elementor, a ZIP code check for the towns it serves, and Google reviews that stay current.",
       heroImage: asset("img-hero"),
-      sections: ["overview", "built", "mobile", "how", "cta"].map((name) => link(id(name))),
+      sections: [link(swotId("drumond-auto-body")), ...["overview", "built", "mobile", "how", "cta"].map((name) => link(id(name)))],
       services: ["development"],
       region: "United States",
     },
@@ -1751,7 +1851,7 @@ for (const study of marketingCaseStudies) {
       // The banner video's still. The poster (case-study box, project cards) stays the card image.
       heroImage: asset("img-hero-still"),
       heroVideo: asset("video-hero"),
-      sections: ["overview", "systems", "solved", "mobile", "how", "cta"].map((name) => link(id(name))),
+      sections: [link(swotId("in-house-recruitment")), ...["overview", "systems", "solved", "mobile", "how", "cta"].map((name) => link(id(name)))],
       services: ["development"],
       region: "United Kingdom",
     },
@@ -1943,7 +2043,7 @@ for (const study of marketingCaseStudies) {
       heroButtonLabel: "Start Your Project",
       heroButtonLink: "/contact",
       heroImage: asset("img-poster"),
-      sections: ["overview", "model", "builds", "mobile", "how", "cta"].map((name) => link(id(name))),
+      sections: [link(swotId("designzhub360")), ...["overview", "model", "builds", "mobile", "how", "cta"].map((name) => link(id(name)))],
       services: ["development"],
       region: "United States",
     },
@@ -2150,7 +2250,7 @@ for (const study of marketingCaseStudies) {
       heroButtonLabel: "Start Your Project",
       heroButtonLink: "/contact",
       heroImage: asset("img-hero"),
-      sections: ["overview", "problem", "help", "videos", "how", "cta"].map((name) => link(id(name))),
+      sections: [link(swotId("saddam-hussain")), ...["overview", "problem", "help", "videos", "how", "cta"].map((name) => link(id(name)))],
       services: ["marketing"],
       region: "Pakistan",
     },
@@ -2362,7 +2462,7 @@ for (const study of marketingCaseStudies) {
       heroButtonLabel: "Start Your Project",
       heroButtonLink: "/contact",
       heroImage: asset("img-poster"),
-      sections: ["who", "challenge", "help", "before-after", "work", "process", "cta"].map((name) => link(id(name))),
+      sections: [link(swotId("ng-interiors-constructions")), ...["who", "challenge", "help", "before-after", "work", "process", "cta"].map((name) => link(id(name)))],
       industries: ["real-estate"],
       services: ["marketing", "branding"],
       region: "Pakistan",
@@ -2574,12 +2674,34 @@ for (const study of marketingCaseStudies) {
       heroButtonLink: "/contact",
       heroImage: asset("img-hero-still"),
       heroVideo: asset("video-hero"),
-      sections: ["who", "challenge", "help", "creatives", "process", "cta"].map((name) => link(id(name))),
+      sections: [link(swotId("aawaz-institute")), ...["who", "challenge", "help", "creatives", "process", "cta"].map((name) => link(id(name)))],
       services: ["marketing", "branding"],
       region: "Pakistan",
     },
     rewrite,
   );
+}
+
+// The SWOT section first on the case studies created once above (Gulbaan, Cathy O'Bryan's Books;
+// 20 Nov 2026): only their sections list changes, and only while they have no unpublished changes,
+// so editors' work is kept.
+for (const slug of ["gulbaan", "cathy-obryans-books"]) {
+  const entry = await cma(`/entries/case-study-${slug}`);
+  if (!entry) continue;
+  if (entry.sys.version > (entry.sys.publishedVersion ?? 0) + 1) {
+    console.log(`  draft changes, skipped: case-study-${slug} (SWOT)`);
+    continue;
+  }
+  const sections = entry.fields.sections?.[locale] ?? [];
+  if (sections[0]?.sys?.id === swotId(slug)) continue;
+  entry.fields.sections = { [locale]: [link(swotId(slug)), ...sections.filter((item) => item.sys.id !== swotId(slug))] };
+  const updated = await cma(`/entries/case-study-${slug}`, {
+    method: "PUT",
+    body: { fields: entry.fields },
+    headers: { "X-Contentful-Version": String(entry.sys.version) },
+  });
+  await cma(`/entries/case-study-${slug}/published`, { method: "PUT", headers: { "X-Contentful-Version": String(updated.sys.version) } });
+  console.log(`  updated and published: case-study-${slug} (SWOT first)`);
 }
 
 console.log("Done.");

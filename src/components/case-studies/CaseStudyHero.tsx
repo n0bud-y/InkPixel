@@ -5,6 +5,7 @@ import { withAccent } from "@/components/ui/accent";
 import { Button } from "@/components/ui/Button";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import type { CaseStudy, VideoFile } from "@/contentful/queries/case-studies";
+import { HeroAnalytics } from "./HeroAnalytics";
 import { HeroVideo } from "./HeroVideo";
 
 type HeroProps = {
@@ -18,6 +19,9 @@ type HeroProps = {
   client: CaseStudy["client"];
   /** A video behind the hero (0017): the banner layout, whatever `layout` says. */
   video?: VideoFile | null;
+  /** Case studies: their services, for the decorative dashboard cards around the image
+   *  (HeroAnalytics). Left out on product pages, which have none. */
+  services?: string[];
 };
 
 // Top of a case study, in one of three layouts (picked per case study in Contentful). The text
@@ -45,7 +49,19 @@ export function CaseStudyHero(props: HeroProps) {
 // each way) and start up to 0.65s apart, a gentle wave in which overlapping layers stay within a few pixels
 // of each other (further apart, the cut edges between them would show).
 // `width`: the image's width classes, matching `sizes` (the width it was shown at before).
-function HeroVisual({ image, layers, sizes, width }: Pick<HeroProps, "image" | "layers"> & { sizes: string; width: string }) {
+function HeroVisual(props: Pick<HeroProps, "image" | "layers" | "services"> & { sizes: string; width: string }) {
+  const { services, width } = props;
+  if (!services) return <HeroImage {...props} />;
+  // With the dashboard cards: the box takes the image's width, the image fills it.
+  return (
+    <div className={`relative max-w-full ${width}`}>
+      <HeroImage {...props} width="w-full" />
+      <HeroAnalytics services={services} />
+    </div>
+  );
+}
+
+function HeroImage({ image, layers, sizes, width }: Pick<HeroProps, "image" | "layers"> & { sizes: string; width: string }) {
   if (!layers.length) {
     // A set width (as in `sizes`, never wider than its column), height from the aspect ratio:
     // the box is reserved before the image arrives. (Was w-auto h-auto, which ignores the width
@@ -92,7 +108,7 @@ function HeroVisual({ image, layers, sizes, width }: Pick<HeroProps, "image" | "
 
 // On white (the header is white on case-study pages): the client's logo (once approved), the
 // gradient heading and the intro on the left, the image on the right.
-function SplitHero({ heading, text, image, layers, client }: HeroProps) {
+function SplitHero({ heading, text, image, layers, client, services }: HeroProps) {
   return (
     <section aria-labelledby="case-study-title" className="relative isolate overflow-hidden bg-white">
       <div className="container-site grid grid-cols-[minmax(0,1fr)] items-center gap-10 pt-32 pb-[clamp(4rem,5.85vw,7rem)] sm:pt-36 lg:grid-cols-2 lg:gap-[clamp(2rem,4vw,6rem)] lg:pt-40 2xl:pt-48">
@@ -122,7 +138,7 @@ function SplitHero({ heading, text, image, layers, client }: HeroProps) {
         </div>
 
         <div className="flex justify-center lg:justify-end">
-          <HeroVisual image={image} layers={layers} sizes="(min-width: 1024px) 46vw, 100vw" width="w-full lg:w-[46vw]" />
+          <HeroVisual image={image} layers={layers} services={services} sizes="(min-width: 1024px) 46vw, 100vw" width="w-full lg:w-[46vw]" />
         </div>
       </div>
     </section>
@@ -140,7 +156,7 @@ const coral = { stopColor: "var(--coral)" };
 
 // The white heading on the brand gradient (at 50% over navy), with the arch behind the image.
 // The artwork is anchored to the bottom and cropped at the sides on narrow screens.
-function CenteredHero({ heading, image, layers }: HeroProps) {
+function CenteredHero({ heading, image, layers, services }: HeroProps) {
   return (
     <section aria-labelledby="case-study-title" className="relative isolate overflow-hidden bg-primary">
       <svg
@@ -180,7 +196,7 @@ function CenteredHero({ heading, image, layers }: HeroProps) {
             {withAccent(heading)}
         </h1>
         <div className="mt-[clamp(2rem,2.5vw,3rem)] flex justify-center">
-          <HeroVisual image={image} layers={layers} sizes="(min-width: 1280px) 61vw, 100vw" width="w-full xl:w-[61vw]" />
+          <HeroVisual image={image} layers={layers} services={services} sizes="(min-width: 1280px) 61vw, 100vw" width="w-full xl:w-[61vw]" />
         </div>
       </div>
     </section>
@@ -189,7 +205,7 @@ function CenteredHero({ heading, image, layers }: HeroProps) {
 
 // On cream with the faint network lines (the home page's Process background): the eyebrow,
 // heading, text, and button centred, then the image, which runs to the bottom of the section.
-function LightHero({ eyebrow, heading, text, button, image, layers }: HeroProps) {
+function LightHero({ eyebrow, heading, text, button, image, layers, services }: HeroProps) {
   return (
     <section aria-labelledby="case-study-title" className="relative isolate overflow-hidden bg-[#fffdfa]">
       <Image src={network} alt="" fill sizes="100vw" className="-z-10 object-cover" />
@@ -218,7 +234,7 @@ function LightHero({ eyebrow, heading, text, button, image, layers }: HeroProps)
           )}
         </div>
         <div className="mt-[clamp(1.5rem,2vw,2.5rem)] flex justify-center">
-          <HeroVisual image={image} layers={layers} sizes="(min-width: 1024px) 55vw, 100vw" width="w-full lg:w-[55vw]" />
+          <HeroVisual image={image} layers={layers} services={services} sizes="(min-width: 1024px) 55vw, 100vw" width="w-full lg:w-[55vw]" />
         </div>
       </div>
     </section>
@@ -246,7 +262,7 @@ function LogoChip({ client }: Pick<HeroProps, "client">) {
 
 // On navy with the faint grid and a crimson glow behind the image: the logo, eyebrow, white
 // heading (accent words in the gradient), text, and button on the left, the image on the right.
-function DarkHero({ eyebrow, heading, text, button, image, layers, client }: HeroProps) {
+function DarkHero({ eyebrow, heading, text, button, image, layers, client, services }: HeroProps) {
   return (
     <section aria-labelledby="case-study-title" className="relative isolate overflow-hidden bg-primary">
       <div aria-hidden="true" className="absolute inset-0 -z-10 bg-grid [mask-image:linear-gradient(to_bottom,#000,transparent_85%)]" />
@@ -282,7 +298,7 @@ function DarkHero({ eyebrow, heading, text, button, image, layers, client }: Her
           )}
         </div>
         <div className="flex justify-center lg:justify-end">
-          <HeroVisual image={image} layers={layers} sizes="(min-width: 1024px) 50vw, 100vw" width="w-full lg:w-[50vw]" />
+          <HeroVisual image={image} layers={layers} services={services} sizes="(min-width: 1024px) 50vw, 100vw" width="w-full lg:w-[50vw]" />
         </div>
       </div>
     </section>
@@ -292,7 +308,7 @@ function DarkHero({ eyebrow, heading, text, button, image, layers, client }: Her
 // On white with the faint navy grid: the eyebrow and a very large heading across the page, then
 // the text (and logo) beside the button, a thin rule, and the image across the page below on a
 // soft brand glow.
-function EditorialHero({ eyebrow, heading, text, button, image, layers, client }: HeroProps) {
+function EditorialHero({ eyebrow, heading, text, button, image, layers, client, services }: HeroProps) {
   return (
     <section aria-labelledby="case-study-title" className="relative isolate overflow-hidden bg-white bg-grid-light">
       <div className="container-site pt-32 sm:pt-36 lg:pt-40 2xl:pt-48">
@@ -337,7 +353,7 @@ function EditorialHero({ eyebrow, heading, text, button, image, layers, client }
             aria-hidden="true"
             className="absolute top-1/2 left-1/2 -z-10 h-[80%] w-[70%] -translate-1/2 rounded-full bg-[radial-gradient(closest-side,rgb(250_97_67_/_0.22),transparent)]"
           />
-          <HeroVisual image={image} layers={layers} sizes="(min-width: 1024px) 70vw, 100vw" width="w-full lg:w-[70vw]" />
+          <HeroVisual image={image} layers={layers} services={services} sizes="(min-width: 1024px) 70vw, 100vw" width="w-full lg:w-[70vw]" />
         </div>
       </div>
     </section>
@@ -347,13 +363,18 @@ function EditorialHero({ eyebrow, heading, text, button, image, layers, client }
 // A full-width banner with the video playing behind it (the hero image is its still), darkened
 // on the left (on phones, all over) so the logo, eyebrow, white heading, text, and button read on
 // any frame; a fade at the bottom into the navy.
-function VideoHero({ eyebrow, heading, text, button, image, client, video }: HeroProps & { video: VideoFile }) {
+function VideoHero({ eyebrow, heading, text, button, image, client, video, services }: HeroProps & { video: VideoFile }) {
   return (
     <section
       aria-labelledby="case-study-title"
       className="relative isolate flex min-h-[min(100svh,60rem)] items-center overflow-hidden bg-primary"
     >
       <HeroVideo video={video} still={image} />
+      {services && (
+        <div className="pointer-events-none absolute top-[22%] right-[6vw] bottom-[18%] hidden w-[30vw] lg:block">
+          <HeroAnalytics services={services} />
+        </div>
+      )}
       <div aria-hidden="true" className="absolute inset-0 -z-10 bg-primary/65 lg:hidden" />
       <div
         aria-hidden="true"
