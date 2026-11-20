@@ -2397,13 +2397,13 @@ for (const study of marketingCaseStudies) {
     rewrite,
   );
 
-  // 5. The real work: covers of the studio's own project videos.
+  // 5. The real work: covers of the studio's TikTok videos, shown as reels (`reelGalleries`).
   await ensure(
     id("work"),
     "caseStudyGallery",
     {
-      title: "From the *Site*",
-      intro: "From the studio's TikTok, @nginteriorsconstructions, which we handle: walkthroughs, artisans at work, and the change from bare site to finished room.",
+      title: "Reels We Make on *TikTok*",
+      intro: "Project videos we film, edit, and post on the studio's TikTok: a walkthrough, artisans at work, a space from bare walls to a finished room.",
       images: [1, 2, 3, 4].map((n) => asset(`img-site-${n}`)),
     },
     rewrite,
