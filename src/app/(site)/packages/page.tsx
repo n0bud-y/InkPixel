@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
+import type { CSSProperties } from "react";
 import { CallToActionSection } from "@/components/case-studies/CallToActionSection";
 import { CaseStudyHeading, CaseStudySectionFrame } from "@/components/case-studies/CaseStudySection";
 import { Reveal } from "@/components/motion/Reveal";
@@ -17,6 +17,18 @@ export function generateMetadata(): Metadata {
   // Not indexed until the project head approves the packages (packagesLive).
   return pageMetadata({ title: "Packages", description, path: "/packages", noIndex: !packagesLive });
 }
+
+// A service's icon (its first sub-service's), painted in the brand gradient through its shape.
+const maskOf = (src: string): CSSProperties => ({
+  maskImage: `url(${src})`,
+  maskSize: "contain",
+  maskRepeat: "no-repeat",
+  maskPosition: "center",
+  WebkitMaskImage: `url(${src})`,
+  WebkitMaskSize: "contain",
+  WebkitMaskRepeat: "no-repeat",
+  WebkitMaskPosition: "center",
+});
 
 // "From PKR 80,000" (the lowest set price), or "Get a quote" while no price is set.
 function fromLabel(service: (typeof servicePackages)[number]) {
@@ -72,16 +84,16 @@ export default function PackagesPage() {
                   href={href}
                   className="group flex h-full flex-col overflow-hidden rounded-[1.25rem] border border-primary/10 bg-white shadow-[0_20px_50px_-35px_rgb(21_25_54_/_0.5)] transition-[translate,box-shadow,border-color] duration-500 ease-out outline-offset-4 hover:-translate-y-1 hover:border-crimson/30 hover:shadow-[0_30px_60px_-30px_rgb(201_29_76_/_0.4)] focus-visible:outline-2 focus-visible:outline-coral"
                 >
-                  <div className="relative aspect-[16/9] overflow-hidden bg-primary">
-                    <Image
-                      src={category.image}
-                      alt=""
-                      fill
-                      sizes="(min-width: 1280px) 30vw, (min-width: 768px) 45vw, 92vw"
-                      className="object-cover transition-transform duration-700 ease-out motion-safe:group-hover:scale-[1.04]"
-                    />
-                  </div>
                   <div className="flex flex-1 flex-col p-[clamp(1.25rem,1.6vw,1.75rem)]">
+                    {category.services[0] && (
+                      <span className="mb-5 grid size-14 place-items-center rounded-2xl bg-primary/[0.04] ring-1 ring-primary/[0.07]">
+                        <span
+                          aria-hidden="true"
+                          className="block size-8 bg-brand-gradient-reverse transition-transform duration-300 group-hover:scale-110"
+                          style={maskOf(category.services[0].icon.src)}
+                        />
+                      </span>
+                    )}
                     <h3 className="font-display text-[clamp(1.25rem,1.5vw,1.75rem)] leading-tight font-semibold text-primary">
                       {category.label} Packages
                     </h3>
