@@ -1,5 +1,12 @@
 import type { NextConfig } from "next";
 
+// Builds on the cPanel server (LOW_MEMORY_BUILD=1, set by scripts/deploy-cpanel.sh): the hosting
+// caps an account's memory, and a build killed half-way leaves the site down (20 Nov 2026). These
+// builds compile in Webpack's separate worker (off by default here because of the custom webpack
+// config below), with its memory optimisations, no source maps, no disk cache, and no TypeScript
+// check (run locally before each commit: npx tsc --noEmit). Other builds are unchanged.
+const lowMemory = process.env.LOW_MEMORY_BUILD === "1";
+
 const nextConfig: NextConfig = {
   // The live site runs on cPanel (Node.js app): `next build` also writes a self-contained server
   // to .next/standalone (server.js and only the packages it needs), which is what gets uploaded.
@@ -28,6 +35,8 @@ const nextConfig: NextConfig = {
   // for Turbopack (scripts/deploy-cpanel.sh). Each build writes the files into .next/static/media:
   // the server build from its own output folder, as Next.js's image loader does.
   webpack(config, { isServer, dev, nextRuntime }) {
+    // Low-memory builds: Webpack keeps its cache in memory only (the docs' memory guide).
+    if (lowMemory && config.cache && !dev) config.cache = Object.freeze({ type: "memory" as const });
     const prefix = !isServer ? "" : dev || nextRuntime === "edge" ? ".." : "../..";
     config.module.rules.push({
       test: /\.mp4$/,
@@ -40,7 +49,9 @@ const nextConfig: NextConfig = {
     // but caps the processes an account may start (spawn EAGAIN), so its build sets
     // NEXT_BUILD_CPUS=1 (scripts/deploy-cpanel.sh). Unset elsewhere.
     cpus: Number(process.env.NEXT_BUILD_CPUS) || undefined,
+    ...(lowMemory && { webpackBuildWorker: true, webpackMemoryOptimizations: true, serverSourceMaps: false }),
   },
+  ...(lowMemory && { enablePrerenderSourceMaps: false, typescript: { ignoreBuildErrors: true } }),
   images: {
     // Case-study and blog images come from Contentful's image server, from our space only.
     remotePatterns: [

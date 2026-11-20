@@ -1,12 +1,16 @@
 #!/usr/bin/env bash
 # Deploys the live site on the cPanel server (Node.js app): pulls the latest code, installs the
 # packages, builds, completes the self-contained server in .next/standalone (Next.js leaves the
-# static files and public/ out of it), and restarts the app.
+# static files and public/ out of it), copies it to live/ (where the app runs), and restarts the app.
+#
+# The app runs from live/ (startup file live/server.js), not from .next: `next build` deletes .next
+# when it starts, so a build that fails half-way (e.g. killed for using too much memory, 20 Nov
+# 2026) used to take the site down. live/ is only replaced once a build has succeeded.
 #
 # Usage, in cPanel → Terminal:   bash ~/<application root>/scripts/deploy-cpanel.sh
 # or just `git pull`, once the server runs it after each pull (git config core.hooksPath .githooks).
 # One-time setup (docs/README.md → Deploying): .env.production with the Contentful keys in the
-# application root, and the app's startup file set to .next/standalone/server.js.
+# application root, and the app's startup file set to live/server.js.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 root="$PWD"
@@ -48,11 +52,20 @@ echo "→ Building"
 # Fresh Contentful data every build: a fetch cache left by the previous build can hand the build
 # an old list, so new case studies or posts aren't prerendered (20 Nov 2026).
 rm -rf .next/cache/fetch-cache
-NEXT_BUILD_CPUS=1 npx next build --webpack
+# LOW_MEMORY_BUILD=1: the build settings for this server's memory cap (next.config.ts).
+LOW_MEMORY_BUILD=1 NEXT_BUILD_CPUS=1 npx next build --webpack
 
 echo "→ Completing the server folder (static files and public/)"
 cp -r .next/static .next/standalone/.next/
 cp -r public .next/standalone/
+
+echo "→ Switching the live site to the new build"
+# Copied beside live/ first, then swapped in, so live/ is never half-written.
+rm -rf live-next live-old
+cp -a .next/standalone live-next
+if [ -d live ]; then mv live live-old; fi
+mv live-next live
+rm -rf live-old
 
 echo "→ Restarting the app"
 mkdir -p tmp

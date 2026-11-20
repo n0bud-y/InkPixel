@@ -15,6 +15,10 @@
 
 # next.js
 /.next/
+# the live build on the cPanel server (scripts/deploy-cpanel.sh)
+/live/
+/live-next/
+/live-old/
 /out/
 
 # production
