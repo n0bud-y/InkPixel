@@ -24,8 +24,9 @@ function seoOf(caseStudy: CaseStudy) {
 // Every published case study is built ahead of time; one published later renders on its
 // first visit and is then cached like the rest.
 // Case studies whose banner shows no floating dashboard cards (HeroAnalytics): IHR (project head,
-// 21 Nov 2026; its video banner is busy enough on its own).
-const noHeroAnalytics = ["in-house-recruitment"];
+// 21 Nov 2026; its video banner is busy enough on its own) and Aawaz (21 Nov 2026; the cards
+// covered the students in its video).
+const noHeroAnalytics = ["in-house-recruitment", "aawaz-institute"];
 
 export async function generateStaticParams() {
   const caseStudies = await getCaseStudies();

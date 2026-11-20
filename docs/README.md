@@ -400,6 +400,7 @@ Newest first. Every new fact, decision, or change to the project is recorded her
 
 | Date | Update | Source |
 |---|---|---|
+| 21 Nov 2026 | **Aawaz banner without the dashboard cards** (project head). The floating cards are off the Aawaz Institute banner too (they covered the students in its video); IHR has none either, every other case study keeps them. Code change: live after the next deploy | Project head |
 | 21 Nov 2026 | **Drumond "Built for Phones First" redesigned** (project head: more creative). The four screenshots now sit in phone frames (notch, side buttons), fanned in an arc over a brand glow and a dotted arc, each with a numbered caption (Home, Services, Insurance, Our Team); they rise in one after another, and a phone straightens and lifts on hover. On phones: a swipe row. Drumond only. Code change: live after the next deploy | Project head |
 | 21 Nov 2026 | **IHR banner without the dashboard cards** (project head). The floating cards are off the In-house Recruitment banner only (its video banner); every other case study keeps them. Code change: live after the next deploy | Project head |
 | 21 Nov 2026 | **Designzhub360: "On Phones" removed** (project head). The phone screenshots section is off the Designzhub360 case study; its entry (`dzh-mobile`) and images stay in Contentful, unused | Project head |

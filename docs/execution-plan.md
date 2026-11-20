@@ -349,6 +349,7 @@ Newest first.
 
 | Date | Update |
 |---|---|
+| 21 Nov 2026 | Case-study page: `aawaz-institute` added to `noHeroAnalytics`. Checked locally: Aawaz and IHR without cards, Gulbaan with |
 | 21 Nov 2026 | `GallerySection.tsx`: `PhoneGallery` for the entry ids in `phoneGalleries` (`drm-mobile`); captions from the alt text; tilt and drop per phone as CSS variables (desktop only); the swipe row is a focusable region. Checked at 1440 and 390, no overflow, 0 console errors; typecheck and lint pass |
 | 21 Nov 2026 | Case-study page: `noHeroAnalytics` list (`in-house-recruitment`); those pages pass no `services` to `CaseStudyHero`, so `HeroAnalytics` isn't rendered. Checked: IHR without cards, Aawaz and Pak with, 0 console errors |
 | 21 Nov 2026 | Seed: `dzh-mobile` removed from `case-study-designzhub360` sections (republished) |
