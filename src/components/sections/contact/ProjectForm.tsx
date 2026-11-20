@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type CSSProperties, type FormEvent, type ReactNode } from "react";
 import { ThankYouDialog, type Sender } from "@/components/ui/ThankYouDialog";
 import { contactPage } from "@/content/contact-page";
+import { getServicePackages } from "@/content/packages";
 import type { Enquiry } from "@/lib/enquiry";
 import { sendEnquiry } from "@/lib/send-enquiry";
 import { siteConfig } from "@/lib/site";
@@ -57,6 +58,8 @@ const chip =
 //   service is chosen and the answers show in a box above the message (with "Remove"), and go
 //   into the email. `?service=<core service>` only chooses the service. The address is read in the
 //   browser, so the page stays static.
+// - Coming from a packages page (/contact?service=<core service>&package=<package>), the service
+//   is chosen and an empty message starts with the package's name (the visitor can change it).
 export function ProjectForm({
   services,
   estimators,
@@ -89,6 +92,12 @@ export function ProjectForm({
     // eslint-disable-next-line react-hooks/set-state-in-effect
     if (core) setChosen([core]);
     if (estimator && answers.length) setEstimate({ name: estimator.name, answers });
+    const pkg = core ? getServicePackages(core)?.packages.find((item) => item.slug === params.get("package")) : undefined;
+    const message = formRef.current?.elements.namedItem("message");
+    if (pkg && message instanceof HTMLTextAreaElement && !message.value) {
+      const label = services.find((item) => item.slug === core)?.label ?? core;
+      message.value = `I'm interested in the ${pkg.name} package (${label}).`;
+    }
   }, [services, estimators]);
 
   const errorOf = (field: TextField, value: string) => {
