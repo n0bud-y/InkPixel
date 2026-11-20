@@ -78,6 +78,8 @@ export type CaseStudyGallerySection = {
   title: string;
   intro: string | null;
   images: ContentfulImage[];
+  /** A video for each image, in the same order (0019; null where there is none). */
+  videos: (VideoFile | null)[];
 };
 
 export type Testimonial = {
@@ -325,6 +327,7 @@ export type SectionData =
       title: string | null;
       intro: string | null;
       imagesCollection: { items: AssetData[] } | null;
+      videosCollection: { items: VideoAssetData[] } | null;
     }
   | {
       __typename: "CaseStudyTestimonials";
@@ -545,6 +548,13 @@ export const SECTION_FIELDS = /* GraphQL */ `
       imagesCollection(limit: 12) {
         items {
           ...ImageFields
+        }
+      }
+      videosCollection(limit: 12) {
+        items {
+          url
+          contentType
+          description
         }
       }
     }
@@ -927,7 +937,8 @@ export function toSection(item: SectionData | null): CaseStudySectionData[] {
     case "CaseStudyGallery": {
       const images = (item.imagesCollection?.items ?? []).flatMap((asset) => toImage(asset) ?? []);
       if (!item.title || !images.length) return [];
-      return [{ type: "gallery", id: item.sys.id, title: item.title, intro: item.intro, images }];
+      const videos = (item.videosCollection?.items ?? []).map(toVideoFile);
+      return [{ type: "gallery", id: item.sys.id, title: item.title, intro: item.intro, images, videos }];
     }
     case "CaseStudyTestimonials": {
       const testimonials = (item.testimonialsCollection?.items ?? []).flatMap((testimonial) =>

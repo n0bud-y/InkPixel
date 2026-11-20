@@ -349,6 +349,7 @@ Newest first.
 
 | Date | Update |
 |---|---|
+| 21 Nov 2026 | Migration `0019-gallery-videos` (caseStudyGallery `videos`, run on master); query maps them as `videos` (same order as images). `ReelList.tsx` (client: one plays at a time, pauses off screen, falls back to muted if sound is blocked) and `CompareSlider.tsx` (range input) used by `GallerySection` (`reelGalleries`, `beforeAfterGalleries`). Seed: assets `ng-img-banner`, `ng-video-reel-1..4`, `ng-img-ba-5/6` (cropped above the printed labels), `ng-img-site-4` replaced. Checked locally: reel plays on click, slider moves, 0 console errors, no phone overflow |
 | 21 Nov 2026 | `GallerySection.tsx`: `ReelGallery` for the entry ids in `reelGalleries` (`ng-work` → @nginteriorsconstructions on TikTok); the caption overlay repeats the alt text, so it's hidden from screen readers. Seed: `ng-work` title and intro. Checked locally at 1440 and 390: 0 console or hydration errors, no horizontal overflow |
 | 21 Nov 2026 | Case-study page: `aawaz-institute` added to `noHeroAnalytics`. Checked locally: Aawaz and IHR without cards, Gulbaan with |
 | 21 Nov 2026 | `GallerySection.tsx`: `PhoneGallery` for the entry ids in `phoneGalleries` (`drm-mobile`); captions from the alt text; tilt and drop per phone as CSS variables (desktop only); the swipe row is a focusable region. Checked at 1440 and 390, no overflow, 0 console errors; typecheck and lint pass |

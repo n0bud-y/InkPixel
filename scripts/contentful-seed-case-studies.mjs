@@ -2266,7 +2266,10 @@ for (const study of marketingCaseStudies) {
 // TikTok @nginteriorsconstructions; read 20 Nov 2026). No follower counts and no results claimed;
 // the logo itself is not claimed as ours. Images: screenshots of those pages (the page's email
 // blurred), its Facebook cover and an Instagram post, and covers of its own TikTok videos. The
-// poster sent by the project head stays the card and hero image.
+// banner (21 Nov 2026, project head) is a custom image of real material only: the NG Architects
+// sign photo from its Facebook page, a frame of its TikTok video on a phone, and its house
+// before/after posts; it is the card image too. The reels play the studio's own TikTok videos
+// (0019), and the house before/after (its Facebook post, 1080 px) leads the Before & After section.
 {
   const id = (name) => `ng-${name}`;
   const asset = (name) => link(id(name), "Asset");
@@ -2286,13 +2289,32 @@ for (const study of marketingCaseStudies) {
     ["site-1", "Walking through a residential project at Greens 3, Clifton"],
     ["site-2", "An artisan spraying a Duco finish on site"],
     ["site-3", "A site at the start of the work: open ceiling and bare walls"],
-    ["site-4", "A finished space with artwork and lounge seating"],
+    ["site-4", "A finished home: living room with a lit ceiling and a blue sofa"],
     ["ba-1", "Before: a bare bedroom with grey plaster walls"],
     ["ba-2", "After: the same bedroom with a tufted navy bed, pendant lights, and artwork"],
     ["ba-3", "Before: a second bare bedroom with open wardrobe niches"],
     ["ba-4", "After: the same bedroom with fitted wardrobes, a wooden bed, and a desk"],
+    ["ba-5", "Before: a two-storey house as a grey concrete shell, with rubble in front"],
+    ["ba-6", "After: the same house finished in white and stone, with a wooden door, planters, and a lawn"],
   ];
   for (const [name, alt] of images) await upsertAsset(id(`img-${name}`), `ng-interiors-constructions/${name}.webp`, "image/webp", alt);
+  await upsertAsset(
+    id("img-banner"),
+    "ng-interiors-constructions/banner.webp",
+    "image/webp",
+    "The NG Architects sign on a glass building, a TikTok video of a finished home on a phone, and the studio's house before-and-after posts",
+  );
+  // Its TikTok videos for the reels, in the order of the reel covers (audio re-encoded to AAC-LC,
+  // faststart; video as posted).
+  const reels = [
+    "Walking through a residential project at Greens 3, Clifton",
+    "An artisan spraying a Duco finish on site",
+    "Every space begins with a muse: a site at the start of the work",
+    "Your home, from design to interior: a finished home",
+  ];
+  for (const [index, caption] of reels.entries()) {
+    await upsertAsset(id(`video-reel-${index + 1}`), `ng-interiors-constructions/reel-${index + 1}.mp4`, "video/mp4", caption);
+  }
 
   // 1. Who they are.
   const facts = [
@@ -2391,8 +2413,8 @@ for (const study of marketingCaseStudies) {
     "caseStudyGallery",
     {
       title: "Before & *After*",
-      intro: "From the studio's own posts, which we design and publish: two bedrooms from bare plaster to finished rooms.",
-      images: [1, 2, 3, 4].map((n) => asset(`img-ba-${n}`)),
+      intro: "From the studio's own posts, which we design and publish: a house from grey shell to finished home, and two bedrooms from bare plaster to finished rooms.",
+      images: [5, 6, 1, 2, 3, 4].map((n) => asset(`img-ba-${n}`)),
     },
     rewrite,
   );
@@ -2403,8 +2425,9 @@ for (const study of marketingCaseStudies) {
     "caseStudyGallery",
     {
       title: "Reels We Make on *TikTok*",
-      intro: "Project videos we film, edit, and post on the studio's TikTok: a walkthrough, artisans at work, a space from bare walls to a finished room.",
+      intro: "Project videos we film, edit, and post on the studio's TikTok: a walkthrough, artisans at work, a bare site, and a finished home. Click a reel to play it.",
       images: [1, 2, 3, 4].map((n) => asset(`img-site-${n}`)),
+      videos: [1, 2, 3, 4].map((n) => asset(`video-reel-${n}`)),
     },
     rewrite,
   );
@@ -2454,7 +2477,7 @@ for (const study of marketingCaseStudies) {
         "How we run NG Interiors & Constructions' Facebook, Instagram, and TikTok: project videos, post design, and ads for consultation enquiries.",
       cardHighlight: "Social media, video, and ads for an interior design studio",
       cardPoints: ["Facebook, Instagram & TikTok", "Project videos & reels", "Ads & post design"],
-      cardImage: asset("img-poster"),
+      cardImage: asset("img-banner"),
       heroLayout: "Light",
       heroEyebrow: "Social Media · Video · Ads",
       heroHeading: "NG Interiors & Constructions: Social Media and Video for an *Interior Design Studio*",
@@ -2462,7 +2485,7 @@ for (const study of marketingCaseStudies) {
         "NG Interiors & Constructions designs and builds homes and commercial spaces in Karachi. We run its Facebook, Instagram, and TikTok: the posts, the project videos, the post design, and the ads for consultations.",
       heroButtonLabel: "Start Your Project",
       heroButtonLink: "/contact",
-      heroImage: asset("img-poster"),
+      heroImage: asset("img-banner"),
       sections: [link(swotId("ng-interiors-constructions")), ...["who", "challenge", "help", "before-after", "work", "process", "cta"].map((name) => link(id(name)))],
       industries: ["real-estate"],
       services: ["marketing", "branding"],
