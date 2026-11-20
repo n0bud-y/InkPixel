@@ -1283,6 +1283,14 @@ for (const study of marketingCaseStudies) {
     ["Our work", "Video · TikTok · Facebook & Instagram · Ads"],
   ];
   for (const [index, [title, text]] of facts.entries()) await ensure(id(`fact-${index + 1}`), "caseStudyItem", { title, text }, rewrite);
+  // The section's image (21 Nov 2026, project head: more creative): a collage of stills from the
+  // tower's promo video (lobby sign, Clifton skyline, smart home, bedroom) with a location pin.
+  await upsertAsset(
+    id("img-who"),
+    "gw-towers/who.webp",
+    "image/webp",
+    "G&W Towers: the G&W sign in its lobby, the Clifton skyline at night, a smart-home apartment, and a bedroom",
+  );
   await ensure(
     id("overview"),
     "caseStudySection",
@@ -1293,7 +1301,7 @@ for (const study of marketingCaseStudies) {
         "G&W Towers is a residential tower in Clifton, Karachi, launched jointly by Godils & Wakeels. It stands opposite the Bar BQ Tonight restaurant, with sea-facing views from its upper floors.",
         "It offers 3- and 4-bedroom apartments, open on three sides, with voice-controlled smart-home features, a gym, and bank financing, and is set to welcome its first residents by the end of the year.",
       ),
-      image: asset("img-scene-lobby"),
+      image: asset("img-who"),
       layout: "Image right",
       facts: facts.map((_, index) => link(id(`fact-${index + 1}`))),
       highlight: null,
