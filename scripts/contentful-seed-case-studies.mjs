@@ -1970,6 +1970,8 @@ for (const study of marketingCaseStudies) {
   const images = [
     ["hero", "Saddam Hussain's YouTube channel in a browser and his Facebook page on a phone"],
     ["overview", "Saddam Hussain in his number 17 shirt on match day"],
+    // The "Who" image since 20 Nov 2026 (project head): his portrait in the Pakistan team blazer.
+    ["who", "Saddam Hussain in the Pakistan football team blazer, with his number, 17"],
     ["facebook", "Saddam Hussain's verified Facebook page in a browser and on a phone"],
     ["youtube", "Saddam Hussain's YouTube channel, with its banner: Ability is what you're capable of doing"],
     ["editing", "Thumbnail of the Portfolio highlights video: Saddam Hussain, Pakistan national team captain, midfielder and defender"],
@@ -2000,7 +2002,7 @@ for (const study of marketingCaseStudies) {
         "Saddam Hussain is a professional footballer and the captain of Pakistan's national football team, wearing number 17. At club level he plays for SSGC FC in Karachi.",
         "Off the pitch, he appears as a guest of honour at tournaments and ceremonies, shares his training, and speaks about the future of football in Pakistan. His Facebook page and YouTube channel are where his fans follow all of it.",
       ),
-      image: asset("img-overview"),
+      image: asset("img-who"),
       layout: "Image right",
       facts: facts.map((_, index) => link(id(`fact-${index + 1}`))),
       highlight: null,
