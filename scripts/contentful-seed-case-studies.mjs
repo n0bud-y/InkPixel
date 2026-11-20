@@ -2043,7 +2043,8 @@ for (const study of marketingCaseStudies) {
       heroButtonLabel: "Start Your Project",
       heroButtonLink: "/contact",
       heroImage: asset("img-poster"),
-      sections: [link(swotId("designzhub360")), ...["overview", "model", "builds", "mobile", "how", "cta"].map((name) => link(id(name)))],
+      // "On Phones" (dzh-mobile) taken off the page (project head, 21 Nov 2026).
+      sections: [link(swotId("designzhub360")), ...["overview", "model", "builds", "how", "cta"].map((name) => link(id(name)))],
       services: ["development"],
       region: "United States",
     },
