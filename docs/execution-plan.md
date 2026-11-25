@@ -349,6 +349,7 @@ Newest first.
 
 | Date | Update |
 |---|---|
+| 26 Nov 2026 | `layout.tsx`: `verification.other["msvalidate.01"]`. `next.config.ts`: host redirect `www.inkpixelstudios.com/:path*` → `https://inkpixelstudios.com/:path*` (permanent). Checked on a production build: both meta tags in the head; www request → 308 with the path kept; the main host → 200 |
 | 21 Nov 2026 | G&W seed: asset `gw-img-who` (`gw-towers/who.webp`, 1440 px, rendered from the promo stills in headless Chrome) as the `gw-overview` image (was `gw-img-scene-lobby`) |
 | 21 Nov 2026 | Migration `0019-gallery-videos` (caseStudyGallery `videos`, run on master); query maps them as `videos` (same order as images). `ReelList.tsx` (client: one plays at a time, pauses off screen, falls back to muted if sound is blocked) and `CompareSlider.tsx` (range input) used by `GallerySection` (`reelGalleries`, `beforeAfterGalleries`). Seed: assets `ng-img-banner`, `ng-video-reel-1..4`, `ng-img-ba-5/6` (cropped above the printed labels), `ng-img-site-4` replaced. Checked locally: reel plays on click, slider moves, 0 console errors, no phone overflow |
 | 21 Nov 2026 | `GallerySection.tsx`: `ReelGallery` for the entry ids in `reelGalleries` (`ng-work` → @nginteriorsconstructions on TikTok); the caption overlay repeats the alt text, so it's hidden from screen readers. Seed: `ng-work` title and intro. Checked locally at 1440 and 390: 0 console or hydration errors, no horizontal overflow |

@@ -43,8 +43,12 @@ export const metadata: Metadata = {
   },
   twitter: { card: "summary_large_image" },
   robots: indexable ? undefined : { index: false, follow: false },
-  // Google Search Console ownership check (<meta name="google-site-verification">). Keep it.
-  verification: { google: "XUHo0WC4b6qqG-0kf1b3Y5KIkcbXP1FMwUHkVnealgY" },
+  // Ownership checks: Google Search Console (<meta name="google-site-verification">) and Bing
+  // Webmaster Tools (<meta name="msvalidate.01">, 26 Nov 2026). Keep them.
+  verification: {
+    google: "XUHo0WC4b6qqG-0kf1b3Y5KIkcbXP1FMwUHkVnealgY",
+    other: { "msvalidate.01": "9B1A0D4F12AA35364A98AD18F63886CA" },
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

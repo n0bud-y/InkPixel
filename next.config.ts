@@ -85,6 +85,13 @@ const nextConfig: NextConfig = {
   // /terms-and-conditions (26 Oct 2026); /privacy is a shortcut to the Privacy Policy.
   async redirects() {
     return [
+      // www → the main address, keeping the path (26 Nov 2026, for SEO: one address per page).
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.inkpixelstudios.com" }],
+        destination: "https://inkpixelstudios.com/:path*",
+        permanent: true,
+      },
       { source: "/services/web-development", destination: "/services/development/web-development", permanent: true },
       { source: "/terms", destination: "/terms-and-conditions", permanent: true },
       { source: "/privacy", destination: "/privacy-policy", permanent: true },
