@@ -8,6 +8,7 @@ import { hasLightHeader } from "./NavLinks";
 // How far the page scrolls before the header turns white.
 const SCROLLED_AT = 40;
 
+
 // The <header> bar and the logo that suits it. Most pages: transparent over the top of the page
 // with the white logo; once the page scrolls, a solid white bar with the dark logo (the logos
 // crossfade). Pages that open on white (case studies): white all the time. The rest of the header
