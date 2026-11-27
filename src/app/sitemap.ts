@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { corePages } from "@/content/core-pages";
+import { events } from "@/content/events";
 import { servicePages, servicePlace } from "@/content/service-pages";
 import { getCaseStudies, type CaseStudySummary } from "@/contentful/queries/case-studies";
 import { getCategories, getPosts, type Category, type PostSummary } from "@/contentful/queries/posts";
@@ -49,6 +50,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...corePages.map(({ category }) => ({ url: absoluteUrl(`/services/${category.slug}`) })),
     ...caseStudies.map(({ href, updatedAt }) => ({ url: absoluteUrl(href), lastModified: updatedAt })),
     ...products.map(({ href, updatedAt }) => ({ url: absoluteUrl(href), lastModified: updatedAt })),
+    ...events.map(({ slug }) => ({ url: absoluteUrl(`/events/${slug}`) })),
     ...posts.map(({ href, publishedDate, updatedDate }) => ({ url: absoluteUrl(href), lastModified: updatedDate ?? publishedDate })),
     ...categories.map(({ href }) => ({ url: absoluteUrl(href) })),
   ];

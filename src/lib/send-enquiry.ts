@@ -5,6 +5,7 @@ import path from "node:path";
 import { headers } from "next/headers";
 import nodemailer, { type Transporter } from "nodemailer";
 import * as z from "zod";
+import { formatPrice, getEvent, isPast } from "@/content/events";
 import { env } from "@/env";
 import { enquiryEmail, type Enquiry } from "@/lib/enquiry";
 import { siteConfig } from "@/lib/site";
@@ -139,4 +140,93 @@ export async function sendEnquiry(input: Enquiry): Promise<EnquiryResult> {
   }
 
   return sent || logged ? { ok: true } : { ok: false, reason: "unavailable" };
+}
+
+// Event bookings (28 Nov 2026): the booking form on an event's page (/events/<slug>). The ticket's
+// price comes from src/content/events.ts, never from the browser. Saved to the backup log and
+// emailed to the studio like an enquiry (Reply-To: the buyer), with a booking reference the buyer
+// quotes when sending the Raast receipt on WhatsApp.
+const dogFields = z.object({ name: text(120).min(1), breed: text(120).min(1), sex: optional(20), dateOfBirth: optional(40), className: optional(80) });
+const bookingSchema = z.object({
+  event: text(120).min(1),
+  ticket: text(80).min(1),
+  quantity: z.number().int().min(1).max(20),
+  name: text(120).min(1),
+  email: z.string().trim().max(254).pipe(z.email()),
+  phone: text(40).min(7),
+  city: optional(80),
+  dogs: z.array(dogFields).max(20).optional(),
+  message: optional(2000),
+  website: z.string().max(500).optional(),
+});
+
+export type BookingInput = z.input<typeof bookingSchema>;
+export type BookingResult =
+  | { ok: true; reference: string; total: number | null }
+  | { ok: false; reason: "invalid" | "busy" | "unavailable" | "closed" };
+
+export async function sendBooking(input: BookingInput): Promise<BookingResult> {
+  const parsed = bookingSchema.safeParse(input);
+  if (!parsed.success) return { ok: false, reason: "invalid" };
+  const booking = parsed.data;
+
+  const event = getEvent(booking.event);
+  const ticket = event?.tickets.find(({ name }) => name === booking.ticket);
+  if (!event || !ticket) return { ok: false, reason: "invalid" };
+  if (!event.bookingOpen || isPast(event)) return { ok: false, reason: "closed" };
+  // Exhibitors: one dog per ticket, each with a name and breed.
+  if (ticket.exhibitor && booking.dogs?.length !== booking.quantity) return { ok: false, reason: "invalid" };
+
+  // A reference the buyer can read out: the event's code and six letters or digits.
+  const reference = `${event.code}-${Math.random().toString(36).slice(2, 8).toUpperCase().padEnd(6, "0")}`;
+  const total = ticket.price === null ? null : ticket.price * booking.quantity;
+  if (booking.website) return { ok: true, reference, total };
+
+  const requestHeaders = await headers();
+  const visitor = requestHeaders.get("x-forwarded-for")?.split(",").at(-1)?.trim() || requestHeaders.get("x-real-ip");
+  if (visitor && tooMany(visitor)) return { ok: false, reason: "busy" };
+
+  const time = new Date().toISOString();
+  const logged = await log({ time, form: "booking", reference, ...booking, total, website: undefined, ip: visitor ?? "" });
+
+  const price = formatPrice(total, event.currency) ?? "price to be confirmed";
+  const lines = [
+    `Booking ${reference}: ${event.title}`,
+    `Ticket: ${ticket.name} × ${booking.quantity} (${price})`,
+    "",
+    `Name: ${booking.name}`,
+    `Phone: ${booking.phone}`,
+    `Email: ${booking.email}`,
+    booking.city ? `City: ${booking.city}` : "",
+    ...(booking.dogs?.length
+      ? [
+          "",
+          "Dogs:",
+          ...booking.dogs.map((dog, index) =>
+            `${index + 1}. ${dog.name}, ${dog.breed}${dog.sex ? `, ${dog.sex}` : ""}${dog.dateOfBirth ? `, born ${dog.dateOfBirth}` : ""}${dog.className ? `, class: ${dog.className}` : ""}`,
+          ),
+        ]
+      : []),
+    booking.message ? `\nMessage:\n${booking.message}` : "",
+    "",
+    "Payment: by Raast; the buyer sends the receipt on WhatsApp quoting the reference. Confirm once received.",
+  ].filter((line, index, all) => line !== "" || all[index - 1] !== "");
+
+  const { transport, from } = mailer();
+  let sent = false;
+  try {
+    await transport.sendMail({
+      from: { name: `${siteConfig.name} website`, address: from },
+      to: env.CONTACT_TO ?? siteConfig.email,
+      replyTo: { name: booking.name, address: booking.email },
+      subject: `Booking ${reference}: ${ticket.name} × ${booking.quantity}, ${event.title}`.replace(/\s+/g, " ").trim(),
+      text: `${lines.join("\n")}\n\n—\nSent from ${siteConfig.url}/events/${event.slug}`,
+    });
+    sent = true;
+  } catch (error) {
+    console.error("Booking email not sent (it is in the backup log if that was written).", error);
+    if (logged) await log({ time: new Date().toISOString(), note: `email not sent for booking ${reference}` });
+  }
+
+  return sent || logged ? { ok: true, reference, total } : { ok: false, reason: "unavailable" };
 }

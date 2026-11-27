@@ -55,6 +55,8 @@ export const mainNav = [
   { href: "/technologies", label: "Technologies" },
   { href: "/blog", label: "Insights" },
   { href: "/products", label: "Products" },
+  // Events (28 Nov 2026, project head).
+  { href: "/events", label: "Events" },
   { href: "/case-studies", label: "Our Work" },
 ].filter(({ href }) => features.blog || href !== "/blog");
 

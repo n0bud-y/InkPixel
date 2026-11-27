@@ -291,6 +291,58 @@ export function productSchema({
   } as Thing;
 }
 
+// An event (/events/<slug>): an in-person event at its venue, organised by its organiser, with the
+// studio as a partner (sponsor), and one Offer per ticket that has a price.
+export function eventSchema(event: {
+  name: string;
+  description: string;
+  path: string;
+  image: string;
+  start: string;
+  end: string | null;
+  venue: { name: string; address: string };
+  organizer: string;
+  tickets: { name: string; price: number | null }[];
+  currency: string;
+  bookingOpen: boolean;
+}): Thing {
+  const url = absoluteUrl(event.path);
+  const offers = event.tickets.flatMap(({ name, price }) =>
+    price === null
+      ? []
+      : [
+          {
+            "@type": "Offer",
+            name,
+            price: price.toFixed(2),
+            priceCurrency: event.currency,
+            availability: event.bookingOpen ? "https://schema.org/InStock" : "https://schema.org/SoldOut",
+            url,
+          },
+        ],
+  );
+  return {
+    "@type": "Event",
+    "@id": `${url}#event`,
+    name: event.name,
+    description: event.description,
+    url,
+    image: event.image,
+    startDate: event.start,
+    ...(event.end && { endDate: event.end }),
+    eventStatus: "https://schema.org/EventScheduled",
+    eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+    location: {
+      "@type": "Place",
+      name: event.venue.name,
+      address: { "@type": "PostalAddress", streetAddress: event.venue.address, addressLocality: "Karachi", addressCountry: "PK" },
+    },
+    organizer: { "@type": "Organization", name: event.organizer },
+    sponsor: { "@id": organizationId },
+    ...(offers.length && { offers }),
+  } as Thing;
+}
+
 // A case study, as an article by the studio about a client's project.
 export function caseStudySchema(caseStudy: {
   title: string;
