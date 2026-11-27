@@ -1,4 +1,14 @@
 import type { StaticImageData } from "next/image";
+import dogShowGallery01 from "@/assets/images/events/all-breed-cacib-dog-show-karachi-2026/gallery-01.webp";
+import dogShowGallery02 from "@/assets/images/events/all-breed-cacib-dog-show-karachi-2026/gallery-02.webp";
+import dogShowGallery03 from "@/assets/images/events/all-breed-cacib-dog-show-karachi-2026/gallery-03.webp";
+import dogShowGallery04 from "@/assets/images/events/all-breed-cacib-dog-show-karachi-2026/gallery-04.webp";
+import dogShowGallery05 from "@/assets/images/events/all-breed-cacib-dog-show-karachi-2026/gallery-05.webp";
+import dogShowGallery06 from "@/assets/images/events/all-breed-cacib-dog-show-karachi-2026/gallery-06.webp";
+import dogShowGallery07 from "@/assets/images/events/all-breed-cacib-dog-show-karachi-2026/gallery-07.webp";
+import dogShowGallery08 from "@/assets/images/events/all-breed-cacib-dog-show-karachi-2026/gallery-08.webp";
+import dogShowGallery09 from "@/assets/images/events/all-breed-cacib-dog-show-karachi-2026/gallery-09.webp";
+import dogShowGallery10 from "@/assets/images/events/all-breed-cacib-dog-show-karachi-2026/gallery-10.webp";
 import dogShowJudge from "@/assets/images/events/all-breed-cacib-dog-show-karachi-2026/judge.webp";
 import dogShowPoster from "@/assets/images/events/all-breed-cacib-dog-show-karachi-2026/poster.webp";
 import dogShowRaastQr from "@/assets/images/events/all-breed-cacib-dog-show-karachi-2026/raast-qr.png";
@@ -37,6 +47,9 @@ export type SiteEvent = {
   end: string | null;
   venue: { name: string; address: string; mapUrl: string };
   poster: { src: StaticImageData; alt: string };
+  /** Photos for the auto-scrolling gallery, and where they come from (shown under it). */
+  gallery: { src: StaticImageData; alt: string }[];
+  galleryCredit: string | null;
   /** Paragraphs. */
   about: string[];
   highlights: string[];
@@ -97,6 +110,21 @@ export const events: SiteEvent[] = [
       src: dogShowPoster,
       alt: "All Breed CACIB Dog Show Karachi poster: judge Vladislava Yaroshuk holding a corgi, a Dalmatian, the date 13 December 2026, and the organisers' logos",
     },
+    // Photos from the organiser's past shows (the PGSDC Facebook page, 28 Nov 2026; project head:
+    // a gallery of Pakistani dogs), not from this show.
+    gallery: [
+      { src: dogShowGallery01, alt: "Winners with their German Shepherd on the first-place podium" },
+      { src: dogShowGallery02, alt: "A German Shepherd gaiting with its handler under the floodlights" },
+      { src: dogShowGallery03, alt: "A German Shepherd moving with its handler past the crowd" },
+      { src: dogShowGallery04, alt: "Dogs and handlers in the ring in front of the Pakistan Kennel Union all-breed show banner" },
+      { src: dogShowGallery05, alt: "A black German Shepherd running in the ring" },
+      { src: dogShowGallery06, alt: "Third place: a German Shepherd and its owner with a trophy and certificate" },
+      { src: dogShowGallery07, alt: "A black German Shepherd standing for the judge" },
+      { src: dogShowGallery08, alt: "A black German Shepherd moving across the floodlit ring" },
+      { src: dogShowGallery09, alt: "First place: a German Shepherd with its handler on the podium" },
+      { src: dogShowGallery10, alt: "Second-place winners with their dog, trophies, and certificates" },
+    ],
+    galleryCredit: "Photos from the Pakistan German Shepherd Dog Club's past shows.",
     about: [
       "The world of canine excellence comes to Karachi. Dog lovers, breeders, exhibitors, and enthusiasts are invited to the All Breed International CACIB Dog Show – Karachi 2026.",
       "An international event celebrating the beauty, quality, structure, temperament, and standards of dogs from every breed, judged by Vladislava Yaroshuk from Ukraine, who brings international expertise to the ring.",

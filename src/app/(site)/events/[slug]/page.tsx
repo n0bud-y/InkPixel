@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { EventContact } from "@/components/events/EventContact";
+import { EventGallery } from "@/components/events/EventGallery";
 import { EventSidebar } from "@/components/events/EventSidebar";
 import { chipHover } from "@/components/events/styles";
 import { Reveal } from "@/components/motion/Reveal";
@@ -138,7 +139,8 @@ export default async function EventPage(props: PageProps<"/events/[slug]">) {
       {/* Content and the booking box. */}
       <div className="bg-light pb-28 lg:pb-0">
         <div className="container-site grid gap-[clamp(2rem,3.5vw,4rem)] py-[clamp(3rem,5vw,6rem)] lg:grid-cols-[minmax(0,1fr)_24rem] xl:grid-cols-[minmax(0,1fr)_26rem]">
-          <div className="order-2 space-y-[clamp(3rem,5vw,5.5rem)] lg:order-1">
+          {/* min-w-0: the gallery strip is wider than the screen; the column must not grow to fit it. */}
+          <div className="order-2 min-w-0 space-y-[clamp(3rem,5vw,5.5rem)] lg:order-1">
             {/* About. */}
             <Reveal>
               <section aria-labelledby="about-title">
@@ -209,6 +211,16 @@ export default async function EventPage(props: PageProps<"/events/[slug]">) {
                 </section>
               </Reveal>
             )}
+
+            {/* Gallery: dogs from the organiser's past shows, sliding by. */}
+            <Reveal>
+              <EventGallery
+                title="Champions of Pakistan's Show Rings"
+                intro="German Shepherds and their handlers in the ring, and the winners on the podium."
+                credit={event.galleryCredit}
+                photos={event.gallery}
+              />
+            </Reveal>
 
             {/* Who it's for. */}
             <Reveal stagger={0.1}>

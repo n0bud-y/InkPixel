@@ -128,6 +128,14 @@
      by its value), and the booking popup rising in when it opens. */
   --animate-tick: tick 0.35s var(--ease-out-soft) both;
   --animate-pop-in: pop-in 0.45s var(--ease-out-soft) both;
+  /* A strip of two identical halves sliding left forever (the event gallery). */
+  --animate-marquee: marquee 50s linear infinite;
+
+  @keyframes marquee {
+    to {
+      translate: -50% 0;
+    }
+  }
 
   @keyframes tick {
     from {
