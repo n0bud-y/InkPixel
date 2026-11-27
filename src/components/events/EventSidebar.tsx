@@ -4,7 +4,7 @@ import { useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { formatPrice, ticketTotal } from "@/content/events";
 import { ScrollTrigger, gsap, useGSAP } from "@/lib/gsap";
-import { BookingDialog, WhatsAppIcon, type BookingEvent } from "./BookingDialog";
+import { BookingDialog, type BookingEvent } from "./BookingDialog";
 import { Countdown, useCountdown } from "./Countdown";
 import { sheen } from "./styles";
 
@@ -16,8 +16,8 @@ const noSubscribe = () => () => {};
 
 // The event's booking box. Desktop: beside the page's content, pinned below the header while the
 // content scrolls (with GSAP: CSS sticky doesn't work inside the smooth scroller), until the end
-// of the content. It shows the date, time, and venue, a countdown, the tickets and prices, "Book
-// now" (the booking popup), WhatsApp and share buttons, and the information numbers. Phones and
+// of the content. It shows the date, time, and venue, a countdown, the tickets and prices, and
+// "Book now" (the booking popup); questions and sharing are in the page (EventContact). Phones and
 // tablets: the box sits in the page, and a bar fixed to the bottom of the screen keeps the price
 // and "Book now" in reach (outside the smooth scroller, so it stays fixed).
 export function EventSidebar({
@@ -28,7 +28,6 @@ export function EventSidebar({
   month,
   start,
   mapUrl,
-  phones,
   bookingOpen,
   past,
 }: {
@@ -39,7 +38,6 @@ export function EventSidebar({
   month: string;
   start: string;
   mapUrl: string;
-  phones: string[];
   bookingOpen: boolean;
   past: boolean;
 }) {
@@ -47,7 +45,6 @@ export function EventSidebar({
   const box = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
   const [ticket, setTicket] = useState<string | null>(null);
-  const [shared, setShared] = useState(false);
   const countdown = useCountdown(start);
   const mounted = useSyncExternalStore(noSubscribe, () => true, () => false);
   const canBook = bookingOpen && !past;
@@ -84,22 +81,8 @@ export function EventSidebar({
     setOpen(true);
   };
 
-  const share = async () => {
-    const url = window.location.href;
-    try {
-      if (navigator.share) await navigator.share({ title: event.title, url });
-      else {
-        await navigator.clipboard.writeText(url);
-        setShared(true);
-      }
-    } catch {
-      // Sharing cancelled.
-    }
-  };
-
   const prices = event.tickets.flatMap((option) => ticketTotal(option, 1) ?? []);
   const from = prices.length ? formatPrice(Math.min(...prices), event.currency) : null;
-  const ask = `https://wa.me/${event.whatsapp}?text=${encodeURIComponent(`Hi, I have a question about ${event.title}.`)}`;
 
   return (
     <div ref={column} className="lg:h-full">
@@ -184,41 +167,6 @@ export function EventSidebar({
           ) : (
             <p className="rounded-full bg-primary/5 py-4 text-center font-medium text-primary/70">{past ? "This event has ended" : "Booking opens soon"}</p>
           )}
-
-          <div className="grid grid-cols-2 gap-3">
-            <a
-              href={ask}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex h-11 items-center justify-center gap-2 rounded-full border border-primary/15 text-[14px] font-medium transition duration-300 hover:-translate-y-0.5 hover:border-[#25d366] hover:bg-[#25d366] hover:text-white hover:shadow-[0_12px_24px_-12px_rgb(37_211_102_/_0.9)]"
-            >
-              <WhatsAppIcon className="size-5" />
-              Ask a question<span className="sr-only"> on WhatsApp (opens in a new tab)</span>
-            </a>
-            <button
-              type="button"
-              onClick={share}
-              className="flex h-11 items-center justify-center gap-2 rounded-full border border-primary/15 text-[14px] font-medium transition duration-300 hover:-translate-y-0.5 hover:border-primary hover:bg-primary hover:text-white hover:shadow-[0_12px_24px_-12px_rgb(21_25_54_/_0.8)]"
-            >
-              <ShareIcon />
-              {shared ? "Link copied" : "Share"}
-            </button>
-          </div>
-
-          {phones.length > 0 && (
-            <div className="border-t border-primary/10 pt-4">
-              <p className="font-mono text-[11px] tracking-[0.16em] text-primary/50 uppercase">Information & registration</p>
-              <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[14px]">
-                {phones.map((phone) => (
-                  <li key={phone}>
-                    <a href={`tel:${phone.replace(/\s/g, "")}`} className="text-primary/80 hover:text-crimson">
-                      {phone}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
         </div>
       </div>
 
@@ -268,17 +216,6 @@ function PinIcon() {
     <svg viewBox="0 0 24 24" className={iconClass} aria-hidden="true">
       <path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21Z" />
       <circle cx="12" cy="9.5" r="2.5" />
-    </svg>
-  );
-}
-
-function ShareIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="size-5 fill-none stroke-current stroke-[1.8]" aria-hidden="true">
-      <circle cx="18" cy="5.5" r="2.5" />
-      <circle cx="6" cy="12" r="2.5" />
-      <circle cx="18" cy="18.5" r="2.5" />
-      <path d="m8.2 10.8 7.6-4.1M8.2 13.2l7.6 4.1" />
     </svg>
   );
 }

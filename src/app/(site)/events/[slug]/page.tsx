@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { EventContact } from "@/components/events/EventContact";
 import { EventSidebar } from "@/components/events/EventSidebar";
 import { chipHover } from "@/components/events/styles";
 import { Reveal } from "@/components/motion/Reveal";
@@ -338,6 +339,11 @@ export default async function EventPage(props: PageProps<"/events/[slug]">) {
               </section>
             </Reveal>
 
+            {/* Information numbers, a question on WhatsApp, and sharing. */}
+            <Reveal>
+              <EventContact title={event.title} whatsapp={event.whatsapp} phones={event.phones} />
+            </Reveal>
+
             {/* Organisers and partners. */}
             <Reveal>
               <section aria-labelledby="partners-title">
@@ -393,7 +399,6 @@ export default async function EventPage(props: PageProps<"/events/[slug]">) {
               month={when.month}
               start={event.start}
               mapUrl={event.venue.mapUrl}
-              phones={event.phones}
               bookingOpen={event.bookingOpen}
               past={past}
             />
