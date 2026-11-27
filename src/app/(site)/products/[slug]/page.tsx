@@ -11,6 +11,11 @@ import { breadcrumbSchema, pageMetadata, productSchema, toShareImage } from "@/l
 // Sections that use the design's larger image, by product (as on the case study pages).
 const largerImage: Record<string, string[]> = { "terminal-gateway-crm": ["The Challenge"] };
 
+// Products' prices for search engines (the Offer in the product schema; 27 Nov 2026, project head).
+const productOffers: Record<string, { price: string; currency: string }> = {
+  "terminal-gateway-crm": { price: "99.00", currency: "USD" },
+};
+
 // Meta title, description, canonical URL, and share image: the product's SEO entry in Contentful
 // (its title used as typed), or the product's name, excerpt, address, and hero image.
 function seoOf(product: Product) {
@@ -57,7 +62,7 @@ export default async function ProductPage(props: PageProps<"/products/[slug]">) 
             { name: productsPage.name, path: "/products" },
             { name: product.name, path: seo.path },
           ]),
-          productSchema({ name: product.name, description: seo.description, path: seo.path, image: seo.image.url }),
+          productSchema({ name: product.name, description: seo.description, path: seo.path, image: seo.image.url, offer: productOffers[slug] }),
         ]}
       />
       <CaseStudyHero

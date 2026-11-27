@@ -253,20 +253,31 @@ export function faqSchema(items: { question: string; answer: string[] }[], path 
 }
 
 // One of the studio's products (/products/<slug>), as a web application made and published by
-// the studio.
+// the studio; with its price when it has one (an Offer, in stock, on the product's own page).
 export function productSchema({
   name,
   description,
   path,
   image,
+  offer,
 }: {
   name: string;
   description: string;
   path: string;
   image: string;
+  offer?: { price: string; currency: string };
 }): Thing {
   const url = absoluteUrl(path);
   return {
+    ...(offer && {
+      offers: {
+        "@type": "Offer",
+        price: offer.price,
+        priceCurrency: offer.currency,
+        availability: "https://schema.org/InStock",
+        url,
+      },
+    }),
     "@type": "SoftwareApplication",
     "@id": `${url}#product`,
     name,
