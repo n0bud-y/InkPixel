@@ -9,9 +9,10 @@ import { siteConfig } from "@/lib/site";
 // content type. To add an event, add an entry to `events` (newest first) with its images in
 // src/assets/images/events/<slug>/.
 //
-// Booking: the buyer picks a ticket and fills in the form; the booking is emailed to the studio
-// (sendBooking, priced from this file, never from the browser), then the buyer pays by Raast (QR
-// code or Raast ID) and sends the receipt on WhatsApp. The studio confirms by hand.
+// Booking (BookingDialog; 28 Nov 2026, project head): one ticket per booking, no forms. The buyer
+// picks a ticket, pays its price by Raast (QR code or Raast ID), and sends the transaction
+// reference and/or the payment screenshot to the studio on WhatsApp; the studio checks the payment
+// and sends the ticket there. More dogs or people are settled in the chat.
 
 export type EventTicket = {
   /** Shown on the page and in the form, e.g. "Visitor". Unique within the event. */
@@ -22,14 +23,12 @@ export type EventTicket = {
   /** Paid once per booking on top of `price × quantity`, e.g. the exhibitor's own entry. */
   entry: number | null;
   description: string;
-  /** Exhibitor tickets ask for the dog's details (one ticket per dog). */
+  /** Exhibitor tickets are per dog (with the exhibitor's entry). */
   exhibitor: boolean;
 };
 
 export type SiteEvent = {
   slug: string;
-  /** Booking references start with it, e.g. "DOG" → DOG-7K2QX9. Letters only. */
-  code: string;
   title: string;
   /** The event card and the search description. */
   excerpt: string;
@@ -84,7 +83,6 @@ export const eventsPage = {
 export const events: SiteEvent[] = [
   {
     slug: "all-breed-cacib-dog-show-karachi-2026",
-    code: "DOG",
     title: "All Breed International CACIB Dog Show – Karachi 2026",
     excerpt:
       "An international all-breed dog show at the Defence Authority Creek Club, Karachi, judged by Vladislava Yaroshuk from Ukraine. Sunday 13 December 2026, 3:00 PM.",
@@ -153,14 +151,14 @@ export const events: SiteEvent[] = [
         answer: "All breeds. It is an all-breed international CACIB show, judged to international standards.",
       },
       {
-        question: "How do I pay?",
+        question: "How do I book and pay?",
         answer:
-          "Book on this page, then pay by Raast: scan the QR code or send to the Raast ID shown after you book, and send the receipt on WhatsApp with your booking reference. We confirm your booking once the payment is received.",
+          "Press Book now, choose your ticket, and pay the amount by Raast: scan the QR code with your banking app. Then add the transaction reference or a screenshot of the payment and press Submit: WhatsApp opens with your details, ready to send to us. We check the payment and send your ticket on WhatsApp.",
       },
       {
         question: "How much does it cost to show my dogs?",
         answer:
-          "Exhibitors pay the Rs 3,000 entry once, plus Rs 1,500 for each dog: one dog is Rs 4,500, two dogs Rs 6,000, three dogs Rs 7,500. Choose the number of dogs in the form and fill in each dog's details. Visitors pay Rs 3,000 per person.",
+          "Exhibitors pay the Rs 3,000 entry once, plus Rs 1,500 for each dog: one dog is Rs 4,500, two dogs Rs 6,000, three dogs Rs 7,500. Book one exhibitor ticket (Rs 4,500 with one dog), then tell us on WhatsApp about any more dogs and pay Rs 1,500 for each. Visitors pay Rs 3,000 per person.",
       },
       {
         question: "Who do I contact for questions?",
@@ -183,13 +181,6 @@ export const getEvent = (slug: string) => events.find((event) => event.slug === 
 export function ticketTotal(ticket: EventTicket, quantity: number) {
   if (ticket.price === null) return null;
   return (ticket.entry ?? 0) + ticket.price * quantity;
-}
-
-/** How a ticket's total is made up, e.g. "Entry Rs 3,000 + 2 dogs × Rs 1,500"; null without an entry. */
-export function ticketBreakdown(ticket: EventTicket, quantity: number, currency: string) {
-  if (ticket.price === null || !ticket.entry) return null;
-  const unit = ticket.exhibitor ? (quantity === 1 ? "dog" : "dogs") : quantity === 1 ? "person" : "people";
-  return `Entry ${formatPrice(ticket.entry, currency)} + ${quantity} ${unit} × ${formatPrice(ticket.price, currency)}`;
 }
 
 /** "PKR 1,000", or null when the price isn't set. */

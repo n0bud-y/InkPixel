@@ -281,9 +281,9 @@ export default async function EventPage(props: PageProps<"/events/[slug]">) {
                 </h2>
                 <ol className="mt-6 grid gap-4 sm:grid-cols-3">
                   {[
-                    ["Book", "Choose your ticket and fill in your details (and your dog's, for exhibitors)."],
-                    ["Pay by Raast", "Scan the Raast QR code or send to the Raast ID shown after booking."],
-                    ["Send the receipt", "Send the receipt on WhatsApp with your booking reference. We confirm your place."],
+                    ["Choose & pay", "Press Book now, choose your ticket, and scan the Raast QR code with your banking app to pay."],
+                    ["Add your proof", "Type the transaction reference or add a screenshot of the payment."],
+                    ["Get your ticket", "Submit on WhatsApp. We check the payment and send your ticket there."],
                   ].map(([title, text], index) => (
                     <li
                       key={title}
