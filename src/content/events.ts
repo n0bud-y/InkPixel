@@ -1,6 +1,7 @@
 import type { StaticImageData } from "next/image";
 import dogShowJudge from "@/assets/images/events/all-breed-cacib-dog-show-karachi-2026/judge.webp";
 import dogShowPoster from "@/assets/images/events/all-breed-cacib-dog-show-karachi-2026/poster.webp";
+import dogShowRaastQr from "@/assets/images/events/all-breed-cacib-dog-show-karachi-2026/raast-qr.png";
 import { siteConfig } from "@/lib/site";
 
 // Events (28 Nov 2026, project head): events the studio markets and sells tickets for, at /events
@@ -116,14 +117,16 @@ export const events: SiteEvent[] = [
       photo: { src: dogShowJudge, alt: "Judge Vladislava Yaroshuk holding a corgi" },
     },
     currency: "PKR",
-    // Prices to be set (project head).
+    // Prices from the project head (28 Nov 2026).
     tickets: [
-      { name: "Visitor", price: null, description: "Entry to watch the show, for one person.", exhibitor: false },
-      { name: "Exhibitor", price: null, description: "Show one dog: registration for one dog in the show.", exhibitor: true },
+      { name: "Visitor", price: 3000, description: "Entry to watch the show, for one person.", exhibitor: false },
+      { name: "Exhibitor", price: 1500, description: "Show one dog: registration for one dog in the show.", exhibitor: true },
     ],
     bookingOpen: true,
-    // Raast details to be set (project head).
-    payment: { raastId: null, accountTitle: null, bank: null, qr: null, link: null },
+    // DUMMY QR CODE (28 Nov 2026): a placeholder until the project head sends the real Raast QR;
+    // it encodes only the words "DUMMY RAAST QR CODE". Replace raast-qr.png (and add the Raast ID,
+    // account title, and bank) before taking payments.
+    payment: { raastId: null, accountTitle: null, bank: null, qr: dogShowRaastQr, link: null },
     // The studio's number until the project head names another.
     whatsapp: siteConfig.phone.tel.replace(/\D/g, ""),
     phones: ["0331 8215888", "0307 2052833", "0345 3189660", "0321 3200020", "0344 4180129"],

@@ -175,7 +175,7 @@ export function BookingDialog({
 
           <h3 className="mt-7 font-display text-[1.25rem] font-semibold">Pay by Raast</h3>
           <ol className="mt-3 space-y-2 text-[15px] leading-relaxed text-primary/80">
-            <li>1. Open your banking app and scan the QR code, or send to the Raast ID below.</li>
+            <li>1. Open your banking app and scan the QR code{payment.raastId ? ", or send to the Raast ID below" : ""}.</li>
             <li>2. Write your reference {done.reference} in the payment note, if your app has one.</li>
             <li>3. Send the receipt on WhatsApp with the button below. We confirm your booking once it&apos;s received.</li>
           </ol>
@@ -224,7 +224,7 @@ export function BookingDialog({
                   <dd className="mt-0.5 font-semibold">{price(done.total)}</dd>
                 </div>
               )}
-              {!payment.raastId && <p className="text-[14px] text-primary/70">We&apos;ll send you the Raast payment details on WhatsApp.</p>}
+              {!payment.raastId && !payment.qr && <p className="text-[14px] text-primary/70">We&apos;ll send you the Raast payment details on WhatsApp.</p>}
               {payment.link && (
                 <a href={payment.link} target="_blank" rel="noopener noreferrer" className="inline-block font-medium text-crimson underline underline-offset-4">
                   Pay with the payment link ↗<span className="sr-only"> (opens in a new tab)</span>
