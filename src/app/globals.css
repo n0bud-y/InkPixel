@@ -137,6 +137,19 @@
     }
   }
 
+  /* Sparkles around the event banner fading and growing in and out. */
+  @keyframes twinkle {
+    0%,
+    100% {
+      opacity: 0.15;
+      scale: 0.55;
+    }
+    50% {
+      opacity: 1;
+      scale: 1;
+    }
+  }
+
   @keyframes tick {
     from {
       opacity: 0;

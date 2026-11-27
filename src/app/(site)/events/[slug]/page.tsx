@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { BookNowButton } from "@/components/events/BookNowButton";
+import { EventBannerArt } from "@/components/events/EventBannerArt";
 import { EventContact } from "@/components/events/EventContact";
 import { EventGallery } from "@/components/events/EventGallery";
 import { EventSidebar } from "@/components/events/EventSidebar";
@@ -107,31 +109,33 @@ export default async function EventPage(props: PageProps<"/events/[slug]">) {
                   <span className="text-coral">●</span> {event.venue.name}, Karachi
                 </li>
               </ul>
-              <p className="mt-5 text-[14px] text-light/60">
+              {/* Book now opens the booking popup (the booking box listens); See tickets scrolls down. */}
+              {event.bookingOpen && !past && (
+                <div className="mt-8 flex flex-wrap items-center gap-3">
+                  <BookNowButton />
+                  <a
+                    href="#tickets-title"
+                    className="inline-flex h-14 items-center rounded-full px-7 text-[15px] font-medium text-white ring-1 ring-white/20 transition duration-300 hover:-translate-y-0.5 hover:bg-white hover:text-primary"
+                  >
+                    See tickets
+                  </a>
+                </div>
+              )}
+              <p className="mt-6 text-[14px] text-light/60">
                 Organised by {event.organizer} · {event.partner}
               </p>
             </div>
-            {/* The poster: tilts and lifts on hover with a light sheen; a date badge floats on it. */}
-            <div className="group relative motion-safe:animate-[rise_0.6s_var(--ease-out-soft)_both] motion-safe:[animation-delay:150ms]">
-              <div
-                aria-hidden="true"
-                className="absolute -inset-6 -z-10 rounded-[2.5rem] bg-[radial-gradient(closest-side,rgb(250_97_67_/_0.35),transparent)] motion-safe:animate-glow-pulse"
+            {event.banner ? (
+              <EventBannerArt image={event.banner.src} alt={event.banner.alt} day={when.day} month={when.month} />
+            ) : (
+              <Image
+                src={event.poster.src}
+                alt={event.poster.alt}
+                priority
+                sizes="(min-width: 1024px) 50vw, 100vw"
+                className="h-auto w-full rounded-[1.75rem] shadow-[0_50px_100px_-40px_rgb(0_0_0_/_0.9)] ring-1 ring-white/10"
               />
-              <div className="relative overflow-hidden rounded-[1.75rem] shadow-[0_50px_100px_-40px_rgb(0_0_0_/_0.9)] ring-1 ring-white/10 transition duration-700 ease-out group-hover:-translate-y-1.5 group-hover:-rotate-1 group-hover:shadow-[0_60px_110px_-40px_rgb(201_29_76_/_0.7)]">
-                <Image src={event.poster.src} alt={event.poster.alt} priority sizes="(min-width: 1024px) 50vw, 100vw" className="h-auto w-full transition-transform duration-700 ease-out group-hover:scale-[1.03]" />
-                <span
-                  aria-hidden="true"
-                  className="pointer-events-none absolute inset-y-0 left-0 w-1/3 -translate-x-full skew-x-[-20deg] bg-linear-to-r from-transparent via-white/35 to-transparent motion-safe:transition-transform motion-safe:duration-1000 motion-safe:ease-out motion-safe:group-hover:translate-x-[400%]"
-                />
-              </div>
-              <span
-                aria-hidden="true"
-                className="absolute -bottom-5 -left-3 grid w-20 overflow-hidden rounded-2xl bg-white text-center text-primary shadow-[0_24px_44px_-16px_rgb(0_0_0_/_0.7)] motion-safe:animate-float sm:-left-5"
-              >
-                <span className="bg-brand-gradient py-1 font-mono text-[12px] tracking-[0.16em] text-white uppercase">{when.month}</span>
-                <span className="py-2 font-display text-[2rem] leading-none font-semibold">{when.day}</span>
-              </span>
-            </div>
+            )}
           </div>
         </div>
       </section>

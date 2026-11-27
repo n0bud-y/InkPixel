@@ -1,9 +1,10 @@
 "use client";
 
-import { useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { formatPrice, ticketTotal } from "@/content/events";
 import { ScrollTrigger, gsap, useGSAP } from "@/lib/gsap";
+import { OPEN_BOOKING } from "./BookNowButton";
 import { BookingDialog, type BookingEvent } from "./BookingDialog";
 import { Countdown, useCountdown } from "./Countdown";
 import { sheen } from "./styles";
@@ -81,6 +82,17 @@ export function EventSidebar({
     setTicket(name);
     setOpen(true);
   };
+
+  // "Book now" in the banner (BookNowButton) opens the same popup.
+  useEffect(() => {
+    if (!canBook) return;
+    const open = () => {
+      setTicket(null);
+      setOpen(true);
+    };
+    window.addEventListener(OPEN_BOOKING, open);
+    return () => window.removeEventListener(OPEN_BOOKING, open);
+  }, [canBook]);
 
   const prices = event.tickets.flatMap((option) => ticketTotal(option, 1) ?? []);
   const from = prices.length ? formatPrice(Math.min(...prices), event.currency) : null;

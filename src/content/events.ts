@@ -1,4 +1,5 @@
 import type { StaticImageData } from "next/image";
+import dogShowBanner from "@/assets/images/events/all-breed-cacib-dog-show-karachi-2026/banner.webp";
 import dogShowGallery01 from "@/assets/images/events/all-breed-cacib-dog-show-karachi-2026/gallery-01.webp";
 import dogShowGallery02 from "@/assets/images/events/all-breed-cacib-dog-show-karachi-2026/gallery-02.webp";
 import dogShowGallery03 from "@/assets/images/events/all-breed-cacib-dog-show-karachi-2026/gallery-03.webp";
@@ -46,7 +47,10 @@ export type SiteEvent = {
   start: string;
   end: string | null;
   venue: { name: string; address: string; mapUrl: string };
+  /** The event card on /events, and the share image. */
   poster: { src: StaticImageData; alt: string };
+  /** The event page's banner picture (a cut-out on a transparent background); the poster without one. */
+  banner: { src: StaticImageData; alt: string } | null;
   /** Photos for the auto-scrolling gallery, and where they come from (shown under it). */
   gallery: { src: StaticImageData; alt: string }[];
   galleryCredit: string | null;
@@ -109,6 +113,12 @@ export const events: SiteEvent[] = [
     poster: {
       src: dogShowPoster,
       alt: "All Breed CACIB Dog Show Karachi poster: judge Vladislava Yaroshuk holding a corgi, a Dalmatian, the date 13 December 2026, and the organisers' logos",
+    },
+    // The banner artwork from the project head (28 Nov 2026): the judge, four dogs, and the
+    // partners' logos, cut out.
+    banner: {
+      src: dogShowBanner,
+      alt: "Judge Vladislava Yaroshuk from Ukraine holding a corgi, beside a Dalmatian, a Golden Retriever, and a German Shepherd, above the logos of PGSDC, World Kennel Union, PKU, Eterna, Defence Authority Creek Club, and Ink Pixel Studios",
     },
     // Photos from the organiser's past shows (the PGSDC Facebook page, 28 Nov 2026; project head:
     // a gallery of Pakistani dogs), not from this show.
