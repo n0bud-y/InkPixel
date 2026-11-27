@@ -349,6 +349,7 @@ Newest first.
 
 | Date | Update |
 |---|---|
+| 28 Nov 2026 | `EventSidebar`: no max-height or inner scroll; pin start `top <header+16>` when the box fits, else `bottom bottom-=16`; short-screen classes `lg:[@media(max-height:820px)]:` (tighter padding, rows, button; `Countdown` `cellClassName`); price column `whitespace-nowrap`. Measured: box top = header + 16 and bottom inside the screen at 1024×700 … 1920×1080, no scroll bar; 0 console errors; no phone overflow |
 | 28 Nov 2026 | `components/events/EventContact.tsx` (client: tel links, WhatsApp question link, share via the Web Share API or a copied link); `EventSidebar` loses `phones`, share, and the WhatsApp link. Checked: 0 console errors, no phone overflow |
 | 28 Nov 2026 | `components/events/Countdown.tsx` (client: `useCountdown` and `Countdown`, dark and light tones, keeps its space while loading) used by the booking box and the /events cards; the card's price line removed. Checked: 0 console errors, no phone overflow |
 | 28 Nov 2026 | `EventTicket.entry` (paid once per booking) with `ticketTotal` and `ticketBreakdown` in `events.ts`, used by the form, sidebar, pages, schema (one ticket = entry + 1), and `sendBooking` (server-priced). New `tick` and `pop-in` keyframes in `globals.css`; `components/events/styles.ts` (`sheen`, `chipHover`). Checked: exhibitor 1/2/3 dogs → Rs 4,500/6,000/7,500, 3 visitors → Rs 9,000, server total Rs 4,500 for 1 dog, Offer Exhibitor 4500.00; 0 console errors; no phone overflow |

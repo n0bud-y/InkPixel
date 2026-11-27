@@ -31,7 +31,18 @@ const tones = {
 // dropping in as it changes. Decorative (the date is in the text, and a ticking timer would keep
 // interrupting screen readers); shows nothing before the page has loaded or once the event starts.
 // The space it takes is kept while loading, so nothing jumps.
-export function Countdown({ start, tone = "dark", className = "" }: { start: string; tone?: keyof typeof tones; className?: string }) {
+export function Countdown({
+  start,
+  tone = "dark",
+  className = "",
+  cellClassName = "",
+}: {
+  start: string;
+  tone?: keyof typeof tones;
+  className?: string;
+  /** Extra classes for each box, e.g. tighter padding. */
+  cellClassName?: string;
+}) {
   const left = useCountdown(start);
   if (left === null) return null;
   const style = tones[tone];
@@ -45,7 +56,7 @@ export function Countdown({ start, tone = "dark", className = "" }: { start: str
   return (
     <div aria-hidden="true" className={`grid grid-cols-4 gap-2 text-center ${className}`}>
       {cells.map(([unit, value]) => (
-        <div key={unit} className={`overflow-hidden rounded-xl py-2 ring-1 ${style.cell}`}>
+        <div key={unit} className={`overflow-hidden rounded-xl py-2 ring-1 ${style.cell} ${cellClassName}`}>
           {/* Re-keyed by its value, so each new number drops in. */}
           <span key={value ?? "-"} className="block font-display text-[1.35rem] leading-none font-semibold tabular-nums motion-safe:animate-tick">
             {value === undefined ? "--" : String(value).padStart(2, "0")}
