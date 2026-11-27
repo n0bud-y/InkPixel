@@ -153,7 +153,7 @@ export const events: SiteEvent[] = [
       {
         question: "How do I book and pay?",
         answer:
-          "Press Book now, choose your ticket, and pay the amount by Raast: scan the QR code with your banking app. Then add the transaction reference or a screenshot of the payment and press Submit: WhatsApp opens with your details, ready to send to us. We check the payment and send your ticket on WhatsApp.",
+          "Press Book now, choose your ticket, and pay the amount by Raast: scan the QR code with your banking app. Then tap Send payment proof on WhatsApp and send us the payment screenshot or the transaction reference in the chat. We check the payment and send your ticket on WhatsApp.",
       },
       {
         question: "How much does it cost to show my dogs?",

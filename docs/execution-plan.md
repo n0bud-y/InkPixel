@@ -349,6 +349,7 @@ Newest first.
 
 | Date | Update |
 |---|---|
+| 28 Nov 2026 | `BookingDialog`: no form, reference, screenshot, or sent step; step 3 is a `wa.me` link. "Book in Three Steps" and the FAQ reworded. Checked: no inputs besides the ticket radios; WhatsApp message with ticket and Rs 4,500; 0 console errors |
 | 28 Nov 2026 | `BookingDialog` rewritten (ticket radios, amount = `ticketTotal(ticket, 1)`, QR, reference input, image picker with a local preview, `wa.me` link with the message; Web Share with files where supported). Removed: `sendBooking` (send-enquiry.ts), `ticketBreakdown`, the event `code`. Checked: no name or quantity fields; empty submit blocked; reference → WhatsApp message with ticket, Rs 4,500, and the reference; popup fits a 390×780 phone; 0 console errors; no phone overflow |
 | 28 Nov 2026 | `EventSidebar`: no max-height or inner scroll; pin start `top <header+16>` when the box fits, else `bottom bottom-=16`; short-screen classes `lg:[@media(max-height:820px)]:` (tighter padding, rows, button; `Countdown` `cellClassName`); price column `whitespace-nowrap`. Measured: box top = header + 16 and bottom inside the screen at 1024×700 … 1920×1080, no scroll bar; 0 console errors; no phone overflow |
 | 28 Nov 2026 | `components/events/EventContact.tsx` (client: tel links, WhatsApp question link, share via the Web Share API or a copied link); `EventSidebar` loses `phones`, share, and the WhatsApp link. Checked: 0 console errors, no phone overflow |
