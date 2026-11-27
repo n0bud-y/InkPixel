@@ -24,6 +24,8 @@ const emptyDog: Dog = { name: "", breed: "", sex: "", dateOfBirth: "", className
 const field =
   "mt-1.5 block w-full rounded-xl border border-primary/15 bg-white px-4 py-3 text-[15px] text-primary outline-none transition placeholder:text-primary/40 focus:border-coral focus:ring-2 focus:ring-coral/25";
 const label = "block text-[13px] font-medium text-primary/80";
+// The popup's body: scrolls inside itself, with the brand scroll bar.
+const scrollArea = "scrollbar-brand min-h-0 flex-1 overflow-y-auto overscroll-contain px-6 py-7 sm:px-8";
 
 const problems: Record<Exclude<BookingResult, { ok: true }>["reason"], string> = {
   invalid: "Please check the form: every field marked * is needed, and an exhibitor booking needs each dog's name and breed.",
@@ -138,9 +140,10 @@ export function BookingDialog({
         if (clickEvent.target === dialog.current) dialog.current?.close();
       }}
       aria-labelledby="booking-title"
-      className="m-auto max-h-[92svh] w-[min(42rem,calc(100vw-1.5rem))] overflow-y-auto overscroll-contain rounded-[1.75rem] bg-light p-0 text-primary shadow-[0_40px_120px_-30px_rgb(10_12_30_/_0.8)] backdrop:bg-primary/70 backdrop:backdrop-blur-sm"
+      className="m-auto max-h-[min(92svh,56rem)] w-[min(42rem,calc(100vw-1.5rem))] flex-col overflow-hidden rounded-[1.75rem] bg-light p-0 text-primary shadow-[0_40px_120px_-30px_rgb(10_12_30_/_0.8)] backdrop:bg-primary/70 backdrop:backdrop-blur-sm open:flex"
     >
-      <div className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-primary/10 bg-light/95 px-6 py-5 backdrop-blur sm:px-8">
+      {/* The header stays put; the form (or the payment step) scrolls below it. */}
+      <div className="flex shrink-0 items-start justify-between gap-4 border-b border-primary/10 bg-light px-6 py-5 sm:px-8">
         <div>
           <p className="font-mono text-[11px] tracking-[0.18em] text-crimson uppercase">{done ? "Booking received" : "Book your place"}</p>
           <h2 id="booking-title" className="mt-1 font-display text-[clamp(1.25rem,2.4vw,1.6rem)] leading-tight font-semibold">
@@ -163,7 +166,7 @@ export function BookingDialog({
       </div>
 
       {done ? (
-        <div className="px-6 py-7 sm:px-8">
+        <div className={scrollArea}>
           <div className="rounded-2xl bg-primary p-5 text-white">
             <p className="text-[14px] text-light/75">Thank you, {done.name.split(" ")[0]}. Your booking reference:</p>
             <p className="mt-1 font-mono text-[clamp(1.6rem,4vw,2.1rem)] font-semibold tracking-[0.08em]">{done.reference}</p>
@@ -245,7 +248,7 @@ export function BookingDialog({
           <p className="mt-3 text-center text-[13px] text-primary/55">We&apos;ve also received your booking by email.</p>
         </div>
       ) : (
-        <form onSubmit={submit} className="space-y-6 px-6 py-7 sm:px-8">
+        <form onSubmit={submit} className={`${scrollArea} space-y-6`}>
           <fieldset>
             <legend className="text-[13px] font-medium text-primary/80">Ticket *</legend>
             <div className="mt-2 grid gap-3 sm:grid-cols-2">

@@ -161,6 +161,19 @@ export default async function EventPage(props: PageProps<"/events/[slug]">) {
                       </h2>
                       <p className="mt-1 text-light/70">Honourable judge from {event.judge.country}</p>
                       <p className="mt-5 text-[clamp(1rem,1.05vw,1.1rem)] leading-[1.75] text-light/85">{event.judge.bio}</p>
+                      {event.judge.profileUrl && (
+                        <a
+                          href={event.judge.profileUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mt-6 inline-flex h-11 items-center gap-2.5 rounded-full bg-white/[0.08] px-5 text-[14px] font-medium text-white ring-1 ring-white/15 transition hover:bg-[#1877f2] hover:ring-[#1877f2]"
+                        >
+                          <svg viewBox="0 0 24 24" className="size-5 fill-current" aria-hidden="true">
+                            <path d="M24 12a12 12 0 1 0-13.9 11.9v-8.4H7.1V12h3V9.4c0-3 1.8-4.7 4.5-4.7 1.3 0 2.7.2 2.7.2v3h-1.5c-1.5 0-2 .9-2 1.9V12h3.4l-.5 3.5h-2.9v8.4A12 12 0 0 0 24 12Z" />
+                          </svg>
+                          {event.judge.name} on Facebook<span className="sr-only"> (opens in a new tab)</span>
+                        </a>
+                      )}
                     </div>
                   </div>
                 </section>

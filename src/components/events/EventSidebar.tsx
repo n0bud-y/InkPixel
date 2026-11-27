@@ -6,8 +6,9 @@ import { formatPrice } from "@/content/events";
 import { ScrollTrigger, gsap, useGSAP } from "@/lib/gsap";
 import { BookingDialog, WhatsAppIcon, type BookingEvent } from "./BookingDialog";
 
-// Where the box sits when pinned: below the fixed header.
-const OFFSET = 112;
+// Where the box sits when pinned: 16 px below the fixed header (96 px tall on laptops, 128 px on
+// large screens), measured, so it never slides under it.
+const pinTop = () => (document.querySelector("header")?.getBoundingClientRect().height ?? 96) + 16;
 
 const noSubscribe = () => () => {};
 
@@ -71,13 +72,20 @@ export function EventSidebar({
       if (!content || !element) return;
       const mm = gsap.matchMedia();
       mm.add("(min-width: 64rem)", () => {
+        // The box is never taller than the screen below the header (it scrolls inside itself on
+        // short screens), measured again whenever ScrollTrigger re-measures (e.g. on resize).
+        const fit = () => element.style.setProperty("--event-top", `${pinTop()}px`);
+        fit();
+        ScrollTrigger.addEventListener("refreshInit", fit);
         ScrollTrigger.create({
           trigger: element,
-          start: `top ${OFFSET}px`,
+          start: () => `top ${pinTop()}px`,
           end: () => `+=${Math.max(0, content.offsetHeight - element.offsetHeight)}`,
           pin: true,
           pinSpacing: false,
+          invalidateOnRefresh: true,
         });
+        return () => ScrollTrigger.removeEventListener("refreshInit", fit);
       });
       return () => mm.revert();
     },
@@ -110,7 +118,7 @@ export function EventSidebar({
     <div ref={column} className="lg:h-full">
       <div
         ref={box}
-        className="overflow-hidden rounded-[1.75rem] bg-white text-primary shadow-[0_40px_90px_-45px_rgb(21_25_54_/_0.6)] ring-1 ring-primary/10"
+        className="scrollbar-brand overflow-hidden rounded-[1.75rem] bg-white text-primary shadow-[0_40px_90px_-45px_rgb(21_25_54_/_0.6)] ring-1 ring-primary/10 lg:max-h-[calc(100svh-var(--event-top,7rem)-1rem)] lg:overflow-y-auto lg:overscroll-contain"
       >
         {/* Date and title. */}
         <div className="relative isolate overflow-hidden bg-primary p-6 text-white">

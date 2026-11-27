@@ -44,7 +44,7 @@ export type SiteEvent = {
   partner: string;
   /** Logos on the poster, as names (in poster order). */
   partners: string[];
-  judge: { name: string; country: string; bio: string; photo: { src: StaticImageData; alt: string } } | null;
+  judge: { name: string; country: string; bio: string; photo: { src: StaticImageData; alt: string }; profileUrl: string | null } | null;
   currency: string;
   tickets: EventTicket[];
   bookingOpen: boolean;
@@ -115,6 +115,8 @@ export const events: SiteEvent[] = [
       country: "Ukraine",
       bio: "The honourable judge of the show, bringing international expertise and judging excellence to Karachi.",
       photo: { src: dogShowJudge, alt: "Judge Vladislava Yaroshuk holding a corgi" },
+      // Her public Facebook profile (project head, 28 Nov 2026).
+      profileUrl: "https://www.facebook.com/yaroshuk.vladislava",
     },
     currency: "PKR",
     // Prices from the project head (28 Nov 2026).
