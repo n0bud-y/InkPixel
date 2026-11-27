@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { formatPrice, ticketTotal } from "@/content/events";
 import { ScrollTrigger, gsap, useGSAP } from "@/lib/gsap";
 import { BookingDialog, WhatsAppIcon, type BookingEvent } from "./BookingDialog";
+import { Countdown, useCountdown } from "./Countdown";
 import { sheen } from "./styles";
 
 // Where the box sits when pinned: 16 px below the fixed header (96 px tall on laptops, 128 px on
@@ -12,21 +13,6 @@ import { sheen } from "./styles";
 const pinTop = () => (document.querySelector("header")?.getBoundingClientRect().height ?? 96) + 16;
 
 const noSubscribe = () => () => {};
-
-/** Days, hours, minutes, and seconds until the start; null once it has started. */
-function useCountdown(start: string) {
-  const mounted = useSyncExternalStore(noSubscribe, () => true, () => false);
-  const [now, setNow] = useState(() => Date.now());
-  useEffect(() => {
-    const timer = window.setInterval(() => setNow(Date.now()), 1000);
-    return () => window.clearInterval(timer);
-  }, []);
-  if (!mounted) return undefined;
-  const left = Date.parse(start) - now;
-  if (left <= 0) return null;
-  const seconds = Math.floor(left / 1000);
-  return { days: Math.floor(seconds / 86400), hours: Math.floor((seconds % 86400) / 3600), minutes: Math.floor((seconds % 3600) / 60), seconds: seconds % 60 };
-}
 
 // The event's booking box. Desktop: beside the page's content, pinned below the header while the
 // content scrolls (with GSAP: CSS sticky doesn't work inside the smooth scroller), until the end
@@ -134,28 +120,7 @@ export function EventSidebar({
             </div>
           </div>
 
-          {/* Countdown (after the page has loaded, so server and browser agree). Decorative: the
-              date is in the text, and a ticking timer would keep interrupting screen readers. */}
-          {countdown && (
-            <div aria-hidden="true" className="mt-5 grid grid-cols-4 gap-2 text-center">
-              {(
-                [
-                  ["days", countdown.days],
-                  ["hours", countdown.hours],
-                  ["min", countdown.minutes],
-                  ["sec", countdown.seconds],
-                ] as const
-              ).map(([unit, value]) => (
-                <div key={unit} className="overflow-hidden rounded-xl bg-white/[0.08] py-2 ring-1 ring-white/10">
-                  {/* Re-keyed by its value, so each new number drops in. */}
-                  <span key={value} className="block font-display text-[1.35rem] leading-none font-semibold tabular-nums motion-safe:animate-tick">
-                    {String(value).padStart(2, "0")}
-                  </span>
-                  <span className="mt-1 block font-mono text-[10px] tracking-[0.14em] text-light/60 uppercase">{unit}</span>
-                </div>
-              ))}
-            </div>
-          )}
+          <Countdown start={start} className="mt-5" />
           {countdown === null && <p className="mt-4 text-[14px] text-light/75">{past ? "This event has ended." : "Happening now."}</p>}
         </div>
 
