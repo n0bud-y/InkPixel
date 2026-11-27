@@ -16,8 +16,11 @@ import { siteConfig } from "@/lib/site";
 export type EventTicket = {
   /** Shown on the page and in the form, e.g. "Visitor". Unique within the event. */
   name: string;
-  /** Per ticket, in the event's currency; null until it's set ("Price to be announced"). */
+  /** Per ticket (per person, or per dog for exhibitors), in the event's currency; null until it's
+   *  set ("Price to be announced"). */
   price: number | null;
+  /** Paid once per booking on top of `price × quantity`, e.g. the exhibitor's own entry. */
+  entry: number | null;
   description: string;
   /** Exhibitor tickets ask for the dog's details (one ticket per dog). */
   exhibitor: boolean;
@@ -103,7 +106,7 @@ export const events: SiteEvent[] = [
     ],
     highlights: ["All breeds", "International standards", "CACIB show", "Judge from Ukraine", "DHA Karachi"],
     audience: [
-      { title: "Exhibitors", text: "Show your dog in front of an international judge. One exhibitor ticket per dog." },
+      { title: "Exhibitors", text: "Show your dogs in front of an international judge: your entry, plus a fee for each dog." },
       { title: "Breeders", text: "Meet fellow breeders and see dogs from every breed judged to international standards." },
       { title: "Visitors & families", text: "Dog lovers of all ages are welcome to watch the show." },
     ],
@@ -119,10 +122,17 @@ export const events: SiteEvent[] = [
       profileUrl: "https://www.facebook.com/yaroshuk.vladislava",
     },
     currency: "PKR",
-    // Prices from the project head (28 Nov 2026).
+    // Prices from the project head (28 Nov 2026): visitors Rs 3,000 each; exhibitors always pay
+    // the Rs 3,000 entry, plus Rs 1,500 for each dog (one dog: Rs 4,500; two: Rs 6,000).
     tickets: [
-      { name: "Visitor", price: 3000, description: "Entry to watch the show, for one person.", exhibitor: false },
-      { name: "Exhibitor", price: 1500, description: "Show one dog: registration for one dog in the show.", exhibitor: true },
+      { name: "Visitor", price: 3000, entry: null, description: "Entry to watch the show, for one person.", exhibitor: false },
+      {
+        name: "Exhibitor",
+        price: 1500,
+        entry: 3000,
+        description: "Your entry (Rs 3,000) plus Rs 1,500 for each dog you show.",
+        exhibitor: true,
+      },
     ],
     bookingOpen: true,
     // DUMMY QR CODE (28 Nov 2026): a placeholder until the project head sends the real Raast QR;
@@ -148,8 +158,9 @@ export const events: SiteEvent[] = [
           "Book on this page, then pay by Raast: scan the QR code or send to the Raast ID shown after you book, and send the receipt on WhatsApp with your booking reference. We confirm your booking once the payment is received.",
       },
       {
-        question: "I'm showing more than one dog. How many tickets do I need?",
-        answer: "One exhibitor ticket per dog. Choose the number of dogs and fill in each dog's details in the form.",
+        question: "How much does it cost to show my dogs?",
+        answer:
+          "Exhibitors pay the Rs 3,000 entry once, plus Rs 1,500 for each dog: one dog is Rs 4,500, two dogs Rs 6,000, three dogs Rs 7,500. Choose the number of dogs in the form and fill in each dog's details. Visitors pay Rs 3,000 per person.",
       },
       {
         question: "Who do I contact for questions?",
@@ -166,6 +177,20 @@ export function isPast(event: SiteEvent, now = Date.now()) {
 }
 
 export const getEvent = (slug: string) => events.find((event) => event.slug === slug) ?? null;
+
+/** A booking's total: the entry (if any) plus the price for each person or dog; null when the
+ *  price isn't set. Used everywhere a price is shown, and by the server to price a booking. */
+export function ticketTotal(ticket: EventTicket, quantity: number) {
+  if (ticket.price === null) return null;
+  return (ticket.entry ?? 0) + ticket.price * quantity;
+}
+
+/** How a ticket's total is made up, e.g. "Entry Rs 3,000 + 2 dogs × Rs 1,500"; null without an entry. */
+export function ticketBreakdown(ticket: EventTicket, quantity: number, currency: string) {
+  if (ticket.price === null || !ticket.entry) return null;
+  const unit = ticket.exhibitor ? (quantity === 1 ? "dog" : "dogs") : quantity === 1 ? "person" : "people";
+  return `Entry ${formatPrice(ticket.entry, currency)} + ${quantity} ${unit} × ${formatPrice(ticket.price, currency)}`;
+}
 
 /** "PKR 1,000", or null when the price isn't set. */
 export function formatPrice(amount: number | null, currency: string) {

@@ -3,11 +3,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { EventSidebar } from "@/components/events/EventSidebar";
+import { chipHover } from "@/components/events/styles";
 import { Reveal } from "@/components/motion/Reveal";
 import { PageSchema } from "@/components/seo/PageSchema";
 import { Accordion } from "@/components/ui/Accordion";
 import { Eyebrow } from "@/components/ui/Eyebrow";
-import { eventWhen, events, eventsPage, formatPrice, getEvent, isPast, type SiteEvent } from "@/content/events";
+import { eventWhen, events, eventsPage, formatPrice, getEvent, isPast, ticketTotal, type SiteEvent } from "@/content/events";
 import { absoluteUrl, breadcrumbSchema, eventSchema, faqSchema, pageMetadata } from "@/lib/seo";
 
 const seoOf = (event: SiteEvent) => ({
@@ -64,7 +65,8 @@ export default async function EventPage(props: PageProps<"/events/[slug]">) {
             end: event.end,
             venue: event.venue,
             organizer: event.organizer,
-            tickets: event.tickets,
+            // One ticket's full price (an exhibitor's entry with one dog).
+            tickets: event.tickets.map((ticket) => ({ name: ticket.name, price: ticketTotal(ticket, 1) })),
             currency: event.currency,
             bookingOpen: event.bookingOpen && !past,
           }),
@@ -107,15 +109,26 @@ export default async function EventPage(props: PageProps<"/events/[slug]">) {
                 Organised by {event.organizer} · {event.partner}
               </p>
             </div>
-            <div className="relative motion-safe:animate-[rise_0.6s_var(--ease-out-soft)_both] motion-safe:[animation-delay:150ms]">
-              <div aria-hidden="true" className="absolute -inset-6 -z-10 rounded-[2.5rem] bg-[radial-gradient(closest-side,rgb(250_97_67_/_0.35),transparent)]" />
-              <Image
-                src={event.poster.src}
-                alt={event.poster.alt}
-                priority
-                sizes="(min-width: 1024px) 50vw, 100vw"
-                className="h-auto w-full rounded-[1.75rem] shadow-[0_50px_100px_-40px_rgb(0_0_0_/_0.9)] ring-1 ring-white/10"
+            {/* The poster: tilts and lifts on hover with a light sheen; a date badge floats on it. */}
+            <div className="group relative motion-safe:animate-[rise_0.6s_var(--ease-out-soft)_both] motion-safe:[animation-delay:150ms]">
+              <div
+                aria-hidden="true"
+                className="absolute -inset-6 -z-10 rounded-[2.5rem] bg-[radial-gradient(closest-side,rgb(250_97_67_/_0.35),transparent)] motion-safe:animate-glow-pulse"
               />
+              <div className="relative overflow-hidden rounded-[1.75rem] shadow-[0_50px_100px_-40px_rgb(0_0_0_/_0.9)] ring-1 ring-white/10 transition duration-700 ease-out group-hover:-translate-y-1.5 group-hover:-rotate-1 group-hover:shadow-[0_60px_110px_-40px_rgb(201_29_76_/_0.7)]">
+                <Image src={event.poster.src} alt={event.poster.alt} priority sizes="(min-width: 1024px) 50vw, 100vw" className="h-auto w-full transition-transform duration-700 ease-out group-hover:scale-[1.03]" />
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-y-0 left-0 w-1/3 -translate-x-full skew-x-[-20deg] bg-linear-to-r from-transparent via-white/35 to-transparent motion-safe:transition-transform motion-safe:duration-1000 motion-safe:ease-out motion-safe:group-hover:translate-x-[400%]"
+                />
+              </div>
+              <span
+                aria-hidden="true"
+                className="absolute -bottom-5 -left-3 grid w-20 overflow-hidden rounded-2xl bg-white text-center text-primary shadow-[0_24px_44px_-16px_rgb(0_0_0_/_0.7)] motion-safe:animate-float sm:-left-5"
+              >
+                <span className="bg-brand-gradient py-1 font-mono text-[12px] tracking-[0.16em] text-white uppercase">{when.month}</span>
+                <span className="py-2 font-display text-[2rem] leading-none font-semibold">{when.day}</span>
+              </span>
             </div>
           </div>
         </div>
@@ -139,7 +152,10 @@ export default async function EventPage(props: PageProps<"/events/[slug]">) {
                 </div>
                 <ul className="mt-6 flex flex-wrap gap-2">
                   {event.highlights.map((highlight) => (
-                    <li key={highlight} className="rounded-full bg-white px-4 py-2 text-[14px] font-medium text-primary shadow-[0_10px_24px_-16px_rgb(21_25_54_/_0.5)] ring-1 ring-primary/10">
+                    <li
+                      key={highlight}
+                      className={`cursor-default rounded-full bg-white px-4 py-2 text-[14px] font-medium text-primary shadow-[0_10px_24px_-16px_rgb(21_25_54_/_0.5)] ring-1 ring-primary/10 ${chipHover}`}
+                    >
                       {highlight}
                     </li>
                   ))}
@@ -150,10 +166,23 @@ export default async function EventPage(props: PageProps<"/events/[slug]">) {
             {/* The judge. */}
             {event.judge && (
               <Reveal>
-                <section aria-labelledby="judge-title" className="relative isolate overflow-hidden rounded-[1.75rem] bg-primary text-white">
-                  <div aria-hidden="true" className="absolute -right-24 -bottom-24 -z-10 size-80 rounded-full bg-[radial-gradient(closest-side,rgb(201_29_76_/_0.45),transparent)]" />
+                <section
+                  aria-labelledby="judge-title"
+                  className="group relative isolate overflow-hidden rounded-[1.75rem] bg-primary text-white transition duration-500 hover:-translate-y-1 hover:shadow-[0_40px_80px_-40px_rgb(201_29_76_/_0.7)]"
+                >
+                  <div
+                    aria-hidden="true"
+                    className="absolute -right-24 -bottom-24 -z-10 size-80 rounded-full bg-[radial-gradient(closest-side,rgb(201_29_76_/_0.45),transparent)] motion-safe:animate-glow-pulse"
+                  />
                   <div className="grid sm:grid-cols-[minmax(0,15rem)_1fr]">
-                    <Image src={event.judge.photo.src} alt={event.judge.photo.alt} sizes="(min-width: 640px) 15rem, 100vw" className="h-72 w-full object-cover object-top sm:h-full" />
+                    <div className="overflow-hidden">
+                      <Image
+                        src={event.judge.photo.src}
+                        alt={event.judge.photo.alt}
+                        sizes="(min-width: 640px) 15rem, 100vw"
+                        className="h-72 w-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.06] sm:h-full"
+                      />
+                    </div>
                     <div className="p-[clamp(1.5rem,3vw,2.5rem)]">
                       <p className="font-mono text-[11px] tracking-[0.18em] text-coral uppercase">The judge</p>
                       <h2 id="judge-title" className="mt-2 font-display text-[clamp(1.6rem,2.4vw,2.3rem)] leading-tight font-semibold">
@@ -189,8 +218,16 @@ export default async function EventPage(props: PageProps<"/events/[slug]">) {
                 </h2>
                 <ul className="mt-6 grid gap-4 sm:grid-cols-3">
                   {event.audience.map(({ title, text }, index) => (
-                    <li key={title} data-reveal className="group rounded-[1.5rem] bg-white p-6 ring-1 ring-primary/10 transition duration-500 hover:-translate-y-1 hover:shadow-[0_30px_60px_-35px_rgb(201_29_76_/_0.5)]">
-                      <span className="grid size-11 place-items-center rounded-full bg-brand-gradient-reverse font-display font-semibold text-white">{index + 1}</span>
+                    <li
+                      key={title}
+                      data-reveal
+                      className="group relative overflow-hidden rounded-[1.5rem] bg-white p-6 ring-1 ring-primary/10 transition duration-500 hover:-translate-y-1.5 hover:shadow-[0_30px_60px_-35px_rgb(201_29_76_/_0.5)]"
+                    >
+                      {/* A gradient line that grows across the top on hover. */}
+                      <span aria-hidden="true" className="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-brand-gradient transition-transform duration-500 ease-out group-hover:scale-x-100" />
+                      <span className="grid size-11 place-items-center rounded-full bg-brand-gradient-reverse font-display font-semibold text-white shadow-[0_10px_22px_-10px_rgb(250_97_67_/_0.9)] transition-transform duration-700 ease-out group-hover:scale-110 group-hover:rotate-[360deg]">
+                        {index + 1}
+                      </span>
                       <h3 className="mt-4 font-display text-[1.2rem] font-semibold text-primary">{title}</h3>
                       <p className="mt-2 text-[15px] leading-relaxed text-primary/70">{text}</p>
                     </li>
@@ -208,14 +245,26 @@ export default async function EventPage(props: PageProps<"/events/[slug]">) {
                 </h2>
                 <ul className="mt-6 grid gap-4 sm:grid-cols-2">
                   {event.tickets.map((ticket) => (
-                    <li key={ticket.name} className="relative overflow-hidden rounded-[1.5rem] bg-white p-6 ring-1 ring-primary/10">
-                      <span aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-brand-gradient" />
+                    <li
+                      key={ticket.name}
+                      className="group relative flex flex-col overflow-hidden rounded-[1.5rem] bg-white p-6 ring-1 ring-primary/10 transition duration-500 hover:-translate-y-1.5 hover:shadow-[0_34px_60px_-34px_rgb(201_29_76_/_0.6)] hover:ring-coral/40"
+                    >
+                      <span aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-brand-gradient transition-[height] duration-300 group-hover:h-1.5" />
+                      {/* Ticket notches on both sides, and a dashed tear line between them. */}
+                      <span aria-hidden="true" className="absolute bottom-[2.875rem] -left-3 size-6 rounded-full bg-light ring-1 ring-primary/10" />
+                      <span aria-hidden="true" className="absolute bottom-[2.875rem] -right-3 size-6 rounded-full bg-light ring-1 ring-primary/10" />
+                      <span aria-hidden="true" className="absolute inset-x-5 bottom-[3.625rem] border-t border-dashed border-primary/15" />
                       <p className="flex items-baseline justify-between gap-3">
                         <span className="font-display text-[1.35rem] font-semibold text-primary">{ticket.name}</span>
-                        <span className="font-display text-[1.35rem] font-semibold text-crimson">{formatPrice(ticket.price, event.currency) ?? "Price TBA"}</span>
+                        <span className="origin-right font-display text-[1.35rem] font-semibold text-crimson transition-transform duration-300 group-hover:scale-110">
+                          {formatPrice(ticketTotal(ticket, 1), event.currency) ?? "Price TBA"}
+                        </span>
                       </p>
                       <p className="mt-2 text-[15px] leading-relaxed text-primary/70">{ticket.description}</p>
-                      <p className="mt-3 font-mono text-[11px] tracking-[0.14em] text-primary/45 uppercase">{ticket.exhibitor ? "Per dog" : "Per person"}</p>
+                      {/* At the bottom of the card, below the tear line, whatever the text's length. */}
+                      <p className="mt-auto pt-10 font-mono text-[11px] tracking-[0.14em] text-primary/45 uppercase">
+                        {ticket.entry ? `With 1 dog · +${formatPrice(ticket.price, event.currency)} per extra dog` : ticket.exhibitor ? "Per dog" : "Per person"}
+                      </p>
                     </li>
                   ))}
                 </ul>
@@ -235,8 +284,15 @@ export default async function EventPage(props: PageProps<"/events/[slug]">) {
                     ["Pay by Raast", "Scan the Raast QR code or send to the Raast ID shown after booking."],
                     ["Send the receipt", "Send the receipt on WhatsApp with your booking reference. We confirm your place."],
                   ].map(([title, text], index) => (
-                    <li key={title} data-reveal className="relative rounded-[1.5rem] border border-dashed border-primary/20 p-6">
-                      <span className="font-display text-[2.5rem] leading-none font-semibold text-transparent [-webkit-text-stroke:1.5px_rgb(201_29_76_/_0.55)]">0{index + 1}</span>
+                    <li
+                      key={title}
+                      data-reveal
+                      className="group relative rounded-[1.5rem] border border-dashed border-primary/20 p-6 transition duration-500 hover:-translate-y-1.5 hover:border-solid hover:border-coral/50 hover:bg-white hover:shadow-[0_30px_60px_-36px_rgb(201_29_76_/_0.55)]"
+                    >
+                      {/* The outlined number fills with the brand gradient on hover. */}
+                      <span className="bg-clip-text font-display text-[2.5rem] leading-none font-semibold text-transparent [-webkit-text-stroke:1.5px_rgb(201_29_76_/_0.55)] group-hover:bg-brand-gradient-reverse group-hover:[-webkit-text-stroke-color:transparent]">
+                        0{index + 1}
+                      </span>
                       <h3 className="mt-3 font-display text-[1.15rem] font-semibold text-primary">{title}</h3>
                       <p className="mt-2 text-[15px] leading-relaxed text-primary/70">{text}</p>
                     </li>
@@ -247,7 +303,18 @@ export default async function EventPage(props: PageProps<"/events/[slug]">) {
 
             {/* Venue. */}
             <Reveal>
-              <section aria-labelledby="venue-title" className="rounded-[1.75rem] bg-white p-[clamp(1.5rem,3vw,2.5rem)] ring-1 ring-primary/10">
+              <section
+                aria-labelledby="venue-title"
+                className="group relative overflow-hidden rounded-[1.75rem] bg-white p-[clamp(1.5rem,3vw,2.5rem)] ring-1 ring-primary/10 transition duration-500 hover:shadow-[0_34px_70px_-40px_rgb(21_25_54_/_0.55)] sm:pr-40"
+              >
+                {/* A map pin with ripples, bobbing in the corner. */}
+                <span aria-hidden="true" className="absolute top-8 right-8 hidden size-24 place-items-center sm:grid">
+                  <span className="absolute size-16 rounded-full bg-coral/15 motion-safe:animate-ping" />
+                  <span className="absolute size-10 rounded-full bg-coral/20" />
+                  <svg viewBox="0 0 24 24" className="relative size-12 fill-crimson drop-shadow-[0_10px_14px_rgb(201_29_76_/_0.45)] motion-safe:animate-float-fast">
+                    <path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z" />
+                  </svg>
+                </span>
                 <p className={kicker}>The venue</p>
                 <h2 id="venue-title" className={`mt-2 ${sectionTitle}`}>
                   {event.venue.name}
@@ -260,9 +327,13 @@ export default async function EventPage(props: PageProps<"/events/[slug]">) {
                   href={event.venue.mapUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-5 inline-flex h-12 items-center gap-2 rounded-full bg-primary px-6 text-[15px] font-medium text-white transition hover:bg-primary/90"
+                  className="group/link mt-5 inline-flex h-12 items-center gap-2 rounded-full bg-primary px-6 text-[15px] font-medium text-white transition duration-300 hover:-translate-y-0.5 hover:bg-crimson hover:shadow-[0_14px_30px_-12px_rgb(201_29_76_/_0.8)]"
                 >
-                  Get directions ↗<span className="sr-only"> (opens in a new tab)</span>
+                  Get directions
+                  <span aria-hidden="true" className="transition-transform duration-300 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5">
+                    ↗
+                  </span>
+                  <span className="sr-only"> (opens in a new tab)</span>
                 </a>
               </section>
             </Reveal>
@@ -279,7 +350,7 @@ export default async function EventPage(props: PageProps<"/events/[slug]">) {
                 </p>
                 <ul className="mt-5 flex flex-wrap gap-2">
                   {event.partners.map((name) => (
-                    <li key={name} className="rounded-full border border-primary/15 px-4 py-2 text-[14px] text-primary/80">
+                    <li key={name} className={`cursor-default rounded-full border border-primary/15 px-4 py-2 text-[14px] text-primary/80 ${chipHover} hover:border-transparent`}>
                       {name}
                     </li>
                   ))}

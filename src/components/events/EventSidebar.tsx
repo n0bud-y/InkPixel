@@ -2,9 +2,10 @@
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
-import { formatPrice } from "@/content/events";
+import { formatPrice, ticketTotal } from "@/content/events";
 import { ScrollTrigger, gsap, useGSAP } from "@/lib/gsap";
 import { BookingDialog, WhatsAppIcon, type BookingEvent } from "./BookingDialog";
+import { sheen } from "./styles";
 
 // Where the box sits when pinned: 16 px below the fixed header (96 px tall on laptops, 128 px on
 // large screens), measured, so it never slides under it.
@@ -110,7 +111,7 @@ export function EventSidebar({
     }
   };
 
-  const prices = event.tickets.flatMap(({ price }) => (price === null ? [] : [price]));
+  const prices = event.tickets.flatMap((option) => ticketTotal(option, 1) ?? []);
   const from = prices.length ? formatPrice(Math.min(...prices), event.currency) : null;
   const ask = `https://wa.me/${event.whatsapp}?text=${encodeURIComponent(`Hi, I have a question about ${event.title}.`)}`;
 
@@ -122,9 +123,9 @@ export function EventSidebar({
       >
         {/* Date and title. */}
         <div className="relative isolate overflow-hidden bg-primary p-6 text-white">
-          <div aria-hidden="true" className="absolute -top-20 -right-16 -z-10 size-56 rounded-full bg-[radial-gradient(closest-side,rgb(250_97_67_/_0.45),transparent)]" />
+          <div aria-hidden="true" className="absolute -top-20 -right-16 -z-10 size-56 rounded-full bg-[radial-gradient(closest-side,rgb(250_97_67_/_0.45),transparent)] motion-safe:animate-glow-pulse" />
           <div className="flex items-start gap-4">
-            <div className="grid w-16 shrink-0 overflow-hidden rounded-2xl bg-white text-center text-primary">
+            <div className="grid w-16 shrink-0 overflow-hidden rounded-2xl bg-white text-center text-primary shadow-[0_14px_28px_-12px_rgb(0_0_0_/_0.6)] motion-safe:animate-float">
               <span className="bg-brand-gradient py-1 font-mono text-[11px] tracking-[0.16em] text-white uppercase">{month}</span>
               <span className="py-1.5 font-display text-[1.75rem] leading-none font-semibold">{day}</span>
             </div>
@@ -145,8 +146,11 @@ export function EventSidebar({
                   ["sec", countdown.seconds],
                 ] as const
               ).map(([unit, value]) => (
-                <div key={unit} className="rounded-xl bg-white/[0.08] py-2 ring-1 ring-white/10">
-                  <span className="block font-display text-[1.35rem] leading-none font-semibold tabular-nums">{String(value).padStart(2, "0")}</span>
+                <div key={unit} className="overflow-hidden rounded-xl bg-white/[0.08] py-2 ring-1 ring-white/10">
+                  {/* Re-keyed by its value, so each new number drops in. */}
+                  <span key={value} className="block font-display text-[1.35rem] leading-none font-semibold tabular-nums motion-safe:animate-tick">
+                    {String(value).padStart(2, "0")}
+                  </span>
                   <span className="mt-1 block font-mono text-[10px] tracking-[0.14em] text-light/60 uppercase">{unit}</span>
                 </div>
               ))}
@@ -180,13 +184,16 @@ export function EventSidebar({
             <p className="font-mono text-[11px] tracking-[0.16em] text-primary/50 uppercase">Tickets</p>
             <ul className="mt-2 divide-y divide-primary/10 rounded-2xl ring-1 ring-primary/10">
               {event.tickets.map((option) => (
-                <li key={option.name} className="flex items-center justify-between gap-3 px-4 py-3">
+                <li key={option.name} className="group/ticket relative flex items-center justify-between gap-3 px-4 py-3 transition-colors duration-300 first:rounded-t-2xl last:rounded-b-2xl hover:bg-light">
+                  <span aria-hidden="true" className="absolute inset-y-2 left-0 w-[3px] origin-center scale-y-0 rounded-r bg-brand-gradient transition-transform duration-300 group-hover/ticket:scale-y-100" />
                   <span>
                     <span className="font-medium">{option.name}</span>
-                    <span className="block text-[13px] text-primary/55">{option.exhibitor ? "Per dog" : "Per person"}</span>
+                    <span className="block text-[13px] text-primary/55">
+                      {option.entry ? `With 1 dog · +${formatPrice(option.price, event.currency)} per extra dog` : option.exhibitor ? "Per dog" : "Per person"}
+                    </span>
                   </span>
                   <span className="text-right">
-                    <span className="block font-semibold text-crimson">{formatPrice(option.price, event.currency) ?? "Price TBA"}</span>
+                    <span className="block font-semibold text-crimson">{formatPrice(ticketTotal(option, 1), event.currency) ?? "Price TBA"}</span>
                     {canBook && (
                       <button type="button" onClick={() => book(option.name)} className="text-[13px] font-medium text-primary/70 underline-offset-4 hover:text-primary hover:underline">
                         Book {option.name.toLowerCase()}
@@ -202,9 +209,12 @@ export function EventSidebar({
             <button
               type="button"
               onClick={() => book(null)}
-              className="flex h-14 w-full items-center justify-center gap-2 rounded-full bg-brand-gradient text-[16px] font-semibold text-white shadow-[0_14px_34px_-12px_rgb(201_29_76_/_0.8)] transition hover:-translate-y-px hover:brightness-110"
+              className={`group/book flex h-14 w-full items-center justify-center gap-2 rounded-full bg-brand-gradient text-[16px] font-semibold text-white shadow-[0_14px_34px_-12px_rgb(201_29_76_/_0.8)] hover:shadow-[0_20px_40px_-12px_rgb(250_97_67_/_0.8)] ${sheen}`}
             >
               Book now
+              <span aria-hidden="true" className="transition-transform duration-300 group-hover/book:translate-x-1">
+                →
+              </span>
             </button>
           ) : (
             <p className="rounded-full bg-primary/5 py-4 text-center font-medium text-primary/70">{past ? "This event has ended" : "Booking opens soon"}</p>
@@ -215,7 +225,7 @@ export function EventSidebar({
               href={ask}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex h-11 items-center justify-center gap-2 rounded-full border border-primary/15 text-[14px] font-medium transition hover:border-[#25d366] hover:text-[#128c4b]"
+              className="flex h-11 items-center justify-center gap-2 rounded-full border border-primary/15 text-[14px] font-medium transition duration-300 hover:-translate-y-0.5 hover:border-[#25d366] hover:bg-[#25d366] hover:text-white hover:shadow-[0_12px_24px_-12px_rgb(37_211_102_/_0.9)]"
             >
               <WhatsAppIcon className="size-5" />
               Ask a question<span className="sr-only"> on WhatsApp (opens in a new tab)</span>
@@ -223,7 +233,7 @@ export function EventSidebar({
             <button
               type="button"
               onClick={share}
-              className="flex h-11 items-center justify-center gap-2 rounded-full border border-primary/15 text-[14px] font-medium transition hover:border-primary/30"
+              className="flex h-11 items-center justify-center gap-2 rounded-full border border-primary/15 text-[14px] font-medium transition duration-300 hover:-translate-y-0.5 hover:border-primary hover:bg-primary hover:text-white hover:shadow-[0_12px_24px_-12px_rgb(21_25_54_/_0.8)]"
             >
               <ShareIcon />
               {shared ? "Link copied" : "Share"}
@@ -262,7 +272,7 @@ export function EventSidebar({
               <button
                 type="button"
                 onClick={() => book(null)}
-                className="h-12 rounded-full bg-brand-gradient px-7 text-[15px] font-semibold text-white shadow-[0_12px_28px_-10px_rgb(201_29_76_/_0.8)]"
+                className={`h-12 rounded-full bg-brand-gradient px-7 text-[15px] font-semibold text-white shadow-[0_12px_28px_-10px_rgb(201_29_76_/_0.8)] ${sheen}`}
               >
                 Book now
               </button>

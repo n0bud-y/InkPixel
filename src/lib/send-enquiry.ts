@@ -5,7 +5,7 @@ import path from "node:path";
 import { headers } from "next/headers";
 import nodemailer, { type Transporter } from "nodemailer";
 import * as z from "zod";
-import { formatPrice, getEvent, isPast } from "@/content/events";
+import { formatPrice, getEvent, isPast, ticketBreakdown, ticketTotal } from "@/content/events";
 import { env } from "@/env";
 import { enquiryEmail, type Enquiry } from "@/lib/enquiry";
 import { siteConfig } from "@/lib/site";
@@ -179,7 +179,8 @@ export async function sendBooking(input: BookingInput): Promise<BookingResult> {
 
   // A reference the buyer can read out: the event's code and six letters or digits.
   const reference = `${event.code}-${Math.random().toString(36).slice(2, 8).toUpperCase().padEnd(6, "0")}`;
-  const total = ticket.price === null ? null : ticket.price * booking.quantity;
+  const total = ticketTotal(ticket, booking.quantity);
+  const breakdown = ticketBreakdown(ticket, booking.quantity, event.currency);
   if (booking.website) return { ok: true, reference, total };
 
   const requestHeaders = await headers();
@@ -192,7 +193,8 @@ export async function sendBooking(input: BookingInput): Promise<BookingResult> {
   const price = formatPrice(total, event.currency) ?? "price to be confirmed";
   const lines = [
     `Booking ${reference}: ${event.title}`,
-    `Ticket: ${ticket.name} × ${booking.quantity} (${price})`,
+    `Ticket: ${ticket.name} × ${booking.quantity}`,
+    `Total: ${price}${breakdown ? ` (${breakdown})` : ""}`,
     "",
     `Name: ${booking.name}`,
     `Phone: ${booking.phone}`,

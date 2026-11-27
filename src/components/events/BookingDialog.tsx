@@ -2,9 +2,10 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { formatPrice, type EventTicket } from "@/content/events";
+import { formatPrice, ticketBreakdown, ticketTotal, type EventTicket } from "@/content/events";
 import { sendBooking, type BookingResult } from "@/lib/send-enquiry";
 import { ScrollSmoother } from "@/lib/gsap";
+import { sheen } from "./styles";
 
 /** What the dialog needs from an event (plain data: it's a client component). */
 export type BookingEvent = {
@@ -60,7 +61,8 @@ export function BookingDialog({
   const [copied, setCopied] = useState(false);
 
   const ticket = event.tickets.find(({ name }) => name === ticketName) ?? event.tickets[0];
-  const total = ticket && ticket.price !== null ? ticket.price * quantity : null;
+  const total = ticket ? ticketTotal(ticket, quantity) : null;
+  const breakdown = ticket ? ticketBreakdown(ticket, quantity, event.currency) : null;
 
   useEffect(() => {
     const element = dialog.current;
@@ -140,7 +142,7 @@ export function BookingDialog({
         if (clickEvent.target === dialog.current) dialog.current?.close();
       }}
       aria-labelledby="booking-title"
-      className="m-auto max-h-[min(92svh,56rem)] w-[min(42rem,calc(100vw-1.5rem))] flex-col overflow-hidden rounded-[1.75rem] bg-light p-0 text-primary shadow-[0_40px_120px_-30px_rgb(10_12_30_/_0.8)] backdrop:bg-primary/70 backdrop:backdrop-blur-sm open:flex"
+      className="m-auto max-h-[min(92svh,56rem)] w-[min(42rem,calc(100vw-1.5rem))] flex-col overflow-hidden rounded-[1.75rem] bg-light p-0 text-primary shadow-[0_40px_120px_-30px_rgb(10_12_30_/_0.8)] backdrop:bg-primary/70 backdrop:backdrop-blur-sm open:flex motion-safe:open:animate-pop-in"
     >
       {/* The header stays put; the form (or the payment step) scrolls below it. */}
       <div className="flex shrink-0 items-start justify-between gap-4 border-b border-primary/10 bg-light px-6 py-5 sm:px-8">
@@ -173,6 +175,7 @@ export function BookingDialog({
             <p className="mt-2 text-[14px] text-light/80">
               {ticket?.name} × {quantity}
               {done.total !== null ? ` · ${price(done.total)}` : " · we'll confirm the amount on WhatsApp"}
+              {breakdown && <span className="block text-[13px] text-light/60">{breakdown}</span>}
             </p>
           </div>
 
@@ -240,7 +243,7 @@ export function BookingDialog({
             href={`https://wa.me/${event.whatsapp}?text=${encodeURIComponent(whatsappText)}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-7 flex h-14 w-full items-center justify-center gap-3 rounded-full bg-[#25d366] text-[16px] font-semibold text-white shadow-[0_14px_30px_-12px_rgb(37_211_102_/_0.8)] transition hover:brightness-105"
+            className={`mt-7 flex h-14 w-full items-center justify-center gap-3 rounded-full bg-[#25d366] text-[16px] font-semibold text-white shadow-[0_14px_30px_-12px_rgb(37_211_102_/_0.8)] ${sheen}`}
           >
             <WhatsAppIcon />
             Send receipt on WhatsApp<span className="sr-only"> (opens in a new tab)</span>
@@ -255,7 +258,7 @@ export function BookingDialog({
               {event.tickets.map((option) => (
                 <label
                   key={option.name}
-                  className="relative flex cursor-pointer flex-col rounded-2xl border border-primary/15 bg-white p-4 transition has-[:checked]:border-coral has-[:checked]:ring-2 has-[:checked]:ring-coral/25 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-coral"
+                  className="relative flex cursor-pointer flex-col rounded-2xl border border-primary/15 bg-white p-4 transition duration-300 hover:-translate-y-0.5 hover:border-coral/50 hover:shadow-[0_16px_30px_-20px_rgb(201_29_76_/_0.6)] has-[:checked]:border-coral has-[:checked]:ring-2 has-[:checked]:ring-coral/25 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-coral"
                 >
                   <input
                     type="radio"
@@ -267,7 +270,7 @@ export function BookingDialog({
                   />
                   <span className="flex items-baseline justify-between gap-2">
                     <span className="font-semibold">{option.name}</span>
-                    <span className="text-[14px] font-semibold text-crimson">{price(option.price) ?? "Price TBA"}</span>
+                    <span className="text-[14px] font-semibold text-crimson">{price(ticketTotal(option, 1)) ?? "Price TBA"}</span>
                   </span>
                   <span className="mt-1 text-[13px] leading-snug text-primary/65">{option.description}</span>
                 </label>
@@ -355,14 +358,19 @@ export function BookingDialog({
           <input name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" />
 
           <div className="flex flex-col gap-4 rounded-2xl bg-white p-4 ring-1 ring-primary/10 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-[15px]">
-              <span className="text-primary/60">Total: </span>
-              <span className="font-display text-[1.35rem] font-semibold">{price(total) ?? "to be confirmed"}</span>
-            </p>
+            <div>
+              <p className="text-[15px]">
+                <span className="text-primary/60">Total: </span>
+                <span aria-live="polite" className="font-display text-[1.35rem] font-semibold">
+                  {price(total) ?? "to be confirmed"}
+                </span>
+              </p>
+              {breakdown && <p className="mt-0.5 text-[13px] text-primary/55">{breakdown}</p>}
+            </div>
             <button
               type="submit"
               disabled={status === "sending"}
-              className="inline-flex h-12 items-center justify-center rounded-full bg-brand-gradient px-7 text-[15px] font-semibold text-white shadow-[0_12px_32px_-10px_rgb(201_29_76_/_0.75)] transition hover:brightness-110 disabled:opacity-60"
+              className={`inline-flex h-12 items-center justify-center rounded-full bg-brand-gradient px-7 text-[15px] font-semibold text-white shadow-[0_12px_32px_-10px_rgb(201_29_76_/_0.75)] disabled:opacity-60 ${sheen}`}
             >
               {status === "sending" ? "Sending…" : "Book & see payment"}
             </button>

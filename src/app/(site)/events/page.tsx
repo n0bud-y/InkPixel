@@ -5,7 +5,7 @@ import { ContactCta } from "@/components/sections/home/ContactCta";
 import { PageSchema } from "@/components/seo/PageSchema";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { withAccent } from "@/components/ui/accent";
-import { eventWhen, events, eventsPage, formatPrice, isPast, type SiteEvent } from "@/content/events";
+import { eventWhen, events, eventsPage, formatPrice, isPast, ticketTotal, type SiteEvent } from "@/content/events";
 import { breadcrumbSchema, itemListSchema, pageMetadataFromCms } from "@/lib/seo";
 
 // Rebuilt hourly, so an event moves to "Past events" once it has ended.
@@ -88,7 +88,7 @@ export default function EventsPage() {
 // "Book now" (or "View event" once it's over). Wide (poster beside the text) unless `compact`.
 function EventCard({ event, compact = false }: { event: SiteEvent; compact?: boolean }) {
   const when = eventWhen(event);
-  const prices = event.tickets.flatMap(({ price }) => (price === null ? [] : [price]));
+  const prices = event.tickets.flatMap((ticket) => ticketTotal(ticket, 1) ?? []);
   const from = prices.length ? formatPrice(Math.min(...prices), event.currency) : null;
   const past = isPast(event);
 
@@ -106,7 +106,11 @@ function EventCard({ event, compact = false }: { event: SiteEvent; compact?: boo
           sizes={compact ? "(min-width: 768px) 45vw, 100vw" : "(min-width: 1024px) 55vw, 100vw"}
           className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
         />
-        <span className="absolute top-4 left-4 grid w-16 overflow-hidden rounded-2xl bg-white text-center shadow-lg">
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-y-0 left-0 w-1/3 -translate-x-full skew-x-[-20deg] bg-linear-to-r from-transparent via-white/35 to-transparent motion-safe:transition-transform motion-safe:duration-1000 motion-safe:ease-out motion-safe:group-hover:translate-x-[400%]"
+        />
+        <span className="absolute top-4 left-4 grid w-16 overflow-hidden rounded-2xl bg-white text-center shadow-lg motion-safe:animate-float">
           <span className="bg-brand-gradient py-1 font-mono text-[11px] tracking-[0.16em] text-white uppercase">{when.month}</span>
           <span className="py-1.5 font-display text-[1.75rem] leading-none font-semibold">{when.day}</span>
         </span>
@@ -121,8 +125,11 @@ function EventCard({ event, compact = false }: { event: SiteEvent; compact?: boo
         </p>
         {!compact && <p className="mt-4 text-[clamp(1rem,1.05vw,1.1rem)] leading-relaxed text-primary/75">{event.excerpt}</p>}
         <div className="mt-6 flex flex-wrap items-center gap-4">
-          <span className="inline-flex h-12 items-center rounded-full bg-brand-gradient px-6 text-[15px] font-semibold text-white shadow-[0_12px_30px_-10px_rgb(201_29_76_/_0.75)]">
+          <span className="relative isolate inline-flex h-12 items-center gap-2 overflow-hidden rounded-full bg-brand-gradient px-6 text-[15px] font-semibold text-white shadow-[0_12px_30px_-10px_rgb(201_29_76_/_0.75)] transition duration-300 group-hover:brightness-110">
             {past ? "View event" : "Book now"}
+            <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1">
+              →
+            </span>
           </span>
           {!past && <span className="text-[15px] font-medium text-primary/70">{from ? `From ${from}` : "Tickets on sale"}</span>}
         </div>
